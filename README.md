@@ -10,6 +10,16 @@ A mobile-only app to monitor your GitHub Copilot usage quota with native home sc
 - **Background Refresh** - Automatic hourly quota updates
 - **Offline Support** - Cached data available when offline
 
+## Screenshots
+
+### Dashboard
+
+![Dashboard](./assets/screenshots/dashboard.png)
+
+### Widget
+
+![Widget](./assets/screenshots/widget.png)
+
 ## Prerequisites
 
 - Node.js 18+
@@ -37,6 +47,7 @@ GITHUB_CLIENT_SECRET=your_github_oauth_client_secret
 ```
 
 To get these credentials:
+
 1. Go to [GitHub Developer Settings](https://github.com/settings/developers)
 2. Create a new OAuth App
 3. Set the callback URL to: `xyz.ilteoood.copilotstatus://oauth`
