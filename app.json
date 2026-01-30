@@ -1,0 +1,86 @@
+{
+  "expo": {
+    "name": "Copilot Status",
+    "slug": "copilot-status",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "xyz.ilteoood.copilotstatus",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "xyz.ilteoood.copilotstatus",
+      "entitlements": {
+        "com.apple.security.application-groups": ["group.xyz.ilteoood.copilotstatus"]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundImage": "./assets/images/icon.png",
+        "monochromeImage": "./assets/images/icon.png"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "xyz.ilteoood.copilotstatus"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-background-task",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "17.0"
+          }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
+      ],
+      "expo-secure-store",
+      [
+        "voltra",
+        {
+          "groupIdentifier": "group.xyz.ilteoood.copilotstatus",
+          "widgets": [
+            {
+              "id": "copilot_status",
+              "displayName": "Copilot Status",
+              "description": "Monitor your GitHub Copilot usage quota",
+              "supportedFamilies": ["systemSmall", "systemMedium"]
+            }
+          ],
+          "android": {
+            "widgets": [
+              {
+                "id": "copilot_status",
+                "displayName": "Copilot Status",
+                "description": "Monitor your GitHub Copilot usage quota",
+                "targetCellWidth": 4,
+                "targetCellHeight": 1,
+                "minWidth": 250,
+                "minHeight": 70
+              }
+            ]
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

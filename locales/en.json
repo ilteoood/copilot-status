@@ -1,0 +1,79 @@
+{
+  "common": {
+    "appName": "Copilot Status",
+    "copilot": "Copilot",
+    "loading": "Loading...",
+    "unknown": "Unknown"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Copilot Status",
+    "loadingQuota": "Loading quota...",
+    "unableToLoad": "Unable to load quota",
+    "noDataAvailable": "No quota data available"
+  },
+  "quota": {
+    "used": "USED",
+    "completionsUsed": "Completions Used",
+    "remaining": "Remaining",
+    "totalLimit": "Total Limit"
+  },
+  "cached": {
+    "usingCachedData": "Using cached data",
+    "updated": "Updated",
+    "justNow": "Just now",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago"
+  },
+  "login": {
+    "title": "Copilot Status",
+    "subtitle": "Monitor your GitHub Copilot usage and quota in real-time",
+    "signInButton": "Sign in with GitHub",
+    "footer": "Securely authenticate with your GitHub account to access your Copilot quota information."
+  },
+  "settings": {
+    "title": "Settings",
+    "signedInAs": "Signed in as @{{username}}",
+    "appearance": "APPEARANCE",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "auto": "Auto",
+    "backgroundFetch": "BACKGROUND REFRESH",
+    "backgroundFetchDescription": "How often to refresh data for widgets",
+    "interval": {
+      "0": "Never",
+      "5": "Every 5 minutes",
+      "15": "Every 15 minutes",
+      "30": "Every 30 minutes",
+      "60": "Every hour"
+    },
+    "actions": "ACTIONS",
+    "signOut": "Sign Out",
+    "about": "ABOUT",
+    "appName": "App Name",
+    "version": "Version",
+    "signOutConfirmTitle": "Sign Out",
+    "signOutConfirmMessage": "Are you sure you want to sign out?",
+    "cancel": "Cancel"
+  },
+  "widget": {
+    "copilot": "Copilot",
+    "used": "Used",
+    "usedLowercase": "used",
+    "left": "Left",
+    "requestsUsed": "Requests used",
+    "requestsLeft": "Requests left",
+    "loading": "Loading...",
+    "signInToView": "Sign in to view"
+  },
+  "time": {
+    "never": "Never",
+    "justNow": "Just now",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago"
+  }
+}
