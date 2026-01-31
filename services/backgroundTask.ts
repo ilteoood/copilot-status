@@ -30,7 +30,6 @@ TaskManager.defineTask(BACKGROUND_TASK_NAME, async () => {
 
     // Update widget with fresh data
     await updateCopilotWidgetWithData(quota, now);
-
     return BackgroundTask.BackgroundTaskResult.Success;
   } catch {
     return BackgroundTask.BackgroundTaskResult.Failed;
@@ -42,23 +41,13 @@ export async function registerBackgroundTaskAsync(
 ): Promise<void> {
   const fetchInterval = interval ?? backgroundFetchStorage.getInterval();
 
-  // If interval is 0 (never), unregister the task
-  if (fetchInterval === 0) {
-    await unregisterBackgroundTaskAsync();
-    return;
+  await unregisterBackgroundTaskAsync();
+
+  if (fetchInterval !== 0) {
+    await BackgroundTask.registerTaskAsync(BACKGROUND_TASK_NAME, {
+      minimumInterval: fetchInterval,
+    });
   }
-
-  const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_TASK_NAME);
-
-  // Unregister first if already registered to apply new interval
-  if (isRegistered) {
-    await BackgroundTask.unregisterTaskAsync(BACKGROUND_TASK_NAME);
-  }
-
-  // minimumInterval is in minutes for expo-background-task
-  await BackgroundTask.registerTaskAsync(BACKGROUND_TASK_NAME, {
-    minimumInterval: fetchInterval,
-  });
 }
 
 export async function unregisterBackgroundTaskAsync(): Promise<void> {
