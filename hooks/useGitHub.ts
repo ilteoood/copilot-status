@@ -35,7 +35,7 @@ export function useCopilotQuota() {
     },
     staleTime: 2 * 60 * 1000,
     gcTime: 24 * 60 * 60 * 1000,
-    refetchOnMount: 'always',
+    refetchOnMount: true,
     refetchOnReconnect: true,
   });
 
