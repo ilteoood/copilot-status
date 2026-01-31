@@ -59,12 +59,6 @@ export default function SettingsScreen() {
     await updateBackgroundTaskInterval(interval);
   };
 
-  const getIntervalIcon = (
-    interval: BackgroundFetchInterval
-  ): 'timer-outline' | 'pause-circle-outline' => {
-    return interval === 0 ? 'pause-circle-outline' : 'timer-outline';
-  };
-
   const handleSignOut = () => {
     Alert.alert(t('settings.signOutConfirmTitle'), t('settings.signOutConfirmMessage'), [
       { text: t('settings.cancel'), style: 'cancel' },
@@ -141,7 +135,7 @@ export default function SettingsScreen() {
               i18nPrefix="settings.interval"
               selected={fetchInterval === interval}
               onSelect={handleFetchIntervalChange}
-              icon={getIntervalIcon(interval)}
+              icon={interval === 0 ? 'pause-circle-outline' : 'timer-outline'}
             />
           </React.Fragment>
         ))}
