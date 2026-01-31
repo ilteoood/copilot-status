@@ -1,4 +1,5 @@
 import type { QuotaInfo } from '@/types/quota';
+import { formatFullDate } from '@/utils/dateTimeUtils';
 import { useTranslation } from 'react-i18next';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
@@ -50,6 +51,12 @@ export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayPro
           label={t('quota.totalLimit')}
           value={quota.totalQuota}
           color={theme.colors.critical}
+        />
+        <StatsCard
+          icon="calendar-outline"
+          label={t('quota.resetsAt')}
+          value={formatFullDate(t, quota.resetDate.getTime())}
+          color={theme.colors.tint}
         />
       </View>
     </ScrollView>

@@ -19,7 +19,8 @@
     "used": "USED",
     "completionsUsed": "Completions Used",
     "remaining": "Remaining",
-    "totalLimit": "Total Limit"
+    "totalLimit": "Total Limit",
+    "resetsAt": "Resets at"
   },
   "cached": {
     "usingCachedData": "Using cached data",
