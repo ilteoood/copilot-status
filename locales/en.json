@@ -46,7 +46,6 @@
     "backgroundFetchDescription": "How often to refresh data for widgets",
     "interval": {
       "0": "Never",
-      "5": "Every 5 minutes",
       "15": "Every 15 minutes",
       "30": "Every 30 minutes",
       "60": "Every hour"

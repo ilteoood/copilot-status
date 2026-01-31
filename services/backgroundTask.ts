@@ -9,7 +9,7 @@ import { backgroundFetchStorage, quotaStorage, type BackgroundFetchInterval } fr
 
 export const BACKGROUND_TASK_NAME = 'copilot-quota-background-task';
 
-export const BACKGROUND_FETCH_INTERVALS: BackgroundFetchInterval[] = [0, 5, 15, 30, 60];
+export const BACKGROUND_FETCH_INTERVALS: BackgroundFetchInterval[] = [0, 15, 30, 60];
 
 TaskManager.defineTask(BACKGROUND_TASK_NAME, async () => {
   console.log('Background task running: fetching Copilot quota');
