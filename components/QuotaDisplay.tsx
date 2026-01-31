@@ -1,7 +1,7 @@
 import type { QuotaInfo } from '@/types/quota';
 import { formatFullDate } from '@/utils/dateTimeUtils';
 import { useTranslation } from 'react-i18next';
-import { RefreshControl, ScrollView, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 import { CircularProgress } from './CircularProgress';
 import { StatsCard } from './StatsCard';
@@ -52,10 +52,12 @@ export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayPro
           value={quota.totalQuota}
           color={theme.colors.critical}
         />
-        <View style={styles.resetContainer}>
-          <Text style={styles.resetLabel}>{t('quota.resetsAt')}</Text>
-          <Text style={styles.resetDate}>{formatFullDate(t, quota.resetDate.getTime())}</Text>
-        </View>
+        <StatsCard
+          icon="calendar-outline"
+          label={t('quota.resetsAt')}
+          value={formatFullDate(t, quota.resetDate.getTime())}
+          color={theme.colors.tint}
+        />
       </View>
     </ScrollView>
   );
@@ -75,21 +77,5 @@ const styles = StyleSheet.create(theme => ({
   },
   statsContainer: {
     gap: theme.spacing.sm,
-  },
-  resetContainer: {
-    alignItems: 'center',
-    paddingVertical: theme.spacing.md,
-    marginTop: theme.spacing.xs,
-  },
-  resetLabel: {
-    fontSize: theme.typography.fontSizes.sm,
-    color: theme.colors.icon,
-    fontWeight: theme.typography.fontWeights.medium,
-    marginBottom: theme.spacing.xs,
-  },
-  resetDate: {
-    fontSize: theme.typography.fontSizes.md,
-    color: theme.colors.text,
-    fontWeight: theme.typography.fontWeights.semibold,
   },
 }));
