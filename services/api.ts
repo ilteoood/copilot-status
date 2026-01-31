@@ -39,10 +39,11 @@ export async function fetchCopilotQuota(token: string): Promise<QuotaInfo> {
 
   const quota = parseQuotaResponse(data as GitHubCopilotResponse);
 
+  const now = Date.now();
   quotaStorage.setQuotaData(JSON.stringify(quota));
-  quotaStorage.setLastFetch(Date.now());
+  quotaStorage.setLastFetch(now);
 
-  await updateCopilotWidgetWithData(quota).catch(() => {});
+  await updateCopilotWidgetWithData(quota, now).catch(() => {});
 
   return quota;
 }

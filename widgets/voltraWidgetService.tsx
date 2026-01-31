@@ -205,7 +205,7 @@ export async function clearCopilotWidget(): Promise<void> {
  */
 export async function updateCopilotWidgetWithData(
   quota: QuotaInfo,
-  lastFetch: number | null = Date.now()
+  lastFetch: number
 ): Promise<void> {
   try {
     const lastUpdated = formatFullDate(i18n.t, lastFetch);

@@ -1,11 +1,10 @@
 import { QUERY_KEYS } from '@/hooks/useGitHub';
 import { queryClient } from '@/services/queryClient';
 import { getStoredToken } from '@/stores/secureStorage';
-import { updateCopilotWidgetWithData } from '@/widgets/voltraWidgetService';
 import * as BackgroundTask from 'expo-background-task';
 import * as TaskManager from 'expo-task-manager';
 import { fetchCopilotQuota } from './api';
-import { backgroundFetchStorage, quotaStorage, type BackgroundFetchInterval } from './storage';
+import { backgroundFetchStorage, type BackgroundFetchInterval } from './storage';
 
 export const BACKGROUND_TASK_NAME = 'copilot-quota-background-task';
 
@@ -19,17 +18,10 @@ TaskManager.defineTask(BACKGROUND_TASK_NAME, async () => {
     }
 
     const quota = await fetchCopilotQuota(token);
-    const now = Date.now();
 
     // Update query cache
     queryClient.setQueryData(QUERY_KEYS.COPILOT_QUOTA, quota);
 
-    // Store quota data for widget access
-    quotaStorage.setQuotaData(JSON.stringify(quota));
-    quotaStorage.setLastFetch(now);
-
-    // Update widget with fresh data
-    await updateCopilotWidgetWithData(quota, now);
     return BackgroundTask.BackgroundTaskResult.Success;
   } catch {
     return BackgroundTask.BackgroundTaskResult.Failed;
