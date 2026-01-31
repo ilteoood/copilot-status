@@ -1,4 +1,6 @@
+import { SettingsVoice } from '@/app/(tabs)/components/SettingsVoice';
 import { RadioButton } from '@/components/RadioButton';
+import { Separator } from '@/components/Separator';
 import { useGitHubUser } from '@/hooks/useGitHub';
 import { BACKGROUND_FETCH_INTERVALS, updateBackgroundTaskInterval } from '@/services/backgroundTask';
 import { backgroundFetchStorage, themeStorage, type BackgroundFetchInterval, type ThemePreference } from '@/services/storage';
@@ -19,6 +21,8 @@ import {
   View
 } from 'react-native';
 import { StyleSheet, UnistylesRuntime, useUnistyles } from 'react-native-unistyles';
+import { SettingsCategory } from './components/SettingsCategory';
+import { SettingsSection } from './components/SettingsSection';
 
 export default function SettingsScreen() {
   const { theme } = useUnistyles();
@@ -81,7 +85,7 @@ export default function SettingsScreen() {
         <Text style={styles.headerTitle}>{t('settings.title')}</Text>
       </View>
 
-      <View style={styles.section}>
+      <SettingsSection>
         <View style={styles.userCard}>
           {avatarUrl ? (
             <Image source={{ uri: avatarUrl }} style={styles.avatar} />
@@ -95,64 +99,44 @@ export default function SettingsScreen() {
             <Text style={styles.userSubtitle}>{t('settings.signedInAs', { username: user?.login ?? t('common.unknown') })}</Text>
           </View>
         </View>
-      </View>
+      </SettingsSection>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('settings.appearance')}</Text>
-        <View style={styles.sectionContent}>
-          <RadioButton value="light" i18nPrefix="settings" selected={themePreference === 'light'} onSelect={handleThemeChange} icon='sunny-outline'  />
-          <View style={styles.separator} />
-          <RadioButton value="dark" i18nPrefix="settings" selected={themePreference === 'dark'} onSelect={handleThemeChange} icon='moon-outline' />
-          <View style={styles.separator} />
-          <RadioButton value="system" i18nPrefix="settings" selected={themePreference === 'system'} onSelect={handleThemeChange} icon='phone-portrait-outline' />
-        </View>
-      </View>
+      <SettingsCategory title="settings.appearance">
+        <RadioButton value="light" i18nPrefix="settings" selected={themePreference === 'light'} onSelect={handleThemeChange} icon='sunny-outline' />
+        <Separator />
+        <RadioButton value="dark" i18nPrefix="settings" selected={themePreference === 'dark'} onSelect={handleThemeChange} icon='moon-outline' />
+        <Separator />
+        <RadioButton value="system" i18nPrefix="settings" selected={themePreference === 'system'} onSelect={handleThemeChange} icon='phone-portrait-outline' />
+      </SettingsCategory>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('settings.backgroundFetch')}</Text>
-        <View style={styles.sectionContent}>
-          {BACKGROUND_FETCH_INTERVALS.map((interval, index) => (
-            <React.Fragment key={interval}>
-              {index > 0 && <View style={styles.separator} />}
-              <RadioButton
-                value={interval}
-                i18nPrefix="settings.interval"
-                selected={fetchInterval === interval}
-                onSelect={handleFetchIntervalChange}
-                icon={getIntervalIcon(interval)}
-                />
-            </React.Fragment>
-          ))}
-        </View>
-      </View>
+      <SettingsCategory title="settings.backgroundFetch">
+        {BACKGROUND_FETCH_INTERVALS.map((interval, index) => (
+          <React.Fragment key={interval}>
+            {index > 0 && <Separator />}
+            <RadioButton
+              value={interval}
+              i18nPrefix="settings.interval"
+              selected={fetchInterval === interval}
+              onSelect={handleFetchIntervalChange}
+              icon={getIntervalIcon(interval)}
+            />
+          </React.Fragment>
+        ))}
+      </SettingsCategory>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('settings.actions')}</Text>
-        <View style={styles.sectionContent}>
-          <TouchableOpacity style={styles.row} onPress={handleSignOut}>
-            <Ionicons name="log-out-outline" size={22} color={theme.colors.critical} />
-            <Text style={[styles.rowText, styles.destructiveText]}>{t('settings.signOut')}</Text>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.icon} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <SettingsCategory title="settings.actions">
+        <TouchableOpacity style={styles.row} onPress={handleSignOut}>
+          <Ionicons name="log-out-outline" size={22} color={theme.colors.critical} />
+          <Text style={[styles.rowText, styles.destructiveText]}>{t('settings.signOut')}</Text>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.icon} />
+        </TouchableOpacity>
+      </SettingsCategory>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('settings.about')}</Text>
-        <View style={styles.sectionContent}>
-          <View style={styles.row}>
-            <Ionicons name="information-circle-outline" size={22} color={theme.colors.text} />
-            <Text style={styles.rowText}>{t('settings.appName')}</Text>
-            <Text style={styles.rowValue}>{t('common.appName')}</Text>
-          </View>
-          <View style={styles.separator} />
-          <View style={styles.row}>
-            <Ionicons name="code-outline" size={22} color={theme.colors.text} />
-            <Text style={styles.rowText}>{t('settings.version')}</Text>
-            <Text style={styles.rowValue}>{appVersion}</Text>
-          </View>
-        </View>
-      </View>
+      <SettingsCategory title="settings.about">
+        <SettingsVoice icon="information-circle-outline" text="settings.appName" value="common.appName" />
+        <Separator />
+        <SettingsVoice icon="code-outline" text="settings.version" value={appVersion} />
+      </SettingsCategory>
     </ScrollView>
   );
 }
@@ -171,22 +155,6 @@ const styles = StyleSheet.create(theme => ({
     fontSize: theme.typography.fontSizes['5xl'],
     fontWeight: theme.typography.fontWeights.bold,
     color: theme.colors.text,
-  },
-  section: {
-    marginBottom: theme.spacing.lg,
-    paddingHorizontal: theme.spacing.lg,
-  },
-  sectionTitle: {
-    fontSize: theme.typography.fontSizes.xs,
-    fontWeight: theme.typography.fontWeights.semibold,
-    color: theme.colors.icon,
-    marginBottom: theme.spacing.xs,
-    marginLeft: 4,
-  },
-  sectionContent: {
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.borderRadius.lg,
-    overflow: 'hidden',
   },
   userCard: {
     flexDirection: 'row',
@@ -237,10 +205,5 @@ const styles = StyleSheet.create(theme => ({
   },
   destructiveText: {
     color: theme.colors.critical,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#FFFFFF14',
-    marginLeft: 50,
-  },
+  }
 }));
