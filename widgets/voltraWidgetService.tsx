@@ -68,7 +68,7 @@ function buildIOSWidgetVariants(
     lastUpdated,
   };
 
-  return IOSCopilotWidget(widgetData);
+  return IOSCopilotWidget(widgetData, DEEP_LINK_URL);
 }
 
 /**
