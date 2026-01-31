@@ -25,63 +25,67 @@ export function getStatusColor(percentUsed: number, isDarkMode: boolean) {
   return theme.colors.good;
 }
 
-export function IOSCopilotWidget(data: WidgetData) {
+export function IOSCopilotWidget(data: WidgetData, deepLinkUrl: string) {
   const theme = getTheme(data.isDarkMode);
   const styles = createWidgetStyles(theme);
   const statusColor = getStatusColor(data.percentUsed, data.isDarkMode);
   const remaining = data.totalQuota - data.usedQuota;
 
   const smallWidget = (
-    <Voltra.VStack spacing={4} alignment="center" style={styles.smallContainer}>
-      <Voltra.HStack spacing={16} alignment="center">
-        <Voltra.VStack spacing={2} alignment="center">
-          <Voltra.Text style={{ ...styles.largeValue, color: statusColor }}>
-            {Math.round(data.percentUsed)}%
-          </Voltra.Text>
-          <Voltra.Text style={styles.label}>{i18n.t('widget.usedLowercase')}</Voltra.Text>
-        </Voltra.VStack>
+    <Voltra.Link destination={deepLinkUrl}>
+      <Voltra.VStack spacing={4} alignment="center" style={styles.smallContainer}>
+        <Voltra.HStack spacing={16} alignment="center">
+          <Voltra.VStack spacing={2} alignment="center">
+            <Voltra.Text style={{ ...styles.largeValue, color: statusColor }}>
+              {Math.round(data.percentUsed)}%
+            </Voltra.Text>
+            <Voltra.Text style={styles.label}>{i18n.t('widget.usedLowercase')}</Voltra.Text>
+          </Voltra.VStack>
 
-        <Voltra.VStack spacing={2} alignment="center">
-          <Voltra.Text style={{ ...styles.mediumValue, color: theme.colors.good }}>
-            {remaining.toLocaleString()}
-          </Voltra.Text>
-          <Voltra.Text style={styles.label}>{i18n.t('widget.requestsLeft')}</Voltra.Text>
-        </Voltra.VStack>
-      </Voltra.HStack>
+          <Voltra.VStack spacing={2} alignment="center">
+            <Voltra.Text style={{ ...styles.mediumValue, color: theme.colors.good }}>
+              {remaining.toLocaleString()}
+            </Voltra.Text>
+            <Voltra.Text style={styles.label}>{i18n.t('widget.requestsLeft')}</Voltra.Text>
+          </Voltra.VStack>
+        </Voltra.HStack>
 
-      <Voltra.Text style={styles.smallFooter}>{data.username}</Voltra.Text>
-    </Voltra.VStack>
+        <Voltra.Text style={styles.smallFooter}>{data.username}</Voltra.Text>
+      </Voltra.VStack>
+    </Voltra.Link>
   );
 
   const mediumWidget = (
-    <Voltra.VStack spacing={8} alignment="center" style={styles.container}>
-      <Voltra.HStack spacing={16} alignment="center">
-        <Voltra.VStack spacing={2} alignment="center">
-          <Voltra.Text style={{ ...styles.largeValue, color: statusColor }}>
-            {Math.round(data.percentUsed)}%
-          </Voltra.Text>
-          <Voltra.Text style={styles.label}>{i18n.t('widget.usedLowercase')}</Voltra.Text>
-        </Voltra.VStack>
+    <Voltra.Link destination={deepLinkUrl}>
+      <Voltra.VStack spacing={8} alignment="center" style={styles.container}>
+        <Voltra.HStack spacing={16} alignment="center">
+          <Voltra.VStack spacing={2} alignment="center">
+            <Voltra.Text style={{ ...styles.largeValue, color: statusColor }}>
+              {Math.round(data.percentUsed)}%
+            </Voltra.Text>
+            <Voltra.Text style={styles.label}>{i18n.t('widget.usedLowercase')}</Voltra.Text>
+          </Voltra.VStack>
 
-        <Voltra.VStack spacing={2} alignment="center">
-          <Voltra.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
-            {data.usedQuota.toLocaleString()}
-          </Voltra.Text>
-          <Voltra.Text style={styles.label}>{i18n.t('widget.requestsUsed')}</Voltra.Text>
-        </Voltra.VStack>
+          <Voltra.VStack spacing={2} alignment="center">
+            <Voltra.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
+              {data.usedQuota.toLocaleString()}
+            </Voltra.Text>
+            <Voltra.Text style={styles.label}>{i18n.t('widget.requestsUsed')}</Voltra.Text>
+          </Voltra.VStack>
 
-        <Voltra.VStack spacing={2} alignment="center">
-          <Voltra.Text style={{ ...styles.mediumValue, color: theme.colors.good }}>
-            {remaining.toLocaleString()}
-          </Voltra.Text>
-          <Voltra.Text style={styles.label}>{i18n.t('widget.requestsLeft')}</Voltra.Text>
-        </Voltra.VStack>
-      </Voltra.HStack>
+          <Voltra.VStack spacing={2} alignment="center">
+            <Voltra.Text style={{ ...styles.mediumValue, color: theme.colors.good }}>
+              {remaining.toLocaleString()}
+            </Voltra.Text>
+            <Voltra.Text style={styles.label}>{i18n.t('widget.requestsLeft')}</Voltra.Text>
+          </Voltra.VStack>
+        </Voltra.HStack>
 
-      <Voltra.Text style={styles.footer}>
-        {data.username} - {data.lastUpdated}
-      </Voltra.Text>
-    </Voltra.VStack>
+        <Voltra.Text style={styles.footer}>
+          {data.username} - {data.lastUpdated}
+        </Voltra.Text>
+      </Voltra.VStack>
+    </Voltra.Link>
   );
 
   return {
