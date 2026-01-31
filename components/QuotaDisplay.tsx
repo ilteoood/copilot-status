@@ -55,7 +55,7 @@ export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayPro
         <StatsCard
           icon="calendar-outline"
           label={t('quota.resetsAt')}
-          value={formatFullDate(t, quota.resetDate.getTime())}
+          value={formatFullDate(t, quota.resetDate?.getTime())}
           color={theme.colors.tint}
         />
       </View>
