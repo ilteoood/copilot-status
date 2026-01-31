@@ -49,7 +49,7 @@ To get these credentials:
 
 1. Go to [GitHub Developer Settings](https://github.com/settings/developers)
 2. Create a new OAuth App
-3. Set the callback URL to: `xyz.ilteoood.copilotstatus://oauth`
+3. Set the callback URL to: `xyz.ilteoood.copilotstatus://`
 
 ### 3. iOS Setup
 
