@@ -7,7 +7,6 @@ export const StorageKeys = {
   SYNC_STATUS: 'sync_status',
   THEME_PREFERENCE: 'theme_preference',
   USERNAME: 'username',
-  BACKGROUND_FETCH_INTERVAL: 'background_fetch_interval',
 } as const;
 
 export const storage: MMKV = createMMKV({
@@ -72,19 +71,6 @@ export const themeStorage = {
   },
 };
 
-export type BackgroundFetchInterval = 0 | 5 | 15 | 30 | 60;
-
 export type ThemePreference = 'light' | 'dark' | 'system';
-
-export const backgroundFetchStorage = {
-  getInterval: (): BackgroundFetchInterval => {
-    const value = storage.getString(StorageKeys.BACKGROUND_FETCH_INTERVAL);
-    const numValue = value ? parseInt(value, 10) : null;
-    return (numValue ?? 15) as BackgroundFetchInterval;
-  },
-  setInterval: (interval: BackgroundFetchInterval): void => {
-    storage.set(StorageKeys.BACKGROUND_FETCH_INTERVAL, String(interval));
-  },
-};
 
 export const platformStorage: StateStorage = zustandStorage;

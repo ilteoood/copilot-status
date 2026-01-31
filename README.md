@@ -7,7 +7,6 @@ A mobile-only app to monitor your GitHub Copilot usage quota with native home sc
 - **GitHub OAuth Authentication** - Secure sign-in with your GitHub account
 - **Real-time Quota Dashboard** - View your Copilot usage with visual progress indicators
 - **Native Widgets** - Home screen widgets for iOS (WidgetKit) and Android
-- **Background Refresh** - Automatic hourly quota updates
 - **Offline Support** - Cached data available when offline
 
 ## Screenshots
@@ -93,7 +92,6 @@ copilot-status/
 │   ├── api.ts               # GitHub Copilot API
 │   ├── auth.ts              # OAuth authentication
 │   ├── storage.ts           # MMKV persistence
-│   ├── backgroundTask.ts    # Background fetch
 │   └── widgetSync.ts        # Widget data sync
 ├── stores/                  # Zustand state management
 │   ├── auth.ts              # Auth state
@@ -114,7 +112,6 @@ copilot-status/
 - **State Management**: Zustand with MMKV persistence
 - **Authentication**: expo-auth-session (OAuth 2.0)
 - **Widgets**: vultra
-- **Background Tasks**: expo-background-task
 
 ## License
 

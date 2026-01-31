@@ -4,16 +4,7 @@ import { SettingsCategory } from '@/components/settings/SettingsCategory';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsVoice } from '@/components/settings/SettingsVoice';
 import { useGitHubUser } from '@/hooks/useGitHub';
-import {
-  BACKGROUND_FETCH_INTERVALS,
-  updateBackgroundTaskInterval,
-} from '@/services/backgroundTask';
-import {
-  backgroundFetchStorage,
-  themeStorage,
-  type BackgroundFetchInterval,
-  type ThemePreference,
-} from '@/services/storage';
+import { themeStorage, type ThemePreference } from '@/services/storage';
 import { useAuthStore } from '@/stores/auth';
 import { useQuotaStore } from '@/stores/quota';
 import { updateCopilotWidget } from '@/widgets/voltraWidgetService';
@@ -36,9 +27,6 @@ export default function SettingsScreen() {
   const [themePreference, setThemePreference] = useState<ThemePreference>(() =>
     themeStorage.getThemePreference()
   );
-  const [fetchInterval, setFetchInterval] = useState<BackgroundFetchInterval>(() =>
-    backgroundFetchStorage.getInterval()
-  );
 
   const handleThemeChange = async (newTheme: ThemePreference) => {
     setThemePreference(newTheme);
@@ -52,11 +40,6 @@ export default function SettingsScreen() {
     }
 
     updateCopilotWidget();
-  };
-
-  const handleFetchIntervalChange = async (interval: BackgroundFetchInterval) => {
-    setFetchInterval(interval);
-    await updateBackgroundTaskInterval(interval);
   };
 
   const handleSignOut = () => {
@@ -124,21 +107,6 @@ export default function SettingsScreen() {
           onSelect={handleThemeChange}
           icon="phone-portrait-outline"
         />
-      </SettingsCategory>
-
-      <SettingsCategory title="settings.backgroundFetch">
-        {BACKGROUND_FETCH_INTERVALS.map((interval, index) => (
-          <React.Fragment key={interval}>
-            {index > 0 && <Separator />}
-            <RadioButton
-              value={interval}
-              i18nPrefix="settings.interval"
-              selected={fetchInterval === interval}
-              onSelect={handleFetchIntervalChange}
-              icon={interval === 0 ? 'pause-circle-outline' : 'timer-outline'}
-            />
-          </React.Fragment>
-        ))}
       </SettingsCategory>
 
       <SettingsCategory title="settings.actions">

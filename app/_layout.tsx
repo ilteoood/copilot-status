@@ -1,4 +1,3 @@
-import { registerBackgroundTaskAsync } from '@/services/backgroundTask';
 import '@/services/i18n';
 import { persistOptions, queryClient } from '@/services/queryClient';
 import { ThemePreference, themeStorage } from '@/services/storage';
@@ -25,12 +24,6 @@ function useProtectedRoute() {
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      registerBackgroundTaskAsync().catch(() => {});
-    }
-  }, [isAuthenticated]);
 
   useEffect(() => {
     if (!navigationState?.key || isLoading) return;

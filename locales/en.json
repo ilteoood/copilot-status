@@ -42,14 +42,6 @@
     "dark": "Dark",
     "system": "System",
     "auto": "Auto",
-    "backgroundFetch": "BACKGROUND REFRESH",
-    "backgroundFetchDescription": "How often to refresh data for widgets",
-    "interval": {
-      "0": "Never",
-      "15": "Every 15 minutes",
-      "30": "Every 30 minutes",
-      "60": "Every hour"
-    },
     "actions": "ACTIONS",
     "signOut": "Sign Out",
     "about": "ABOUT",
