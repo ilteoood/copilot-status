@@ -1,10 +1,9 @@
-import React from 'react';
-import { View, RefreshControl, ScrollView } from 'react-native';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
+import type { QuotaInfo } from '@/types/quota';
 import { useTranslation } from 'react-i18next';
+import { RefreshControl, ScrollView, View } from 'react-native';
+import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 import { CircularProgress } from './CircularProgress';
 import { StatsCard } from './StatsCard';
-import type { QuotaInfo } from '@/types/quota';
 
 interface QuotaDisplayProps {
   quota: QuotaInfo;

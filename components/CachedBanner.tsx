@@ -1,6 +1,6 @@
 import { formatTime } from '@/utils/dateTimeUtils';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';

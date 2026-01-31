@@ -1,8 +1,7 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 import { useTranslation } from 'react-i18next';
+import { Text, View } from 'react-native';
 import PieChart from 'react-native-pie-chart';
+import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 interface CircularProgressProps {
   usedQuota: number;

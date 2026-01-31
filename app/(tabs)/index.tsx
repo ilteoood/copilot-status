@@ -1,19 +1,14 @@
 import { CachedBanner } from '@/components/CachedBanner';
 import { QuotaDisplay } from '@/components/QuotaDisplay';
 import { useQuota } from '@/hooks/useQuota';
-import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
-import { useTranslation } from 'react-i18next';
 
 export default function DashboardScreen() {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
   const { quota, lastFetch, isLoading, error, isCached, fetchQuota } = useQuota();
-
-  useEffect(() => {
-    fetchQuota();
-  }, []);
 
   if (isLoading && !quota) {
     return (

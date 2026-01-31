@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import React from 'react';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
+
 import { useTranslation } from 'react-i18next';
+import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 export default function TabLayout() {
   const { theme } = useUnistyles();
