@@ -21,6 +21,7 @@ import {
 import { createWidgetStyles } from './widgetStyles';
 
 const WIDGET_ID = 'copilot_status';
+const DEEP_LINK_URL = 'xyz.ilteoood.copilotstatus://';
 
 function getIsDarkMode(): boolean {
   const themePreference = storage.getString(StorageKeys.THEME_PREFERENCE) as
@@ -93,6 +94,7 @@ function buildAndroidWidgetVariants(
             horizontalAlignment="center-horizontally"
             verticalAlignment="center-vertically"
             style={styles.androidContainer}
+            deepLinkUrl={DEEP_LINK_URL}
           >
             <VoltraAndroid.Text style={styles.errorText}>
               {i18n.t('widget.signInToView')}
@@ -115,49 +117,48 @@ function buildAndroidWidgetVariants(
     {
       size: { width: 250, height: 70 },
       content: (
-        <VoltraAndroid.Button enabled>
-          <VoltraAndroid.Column
+        <VoltraAndroid.Column
+          horizontalAlignment="center-horizontally"
+          verticalAlignment="center-vertically"
+          style={styles.androidContainer}
+          deepLinkUrl={DEEP_LINK_URL}
+        >
+          <VoltraAndroid.Row
             horizontalAlignment="center-horizontally"
             verticalAlignment="center-vertically"
-            style={styles.androidContainer}
+            style={styles.row}
           >
-            <VoltraAndroid.Row
-              horizontalAlignment="center-horizontally"
-              verticalAlignment="center-vertically"
-              style={styles.row}
-            >
-              <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
-                <VoltraAndroid.Text style={{ ...styles.largeValue, color: statusColor }}>
-                  {Math.round(widgetData.percentUsed)}%
-                </VoltraAndroid.Text>
-                <VoltraAndroid.Text style={styles.label}>
-                  {i18n.t('widget.usedLowercase')}
-                </VoltraAndroid.Text>
-              </VoltraAndroid.Column>
-              <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
-                <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
-                  {widgetData.usedQuota.toLocaleString()}
-                </VoltraAndroid.Text>
-                <VoltraAndroid.Text style={styles.label}>
-                  {i18n.t('widget.requestsUsed')}
-                </VoltraAndroid.Text>
-              </VoltraAndroid.Column>
+            <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
+              <VoltraAndroid.Text style={{ ...styles.largeValue, color: statusColor }}>
+                {Math.round(widgetData.percentUsed)}%
+              </VoltraAndroid.Text>
+              <VoltraAndroid.Text style={styles.label}>
+                {i18n.t('widget.usedLowercase')}
+              </VoltraAndroid.Text>
+            </VoltraAndroid.Column>
+            <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
+              <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
+                {widgetData.usedQuota.toLocaleString()}
+              </VoltraAndroid.Text>
+              <VoltraAndroid.Text style={styles.label}>
+                {i18n.t('widget.requestsUsed')}
+              </VoltraAndroid.Text>
+            </VoltraAndroid.Column>
 
-              <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
-                <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.good }}>
-                  {remaining.toLocaleString()}
-                </VoltraAndroid.Text>
-                <VoltraAndroid.Text style={styles.label}>
-                  {i18n.t('widget.requestsLeft')}
-                </VoltraAndroid.Text>
-              </VoltraAndroid.Column>
-            </VoltraAndroid.Row>
+            <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
+              <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.good }}>
+                {remaining.toLocaleString()}
+              </VoltraAndroid.Text>
+              <VoltraAndroid.Text style={styles.label}>
+                {i18n.t('widget.requestsLeft')}
+              </VoltraAndroid.Text>
+            </VoltraAndroid.Column>
+          </VoltraAndroid.Row>
 
-            <VoltraAndroid.Text style={styles.footerWithMargin}>
-              {widgetData.username} - {widgetData.lastUpdated}
-            </VoltraAndroid.Text>
-          </VoltraAndroid.Column>
-        </VoltraAndroid.Button>
+          <VoltraAndroid.Text style={styles.footerWithMargin}>
+            {widgetData.username} - {widgetData.lastUpdated}
+          </VoltraAndroid.Text>
+        </VoltraAndroid.Column>
       ),
     },
   ];
@@ -176,12 +177,12 @@ export async function updateCopilotWidget(): Promise<void> {
     if (Platform.OS === 'ios') {
       const variants = buildIOSWidgetVariants(quota, username, lastUpdated, isDarkMode);
       await updateWidget(WIDGET_ID, variants, {
-        deepLinkUrl: 'xyz.ilteoood.copilotstatus://',
+        deepLinkUrl: DEEP_LINK_URL,
       });
     } else if (Platform.OS === 'android') {
       const variants = buildAndroidWidgetVariants(quota, username, lastUpdated, isDarkMode);
       await updateAndroidWidget(WIDGET_ID, variants, {
-        deepLinkUrl: 'xyz.ilteoood.copilotstatus://',
+        deepLinkUrl: DEEP_LINK_URL,
       });
     }
   } catch {}
@@ -216,12 +217,12 @@ export async function updateCopilotWidgetWithData(
     if (Platform.OS === 'ios') {
       const variants = buildIOSWidgetVariants(quota, username, lastUpdated, isDarkMode);
       await updateWidget(WIDGET_ID, variants, {
-        deepLinkUrl: 'xyz.ilteoood.copilotstatus://',
+        deepLinkUrl: DEEP_LINK_URL,
       });
     } else if (Platform.OS === 'android') {
       const variants = buildAndroidWidgetVariants(quota, username, lastUpdated, isDarkMode);
       await updateAndroidWidget(WIDGET_ID, variants, {
-        deepLinkUrl: 'xyz.ilteoood.copilotstatus://',
+        deepLinkUrl: DEEP_LINK_URL,
       });
     }
 
