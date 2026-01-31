@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version-file: '.nvmrc'
           cache: 'npm'
 
       - name: Install dependencies
@@ -37,11 +37,9 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Create .env file
-        # Note: Placeholder credentials are used for build verification only.
-        # The built APK will be unsigned and requires proper credentials at runtime.
         run: |
-          echo "GITHUB_CLIENT_ID=placeholder" > .env
-          echo "GITHUB_CLIENT_SECRET=placeholder" >> .env
+          echo "GITHUB_CLIENT_ID=${{ secrets.GITHUB_CLIENT_ID }}" > .env
+          echo "GITHUB_CLIENT_SECRET=${{ secrets.GITHUB_CLIENT_SECRET }}" >> .env
 
       - name: Generate native Android code
         run: npx expo prebuild --platform android --clean
