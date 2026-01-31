@@ -1,9 +1,5 @@
 import { exchangeCodeForToken } from '@/services/auth';
-import {
-  clearAuthData,
-  getStoredToken,
-  storeToken,
-} from '@/stores/secureStorage';
+import { clearAuthData, getStoredToken, storeToken } from '@/stores/secureStorage';
 import { create } from 'zustand';
 
 interface AuthState {
@@ -17,7 +13,7 @@ interface AuthState {
   clearError: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => {
+export const useAuthStore = create<AuthState>(set => {
   return {
     isAuthenticated: false,
     isLoading: true,

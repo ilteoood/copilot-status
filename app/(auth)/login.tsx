@@ -4,13 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator,
-  Animated,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Animated, Text, TouchableOpacity, View } from 'react-native';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 export default function LoginScreen() {
@@ -46,14 +40,14 @@ export default function LoginScreen() {
     setLocalLoading(false);
   }, [response]);
 
-   const handleSignIn = async (code: string) => {
-     try {
-       await signIn(code, request?.codeVerifier);
-       router.replace('/(tabs)');
-     } catch {
-       setLocalLoading(false);
-     }
-   };
+  const handleSignIn = async (code: string) => {
+    try {
+      await signIn(code, request?.codeVerifier);
+      router.replace('/(tabs)');
+    } catch {
+      setLocalLoading(false);
+    }
+  };
 
   const handlePress = async () => {
     clearError();
@@ -79,9 +73,7 @@ export default function LoginScreen() {
         </View>
 
         <Text style={styles.title}>{t('login.title')}</Text>
-        <Text style={styles.subtitle}>
-          {t('login.subtitle')}
-        </Text>
+        <Text style={styles.subtitle}>{t('login.subtitle')}</Text>
 
         {error && (
           <View style={styles.errorContainer}>
@@ -100,15 +92,18 @@ export default function LoginScreen() {
             <ActivityIndicator color={theme.colors.background} size="small" />
           ) : (
             <>
-              <Ionicons name="logo-github" size={24} color={theme.colors.background} style={styles.buttonIcon} />
+              <Ionicons
+                name="logo-github"
+                size={24}
+                color={theme.colors.background}
+                style={styles.buttonIcon}
+              />
               <Text style={styles.buttonText}>{t('login.signInButton')}</Text>
             </>
           )}
         </TouchableOpacity>
 
-        <Text style={styles.footer}>
-          {t('login.footer')}
-        </Text>
+        <Text style={styles.footer}>{t('login.footer')}</Text>
       </Animated.View>
     </View>
   );

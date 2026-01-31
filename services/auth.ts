@@ -15,7 +15,7 @@ const getCredentials = () => {
 };
 
 // Create redirect URI
-const getRedirectUri = () => AuthSession.makeRedirectUri()
+const getRedirectUri = () => AuthSession.makeRedirectUri();
 
 // Discovery document for GitHub OAuth
 const discovery: AuthSession.DiscoveryDocument = {
@@ -57,7 +57,7 @@ export async function exchangeCodeForToken(code: string, codeVerifier?: string):
   const response = await fetch(GITHUB_OAUTH_CONFIG.tokenEndpoint, {
     method: 'POST',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),

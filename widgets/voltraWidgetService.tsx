@@ -4,7 +4,11 @@ import type { QuotaInfo } from '@/types/quota';
 import { formatFullDate, formatTime } from '@/utils/dateTimeUtils';
 import { Platform } from 'react-native';
 import { VoltraAndroid } from 'voltra/android';
-import { clearAndroidWidget, updateAndroidWidget, type AndroidWidgetVariants } from 'voltra/android/client';
+import {
+  clearAndroidWidget,
+  updateAndroidWidget,
+  type AndroidWidgetVariants,
+} from 'voltra/android/client';
 import { clearWidget, updateWidget } from 'voltra/client';
 import {
   getStatusColor,
@@ -38,7 +42,7 @@ function getWidgetData(): { quota: QuotaInfo | null; username: string; lastFetch
   const username = usernameStorage.getUsername() ?? '';
 
   try {
-    const quota = quotaDataStr ? JSON.parse(quotaDataStr) as QuotaInfo : null;
+    const quota = quotaDataStr ? (JSON.parse(quotaDataStr) as QuotaInfo) : null;
     return { quota, username, lastFetch };
   } catch {
     return { quota: null, username, lastFetch: null };
@@ -121,10 +125,7 @@ function buildAndroidWidgetVariants(
             verticalAlignment="center-vertically"
             style={styles.row}
           >
-            <VoltraAndroid.Column
-              horizontalAlignment="center-horizontally"
-              style={styles.column}
-            >
+            <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
               <VoltraAndroid.Text style={{ ...styles.largeValue, color: statusColor }}>
                 {Math.round(widgetData.percentUsed)}%
               </VoltraAndroid.Text>
@@ -133,10 +134,7 @@ function buildAndroidWidgetVariants(
               </VoltraAndroid.Text>
             </VoltraAndroid.Column>
 
-            <VoltraAndroid.Column
-              horizontalAlignment="center-horizontally"
-              style={styles.column}
-            >
+            <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
               <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
                 {widgetData.usedQuota.toLocaleString()}
               </VoltraAndroid.Text>
@@ -145,10 +143,7 @@ function buildAndroidWidgetVariants(
               </VoltraAndroid.Text>
             </VoltraAndroid.Column>
 
-            <VoltraAndroid.Column
-              horizontalAlignment="center-horizontally"
-              style={styles.column}
-            >
+            <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
               <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.good }}>
                 {remaining.toLocaleString()}
               </VoltraAndroid.Text>

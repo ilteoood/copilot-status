@@ -3,12 +3,13 @@
 ## TL;DR
 
 > **Quick Summary**: Fix 3 critical bugs: OAuth flow not working (async/await issue), app crash on theme toggle (ThemeProvider mismatch), and widget theme not updating (missing sync triggers).
-> 
+>
 > **Deliverables**:
+>
 > - Fixed OAuth callback with proper error handling
 > - Dynamic React Navigation theme synced with Unistyles
 > - Widget theme refresh on both Android and iOS
-> 
+>
 > **Estimated Effort**: Medium
 > **Parallel Execution**: YES - 3 waves
 > **Critical Path**: Task 1 → (independent) | Task 2 → (independent) | Task 3 → Task 4 → Task 5 → Task 6
@@ -18,18 +19,23 @@
 ## Context
 
 ### Original Request
+
 Fix 3 critical bugs in the React Native Expo app:
+
 1. OAuth flow not working at all
 2. App crashes when switching light → dark → light
 3. Widget doesn't immediately update theme when app theme changes
 
 ### Interview Summary
+
 **Key Discussions**:
+
 - User provided comprehensive root cause analysis with code snippets
 - All bugs have been traced to specific files and lines
 - iOS widget fix requires native module creation
 
 **Research Findings**:
+
 - OAuth bug: `app/oauth.tsx` - navigation happens before `signIn(code)` completes (line 17-19)
 - Theme crash: `app/_layout.tsx` - static `DarkTheme` in ThemeProvider (line 82)
 - Widget sync: `app/(tabs)/settings.tsx` - no call to `syncToAndroidWidget()` after theme change
@@ -37,6 +43,7 @@ Fix 3 critical bugs in the React Native Expo app:
 - Current Unistyles themes: `src/styles/unistyles.ts` - light/dark theme definitions available
 
 ### Guardrails
+
 - Do NOT change the OAuth authentication logic itself - only fix the await/error handling
 - Do NOT modify Unistyles theme definitions - only map them to React Navigation format
 - Do NOT change Android widget rendering logic - only add sync trigger
@@ -47,9 +54,11 @@ Fix 3 critical bugs in the React Native Expo app:
 ## Work Objectives
 
 ### Core Objective
+
 Fix 3 critical user-facing bugs to restore OAuth login, prevent theme toggle crashes, and enable widget theme synchronization.
 
 ### Concrete Deliverables
+
 - `app/oauth.tsx` - Fixed async/await with try-catch error handling
 - `app/_layout.tsx` - Dynamic ThemeProvider computed from UnistylesRuntime
 - `app/(tabs)/settings.tsx` - Call widget sync after theme changes
@@ -58,18 +67,21 @@ Fix 3 critical user-facing bugs to restore OAuth login, prevent theme toggle cra
 - New native module for WidgetCenter.reloadTimelines()
 
 ### Definition of Done
+
 - [ ] OAuth flow completes successfully with proper error handling
 - [ ] Theme toggle (light→dark→light) works without crashes
 - [ ] Android widget updates theme immediately after app theme change
 - [ ] iOS widget updates theme immediately after app theme change
 
 ### Must Have
+
 - Proper async/await pattern in OAuth callback
 - Error boundary for OAuth failures
 - Dynamic theme computation for React Navigation
 - Widget sync trigger after theme changes
 
 ### Must NOT Have (Guardrails)
+
 - Changes to OAuth token exchange logic (only fix await/error handling)
 - Changes to Unistyles theme definitions
 - Changes to Android widget rendering components
@@ -81,6 +93,7 @@ Fix 3 critical user-facing bugs to restore OAuth login, prevent theme toggle cra
 ## Verification Strategy (MANDATORY)
 
 ### Test Decision
+
 - **Infrastructure exists**: NO (no test infrastructure detected)
 - **User wants tests**: Not specified - defaulting to Manual verification
 - **Framework**: None
@@ -94,13 +107,13 @@ Each task includes verification steps that can be executed manually to confirm t
 
 ## Task Dependency Graph
 
-| Task | Depends On | Reason |
-|------|------------|--------|
-| Task 1 | None | Standalone OAuth fix, no dependencies |
-| Task 2 | None | Standalone theme fix, no dependencies |
-| Task 3 | None | Android widget sync, no dependencies |
-| Task 4 | None | iOS native module creation, independent foundation |
-| Task 5 | Task 4 | Swift widget needs native module to exist first for theme data |
+| Task   | Depends On     | Reason                                                           |
+| ------ | -------------- | ---------------------------------------------------------------- |
+| Task 1 | None           | Standalone OAuth fix, no dependencies                            |
+| Task 2 | None           | Standalone theme fix, no dependencies                            |
+| Task 3 | None           | Android widget sync, no dependencies                             |
+| Task 4 | None           | iOS native module creation, independent foundation               |
+| Task 5 | Task 4         | Swift widget needs native module to exist first for theme data   |
 | Task 6 | Task 4, Task 5 | Settings integration requires native module + Swift widget ready |
 
 ---
@@ -136,6 +149,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   - Handle OAuth failure gracefully by redirecting to login
 
   **Code Change** (app/oauth.tsx lines 11-23):
+
   ```typescript
   useEffect(() => {
     const handleCallback = async () => {
@@ -195,6 +209,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   **Acceptance Criteria**:
 
   **Automated Verification (Bash):**
+
   ```bash
   # Verify the code structure after fix:
   grep -A 10 "if (code)" app/oauth.tsx | grep -q "try {" && echo "PASS: try-catch exists" || echo "FAIL: missing try-catch"
@@ -203,6 +218,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   ```
 
   **Manual Verification (Frontend/OAuth flow):**
+
   ```
   1. Start app: npx expo start
   2. Navigate to login screen
@@ -232,17 +248,18 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   - Update ThemeProvider value dynamically
   - Update StatusBar style based on current theme
 
-  **Code Change** (app/_layout.tsx):
+  **Code Change** (app/\_layout.tsx):
+
   ```typescript
   import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
   import { StyleSheet, UnistylesRuntime, useUnistyles } from 'react-native-unistyles';
-  
+
   // Inside RootLayout:
   const { theme: unistylesTheme } = useUnistyles();
-  
+
   // Compute navigation theme from current Unistyles theme
   const navigationTheme = UnistylesRuntime.themeName === 'dark' ? DarkTheme : DefaultTheme;
-  
+
   // In return:
   <ThemeProvider value={navigationTheme}>
     ...
@@ -284,13 +301,14 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   - React Navigation theming docs: https://reactnavigation.org/docs/themes/
 
   **WHY Each Reference Matters**:
-  - _layout.tsx line 82 shows exactly where to make the change
+  - \_layout.tsx line 82 shows exactly where to make the change
   - settings.tsx shows how to use useUnistyles hook pattern
   - unistyles.ts shows available theme names ('light', 'dark')
 
   **Acceptance Criteria**:
 
   **Automated Verification (Bash):**
+
   ```bash
   # Verify dynamic theme usage:
   grep -q "DefaultTheme" app/_layout.tsx && echo "PASS: DefaultTheme imported" || echo "FAIL: missing DefaultTheme"
@@ -299,6 +317,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   ```
 
   **Manual Verification (Frontend/Theme toggle):**
+
   ```
   1. Start app: npx expo start
   2. Go to Settings tab
@@ -328,10 +347,11 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   - Ensure widget updates immediately when theme changes
 
   **Code Change** (app/(tabs)/settings.tsx):
+
   ```typescript
   import { syncQuotaToWidgets } from '@/services/widgetSync';
   import { Platform } from 'react-native';
-  
+
   const handleThemeChange = async (newTheme: 'light' | 'dark' | 'system') => {
     setThemePreference(newTheme);
     themeStorage.setThemePreference(newTheme);
@@ -342,7 +362,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
       UnistylesRuntime.setAdaptiveThemes(false);
       UnistylesRuntime.setTheme(newTheme);
     }
-    
+
     // Trigger widget update for theme change
     if (Platform.OS === 'android') {
       const { updateWidget } = await import('@/widgets/widgetTaskHandler');
@@ -386,6 +406,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   **Acceptance Criteria**:
 
   **Automated Verification (Bash):**
+
   ```bash
   # Verify widget sync is called:
   grep -A 15 "handleThemeChange" app/\(tabs\)/settings.tsx | grep -q "updateWidget" && echo "PASS: updateWidget called" || echo "FAIL: missing updateWidget call"
@@ -393,6 +414,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   ```
 
   **Manual Verification (Android device/emulator):**
+
   ```
   1. Install app on Android: npx expo run:android
   2. Add Copilot Status widget to home screen
@@ -421,20 +443,21 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   - Export a function callable from JavaScript
 
   **Implementation**:
-  
+
   Create `ios/CopilotStatus/WidgetModule.swift`:
+
   ```swift
   import Foundation
   import WidgetKit
-  
+
   @objc(WidgetModule)
   class WidgetModule: NSObject {
-    
+
     @objc
     static func requiresMainQueueSetup() -> Bool {
       return false
     }
-    
+
     @objc
     func reloadAllTimelines() {
       if #available(iOS 14.0, *) {
@@ -443,15 +466,16 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
     }
   }
   ```
-  
+
   Create `ios/CopilotStatus/WidgetModule.m`:
+
   ```objc
   #import <React/RCTBridgeModule.h>
-  
+
   @interface RCT_EXTERN_MODULE(WidgetModule, NSObject)
-  
+
   RCT_EXTERN_METHOD(reloadAllTimelines)
-  
+
   @end
   ```
 
@@ -491,6 +515,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   **Acceptance Criteria**:
 
   **Automated Verification (Bash):**
+
   ```bash
   # Verify files created:
   test -f ios/CopilotStatus/WidgetModule.swift && echo "PASS: Swift file exists" || echo "FAIL: missing Swift file"
@@ -499,6 +524,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   ```
 
   **Build Verification:**
+
   ```bash
   # Verify iOS build succeeds:
   cd ios && xcodebuild -workspace CopilotStatus.xcworkspace -scheme CopilotStatus -configuration Debug -sdk iphonesimulator build | tail -5
@@ -527,17 +553,14 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   **Code Changes**:
 
   **services/widgetSync.ts** - Add theme sync for iOS:
+
   ```typescript
   async function syncThemeToiOSWidget(theme: 'light' | 'dark' | 'system'): Promise<void> {
     try {
-      await SharedGroupPreferences.setItem(
-        'theme_preference',
-        theme,
-        IOS_APP_GROUP
-      );
+      await SharedGroupPreferences.setItem('theme_preference', theme, IOS_APP_GROUP);
     } catch {}
   }
-  
+
   export async function syncThemeToWidgets(theme: 'light' | 'dark' | 'system'): Promise<void> {
     if (Platform.OS === 'ios') {
       await syncThemeToiOSWidget(theme);
@@ -549,40 +572,41 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   ```
 
   **targets/widget/index.swift** - Add theme support:
+
   ```swift
   // Add theme struct
   struct WidgetTheme {
       let background: Color
       let text: Color
       let secondaryText: Color
-      
+
       static let dark = WidgetTheme(
           background: Color(red: 0.08, green: 0.09, blue: 0.09),
           text: Color(red: 0.93, green: 0.93, blue: 0.93),
           secondaryText: .secondary
       )
-      
+
       static let light = WidgetTheme(
           background: Color(red: 0.98, green: 0.98, blue: 0.98),
           text: Color(red: 0.07, green: 0.09, blue: 0.11),
           secondaryText: .secondary
       )
   }
-  
+
   // In Provider, add theme loading:
   private func loadTheme() -> WidgetTheme {
       guard let userDefaults = UserDefaults(suiteName: appGroupId),
             let theme = userDefaults.string(forKey: "theme_preference") else {
           return .dark
       }
-      
+
       switch theme {
       case "light": return .light
       case "dark": return .dark
       default: return .dark // system defaults to dark
       }
   }
-  
+
   // Update containerBackground in QuotaView and ErrorView to use theme
   ```
 
@@ -624,6 +648,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   **Acceptance Criteria**:
 
   **Automated Verification (Bash):**
+
   ```bash
   # Verify Swift theme support:
   grep -q "WidgetTheme" targets/widget/index.swift && echo "PASS: WidgetTheme struct exists" || echo "FAIL: missing WidgetTheme"
@@ -650,9 +675,10 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   - Combine with existing Android logic
 
   **Code Change** (app/(tabs)/settings.tsx):
+
   ```typescript
   import { syncThemeToWidgets } from '@/services/widgetSync';
-  
+
   const handleThemeChange = async (newTheme: 'light' | 'dark' | 'system') => {
     setThemePreference(newTheme);
     themeStorage.setThemePreference(newTheme);
@@ -663,7 +689,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
       UnistylesRuntime.setAdaptiveThemes(false);
       UnistylesRuntime.setTheme(newTheme);
     }
-    
+
     // Sync theme to widgets (works for both platforms)
     if (Platform.OS === 'android') {
       const { updateWidget } = await import('@/widgets/widgetTaskHandler');
@@ -706,6 +732,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   **Acceptance Criteria**:
 
   **Automated Verification (Bash):**
+
   ```bash
   # Verify iOS sync integration:
   grep -q "syncThemeToWidgets" app/\(tabs\)/settings.tsx && echo "PASS: syncThemeToWidgets imported" || echo "FAIL: missing import"
@@ -713,6 +740,7 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
   ```
 
   **Manual Verification (iOS device/simulator):**
+
   ```
   1. Install app on iOS: npx expo run:ios
   2. Add Copilot Status widget to home screen
@@ -735,20 +763,21 @@ Parallel Speedup: ~60% faster than sequential (3 tasks run in parallel)
 
 ## Commit Strategy
 
-| After Task | Message | Files | Verification |
-|------------|---------|-------|--------------|
-| 1 | `fix(oauth): await signIn before navigation to prevent race condition` | `app/oauth.tsx` | `npx tsc --noEmit` |
-| 2 | `fix(theme): dynamically sync React Navigation theme with Unistyles` | `app/_layout.tsx` | `npx tsc --noEmit` |
-| 3 | `fix(widget): trigger Android widget update on theme change` | `app/(tabs)/settings.tsx` | `npx tsc --noEmit` |
-| 4 | `feat(ios): add native module for WidgetCenter.reloadTimelines` | `ios/CopilotStatus/Widget*.{swift,m}` | iOS build |
-| 5 | `feat(widget): add theme support to iOS widget` | `targets/widget/index.swift`, `services/widgetSync.ts` | iOS build + tsc |
-| 6 | `fix(widget): trigger iOS widget update on theme change` | `app/(tabs)/settings.tsx` | `npx tsc --noEmit` |
+| After Task | Message                                                                | Files                                                  | Verification       |
+| ---------- | ---------------------------------------------------------------------- | ------------------------------------------------------ | ------------------ |
+| 1          | `fix(oauth): await signIn before navigation to prevent race condition` | `app/oauth.tsx`                                        | `npx tsc --noEmit` |
+| 2          | `fix(theme): dynamically sync React Navigation theme with Unistyles`   | `app/_layout.tsx`                                      | `npx tsc --noEmit` |
+| 3          | `fix(widget): trigger Android widget update on theme change`           | `app/(tabs)/settings.tsx`                              | `npx tsc --noEmit` |
+| 4          | `feat(ios): add native module for WidgetCenter.reloadTimelines`        | `ios/CopilotStatus/Widget*.{swift,m}`                  | iOS build          |
+| 5          | `feat(widget): add theme support to iOS widget`                        | `targets/widget/index.swift`, `services/widgetSync.ts` | iOS build + tsc    |
+| 6          | `fix(widget): trigger iOS widget update on theme change`               | `app/(tabs)/settings.tsx`                              | `npx tsc --noEmit` |
 
 ---
 
 ## Success Criteria
 
 ### Verification Commands
+
 ```bash
 # TypeScript check
 npx tsc --noEmit
@@ -764,6 +793,7 @@ npx expo run:android --no-install
 ```
 
 ### Final Checklist
+
 - [ ] OAuth flow completes without race condition
 - [ ] Theme toggle (rapid light↔dark) causes no crash
 - [ ] Android widget updates immediately on theme change

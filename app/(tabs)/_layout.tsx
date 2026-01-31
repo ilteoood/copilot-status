@@ -4,7 +4,6 @@ import React from 'react';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 import { useTranslation } from 'react-i18next';
 
-
 export default function TabLayout() {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
@@ -15,7 +14,8 @@ export default function TabLayout() {
         tabBarActiveTintColor: theme.colors.tint,
         headerShown: false,
         tabBarStyle: styles.tabBar,
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -34,9 +34,9 @@ export default function TabLayout() {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const styles = StyleSheet.create(theme => ({
   tabBar: {
     backgroundColor: theme.colors.background,
     borderTopColor: theme.colors.border,
-  }
-}))
+  },
+}));

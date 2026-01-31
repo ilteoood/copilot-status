@@ -2,8 +2,16 @@ import { SettingsVoice } from '@/app/(tabs)/components/SettingsVoice';
 import { RadioButton } from '@/components/RadioButton';
 import { Separator } from '@/components/Separator';
 import { useGitHubUser } from '@/hooks/useGitHub';
-import { BACKGROUND_FETCH_INTERVALS, updateBackgroundTaskInterval } from '@/services/backgroundTask';
-import { backgroundFetchStorage, themeStorage, type BackgroundFetchInterval, type ThemePreference } from '@/services/storage';
+import {
+  BACKGROUND_FETCH_INTERVALS,
+  updateBackgroundTaskInterval,
+} from '@/services/backgroundTask';
+import {
+  backgroundFetchStorage,
+  themeStorage,
+  type BackgroundFetchInterval,
+  type ThemePreference,
+} from '@/services/storage';
 import { useAuthStore } from '@/stores/auth';
 import { useQuotaStore } from '@/stores/quota';
 import { updateCopilotWidget } from '@/widgets/voltraWidgetService';
@@ -12,14 +20,7 @@ import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Alert,
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { StyleSheet, UnistylesRuntime, useUnistyles } from 'react-native-unistyles';
 import { SettingsCategory } from './components/SettingsCategory';
 import { SettingsSection } from './components/SettingsSection';
@@ -32,8 +33,12 @@ export default function SettingsScreen() {
   const { data: user } = useGitHubUser();
   const appVersion = Constants.expoConfig?.version ?? '1.0.0';
 
-  const [themePreference, setThemePreference] = useState<ThemePreference>(() => themeStorage.getThemePreference());
-  const [fetchInterval, setFetchInterval] = useState<BackgroundFetchInterval>(() => backgroundFetchStorage.getInterval());
+  const [themePreference, setThemePreference] = useState<ThemePreference>(() =>
+    themeStorage.getThemePreference()
+  );
+  const [fetchInterval, setFetchInterval] = useState<BackgroundFetchInterval>(() =>
+    backgroundFetchStorage.getInterval()
+  );
 
   const handleThemeChange = async (newTheme: ThemePreference) => {
     setThemePreference(newTheme);
@@ -46,7 +51,7 @@ export default function SettingsScreen() {
       UnistylesRuntime.setTheme(newTheme);
     }
 
-    updateCopilotWidget()
+    updateCopilotWidget();
   };
 
   const handleFetchIntervalChange = async (interval: BackgroundFetchInterval) => {
@@ -54,27 +59,25 @@ export default function SettingsScreen() {
     await updateBackgroundTaskInterval(interval);
   };
 
-  const getIntervalIcon = (interval: BackgroundFetchInterval): 'timer-outline' | 'pause-circle-outline' => {
+  const getIntervalIcon = (
+    interval: BackgroundFetchInterval
+  ): 'timer-outline' | 'pause-circle-outline' => {
     return interval === 0 ? 'pause-circle-outline' : 'timer-outline';
   };
 
   const handleSignOut = () => {
-    Alert.alert(
-      t('settings.signOutConfirmTitle'),
-      t('settings.signOutConfirmMessage'),
-      [
-        { text: t('settings.cancel'), style: 'cancel' },
-        {
-          text: t('settings.signOut'),
-          style: 'destructive',
-          onPress: async () => {
-            await signOut();
-            clearQuota();
-            router.replace('/(auth)/login');
-          },
+    Alert.alert(t('settings.signOutConfirmTitle'), t('settings.signOutConfirmMessage'), [
+      { text: t('settings.cancel'), style: 'cancel' },
+      {
+        text: t('settings.signOut'),
+        style: 'destructive',
+        onPress: async () => {
+          await signOut();
+          clearQuota();
+          router.replace('/(auth)/login');
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const avatarUrl = user?.login ? `https://github.com/${user.login}.png` : null;
@@ -96,17 +99,37 @@ export default function SettingsScreen() {
           )}
           <View style={styles.userInfo}>
             <Text style={styles.username}>{user?.name ?? user?.login ?? t('common.unknown')}</Text>
-            <Text style={styles.userSubtitle}>{t('settings.signedInAs', { username: user?.login ?? t('common.unknown') })}</Text>
+            <Text style={styles.userSubtitle}>
+              {t('settings.signedInAs', { username: user?.login ?? t('common.unknown') })}
+            </Text>
           </View>
         </View>
       </SettingsSection>
 
       <SettingsCategory title="settings.appearance">
-        <RadioButton value="light" i18nPrefix="settings" selected={themePreference === 'light'} onSelect={handleThemeChange} icon='sunny-outline' />
+        <RadioButton
+          value="light"
+          i18nPrefix="settings"
+          selected={themePreference === 'light'}
+          onSelect={handleThemeChange}
+          icon="sunny-outline"
+        />
         <Separator />
-        <RadioButton value="dark" i18nPrefix="settings" selected={themePreference === 'dark'} onSelect={handleThemeChange} icon='moon-outline' />
+        <RadioButton
+          value="dark"
+          i18nPrefix="settings"
+          selected={themePreference === 'dark'}
+          onSelect={handleThemeChange}
+          icon="moon-outline"
+        />
         <Separator />
-        <RadioButton value="system" i18nPrefix="settings" selected={themePreference === 'system'} onSelect={handleThemeChange} icon='phone-portrait-outline' />
+        <RadioButton
+          value="system"
+          i18nPrefix="settings"
+          selected={themePreference === 'system'}
+          onSelect={handleThemeChange}
+          icon="phone-portrait-outline"
+        />
       </SettingsCategory>
 
       <SettingsCategory title="settings.backgroundFetch">
@@ -133,7 +156,11 @@ export default function SettingsScreen() {
       </SettingsCategory>
 
       <SettingsCategory title="settings.about">
-        <SettingsVoice icon="information-circle-outline" text="settings.appName" value="common.appName" />
+        <SettingsVoice
+          icon="information-circle-outline"
+          text="settings.appName"
+          value="common.appName"
+        />
         <Separator />
         <SettingsVoice icon="code-outline" text="settings.version" value={appVersion} />
       </SettingsCategory>
@@ -199,11 +226,7 @@ const styles = StyleSheet.create(theme => ({
     fontSize: theme.typography.fontSizes.sm,
     color: theme.colors.icon,
   },
-  rowValue: {
-    fontSize: theme.typography.fontSizes.md,
-    color: theme.colors.icon,
-  },
   destructiveText: {
     color: theme.colors.critical,
-  }
+  },
 }));

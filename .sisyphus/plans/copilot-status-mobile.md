@@ -3,15 +3,16 @@
 ## TL;DR
 
 > **Quick Summary**: Implement a complete GitHub Copilot Status mobile app with OAuth authentication, quota dashboard, iOS WidgetKit widgets (3 sizes), Android AppWidget, and hourly background refresh using Expo SDK 54.
-> 
+>
 > **Deliverables**:
+>
 > - GitHub OAuth login flow with secure token storage
 > - Dashboard screen with circular progress, stats card, pull-to-refresh
 > - iOS widgets (Small, Medium, Large) via @bacons/apple-targets
 > - Android widget via react-native-android-widget
 > - Background hourly quota refresh via expo-background-task
 > - State management with Zustand + MMKV
-> 
+>
 > **Estimated Effort**: Large (40-60 hours)
 > **Parallel Execution**: YES - 5 waves
 > **Critical Path**: Task 1 → Task 2 → Task 5 → Task 8 → Task 11 → Task 14
@@ -21,20 +22,25 @@
 ## Context
 
 ### Original Request
+
 User requested a comprehensive parallel task graph for implementing a full GitHub Copilot Status app in an existing Expo project with:
+
 - GitHub OAuth authentication
 - Dashboard with quota visualization
 - iOS and Android home screen widgets
 - Background refresh services
 
 ### Interview Summary
+
 **Key Discussions**:
+
 - Project uses Expo SDK 54 with expo-router file-based navigation
 - PRD document provides detailed specifications for all features
 - Environment variables contain GitHub OAuth credentials
 - User constraint: DO NOT touch native folders directly (use Expo config plugins)
 
 **Research Findings**:
+
 - Widgets require development build via `npx expo run:*` (not compatible with Expo Go)
 - `react-native-android-widget@0.20.1` best for Android widgets
 - `@bacons/apple-targets` best for iOS WidgetKit
@@ -43,7 +49,9 @@ User requested a comprehensive parallel task graph for implementing a full GitHu
 - GitHub OAuth requires manual token exchange (no full PKCE support)
 
 ### Gap Analysis (Metis Review)
+
 **Identified Gaps** (addressed):
+
 - Apple Team ID needed for iOS widgets → Added as required input
 - EAS Build requirement not explicit → Added as prerequisite
 - Edge cases for quota boundaries → Defined: 50% = warning, 20% = critical
@@ -54,9 +62,11 @@ User requested a comprehensive parallel task graph for implementing a full GitHu
 ## Work Objectives
 
 ### Core Objective
+
 Build a production-ready GitHub Copilot Status mobile app that allows users to monitor their quota usage through a native dashboard and home screen widgets on both iOS and Android.
 
 ### Concrete Deliverables
+
 1. `/app/(auth)/login.tsx` - Login screen with GitHub OAuth
 2. `/app/(tabs)/index.tsx` - Dashboard with quota visualization
 3. `/app/(tabs)/settings.tsx` - Settings screen with sign out
@@ -68,6 +78,7 @@ Build a production-ready GitHub Copilot Status mobile app that allows users to m
 9. `/tasks/quota-refresh.ts` - Background task definition
 
 ### Definition of Done
+
 - [ ] User can sign in with GitHub OAuth and see dashboard
 - [ ] Dashboard shows quota circle, stats, and handles refresh
 - [ ] iOS widgets (3 sizes) display quota data
@@ -76,6 +87,7 @@ Build a production-ready GitHub Copilot Status mobile app that allows users to m
 - [ ] App works on local development build (`npx expo run:*`)
 
 ### Must Have
+
 - GitHub OAuth flow with expo-auth-session
 - Secure token storage with expo-secure-store
 - Circular progress indicator with color-coded status
@@ -86,6 +98,7 @@ Build a production-ready GitHub Copilot Status mobile app that allows users to m
 - Background hourly refresh
 
 ### Must NOT Have (Guardrails)
+
 - NO direct native folder modifications (ios/, android/)
 - NO internationalization (i18n) for v1
 - NO Live Activities or Dynamic Island
@@ -101,6 +114,7 @@ Build a production-ready GitHub Copilot Status mobile app that allows users to m
 ## Verification Strategy (MANDATORY)
 
 ### Test Decision
+
 - **Infrastructure exists**: NO
 - **User wants tests**: NO (personal app, manual verification)
 - **QA approach**: Manual verification via local development build (`npx expo run:*`)
@@ -109,13 +123,13 @@ Build a production-ready GitHub Copilot Status mobile app that allows users to m
 
 Each TODO includes EXECUTABLE verification procedures:
 
-| Type | Verification Method |
-|------|---------------------|
-| Authentication | OAuth flow in simulator, token in secure store |
-| Dashboard UI | Visual inspection, pull-to-refresh action |
-| Widgets | Add widget to home screen, verify data display |
-| Background Task | Check timestamps, view logs |
-| API Integration | curl commands to verify endpoint |
+| Type            | Verification Method                            |
+| --------------- | ---------------------------------------------- |
+| Authentication  | OAuth flow in simulator, token in secure store |
+| Dashboard UI    | Visual inspection, pull-to-refresh action      |
+| Widgets         | Add widget to home screen, verify data display |
+| Background Task | Check timestamps, view logs                    |
+| API Integration | curl commands to verify endpoint               |
 
 ---
 
@@ -155,33 +169,33 @@ Parallel Speedup: ~50% faster than sequential
 
 ### Dependency Matrix
 
-| Task | Depends On | Blocks | Can Parallelize With |
-|------|------------|--------|---------------------|
-| 1 | None | 2,3,4,5,6 | None |
-| 2 | 1 | 4,5,6,8 | 3 |
-| 3 | 1 | 4,6,14 | 2 |
-| 4 | 2,3 | 7,10 | 5,6 |
-| 5 | 2 | 6,8,13,14 | 4,6 |
-| 6 | 2,3,5 | 8,11,12,14 | None |
-| 7 | 4 | 10 | 8,9 |
-| 8 | 5,6 | 10 | 7,9 |
-| 9 | 4 | 10 | 7,8 |
-| 10 | 7,8,9 | 11,12,13 | None |
-| 11 | 6,10 | 14 | 12 |
-| 12 | 6,10 | 14 | 11 |
-| 13 | 5,10 | 15 | 14 |
-| 14 | 6,11,12 | 15 | 13 |
-| 15 | 13,14 | None | None |
+| Task | Depends On | Blocks     | Can Parallelize With |
+| ---- | ---------- | ---------- | -------------------- |
+| 1    | None       | 2,3,4,5,6  | None                 |
+| 2    | 1          | 4,5,6,8    | 3                    |
+| 3    | 1          | 4,6,14     | 2                    |
+| 4    | 2,3        | 7,10       | 5,6                  |
+| 5    | 2          | 6,8,13,14  | 4,6                  |
+| 6    | 2,3,5      | 8,11,12,14 | None                 |
+| 7    | 4          | 10         | 8,9                  |
+| 8    | 5,6        | 10         | 7,9                  |
+| 9    | 4          | 10         | 7,8                  |
+| 10   | 7,8,9      | 11,12,13   | None                 |
+| 11   | 6,10       | 14         | 12                   |
+| 12   | 6,10       | 14         | 11                   |
+| 13   | 5,10       | 15         | 14                   |
+| 14   | 6,11,12    | 15         | 13                   |
+| 15   | 13,14      | None       | None                 |
 
 ### Agent Dispatch Summary
 
-| Wave | Tasks | Recommended Approach |
-|------|-------|---------------------|
-| 1 | 1,2,3 | Sequential (1), then parallel (2,3) |
-| 2 | 4,5,6 | Parallel after dependencies met |
-| 3 | 7,8,9 | Parallel after dependencies met |
-| 4 | 10,11,12 | 10 first, then parallel (11,12) |
-| 5 | 13,14,15 | Parallel (13,14), then 15 |
+| Wave | Tasks    | Recommended Approach                |
+| ---- | -------- | ----------------------------------- |
+| 1    | 1,2,3    | Sequential (1), then parallel (2,3) |
+| 2    | 4,5,6    | Parallel after dependencies met     |
+| 3    | 7,8,9    | Parallel after dependencies met     |
+| 4    | 10,11,12 | 10 first, then parallel (11,12)     |
+| 5    | 13,14,15 | Parallel (13,14), then 15           |
 
 ---
 
@@ -230,15 +244,16 @@ Parallel Speedup: ~50% faster than sequential
   - PRD Section 3.4 - Build configuration requirements
 
   **Acceptance Criteria**:
+
   ```bash
   # Verify dependencies installed
   cat package.json | grep -E "(zustand|mmkv|android-widget|apple-targets|auth-session|background-task)"
   # Expected: All packages listed
-  
+
   # Verify app.json scheme updated
   cat app.json | grep '"scheme"'
   # Expected: "xyz.ilteoood.copilotstatus"
-  
+
   # Verify plugins configured
   cat app.json | grep -A2 '"plugins"'
   # Expected: expo-router, expo-splash-screen, expo-background-task, react-native-android-widget
@@ -279,15 +294,16 @@ Parallel Speedup: ~50% faster than sequential
   - PRD Section 3.2 - API response format
 
   **Acceptance Criteria**:
+
   ```bash
   # Verify types file exists and exports QuotaInfo
   cat types/quota.ts | grep "export interface QuotaInfo"
   # Expected: interface definition with all fields
-  
+
   # Verify status colors added
   cat constants/theme.ts | grep -E "(statusGood|statusWarning|statusCritical)"
   # Expected: Three color definitions for each theme
-  
+
   # Verify API constants
   cat constants/api.ts | grep "COPILOT_API_ENDPOINT"
   # Expected: https://api.github.com/copilot_internal/user
@@ -327,11 +343,12 @@ Parallel Speedup: ~50% faster than sequential
   - `hooks/use-theme-color.ts` - Example of utility hook pattern
 
   **Acceptance Criteria**:
+
   ```bash
   # Verify storage file exists
   cat services/storage.ts | grep "MMKV"
   # Expected: MMKV import and instance creation
-  
+
   # Verify Zustand adapter
   cat services/storage.ts | grep "StateStorage"
   # Expected: Zustand StateStorage adapter implementation
@@ -380,11 +397,12 @@ Parallel Speedup: ~50% faster than sequential
   - PRD Section 2.1 - Authentication requirements
 
   **Acceptance Criteria**:
+
   ```bash
   # Verify auth service exports
   cat services/auth.ts | grep -E "export (async function|function)"
   # Expected: signInWithGitHub, exchangeCodeForToken, getStoredToken, signOut, isAuthenticated
-  
+
   # Verify Zustand store
   cat stores/auth.ts | grep "create<"
   # Expected: Zustand store with AuthState type
@@ -430,15 +448,16 @@ Parallel Speedup: ~50% faster than sequential
   - PRD Section 3.2 - API integration details
 
   **Acceptance Criteria**:
+
   ```bash
   # Verify API client
   cat services/api.ts | grep "fetchCopilotQuota"
   # Expected: Function that fetches and parses quota
-  
+
   # Verify headers
   cat services/api.ts | grep "Editor-Version"
   # Expected: vscode/1.96.2 header
-  
+
   # Test API manually (with valid token)
   curl -s -H "Authorization: Bearer TOKEN" \
     -H "Accept: application/vnd.github+json" \
@@ -488,11 +507,12 @@ Parallel Speedup: ~50% faster than sequential
   - `stores/auth.ts` - Auth store pattern (from Task 4)
 
   **Acceptance Criteria**:
+
   ```bash
   # Verify quota store
   cat stores/quota.ts | grep "persist<QuotaState>"
   # Expected: Zustand store with MMKV persistence
-  
+
   # Verify hook
   cat hooks/useQuota.ts | grep "export function useQuota"
   # Expected: Hook that exposes quota state and actions
@@ -541,6 +561,7 @@ Parallel Speedup: ~50% faster than sequential
   - PRD Section 4.1.1 - First-time user flow
 
   **Acceptance Criteria**:
+
   ```
   # Playwright verification (via simulator):
   1. Navigate to: login screen (should be default when not authenticated)
@@ -602,6 +623,7 @@ Parallel Speedup: ~50% faster than sequential
   - Note: react-native-reanimated already installed in package.json
 
   **Acceptance Criteria**:
+
   ```
   # Playwright verification (via simulator):
   1. Navigate to: Dashboard (after sign in)
@@ -650,11 +672,12 @@ Parallel Speedup: ~50% faster than sequential
   - `stores/auth.ts` - Auth store for sign out
 
   **Acceptance Criteria**:
+
   ```bash
   # Verify settings screen exists
   ls app/\(tabs\)/settings.tsx
   # Expected: File exists
-  
+
   # Verify tab renamed
   cat app/\(tabs\)/_layout.tsx | grep "Settings"
   # Expected: Tab with name="settings" and title="Settings"
@@ -703,6 +726,7 @@ Parallel Speedup: ~50% faster than sequential
   - Librarian research on expo-router auth patterns
 
   **Acceptance Criteria**:
+
   ```
   # Manual verification flow:
   1. Fresh app launch → Should show login screen
@@ -758,15 +782,16 @@ Parallel Speedup: ~50% faster than sequential
   - PRD Section 2.3.2 - Android widget layout
 
   **Acceptance Criteria**:
+
   ```bash
   # Verify widget files exist
   ls widgets/QuotaWidget.tsx widgets/widgetTaskHandler.ts
   # Expected: Both files exist
-  
+
   # Verify app.json widget config
   cat app.json | grep -A10 "react-native-android-widget"
   # Expected: Widget configuration with name "CopilotQuota"
-  
+
   # Local build verification (manual):
   # 1. Build: npx expo prebuild && npx expo run:android
   # 2. App installs and launches on device/emulator
@@ -820,15 +845,16 @@ Parallel Speedup: ~50% faster than sequential
   - PRD Section 3.4.2 - iOS configuration
 
   **Acceptance Criteria**:
+
   ```bash
   # Verify widget target created
   ls targets/widget/
   # Expected: Swift files for widget
-  
+
   # Verify app.json config
   cat app.json | grep -A5 "apple-targets"
   # Expected: @bacons/apple-targets plugin config
-  
+
   # Local build verification (manual):
   # 1. Set APPLE_TEAM_ID in app.json (replace [APPLE_TEAM_ID] placeholder)
   # 2. Build: npx expo prebuild && npx expo run:ios
@@ -886,15 +912,16 @@ Parallel Speedup: ~50% faster than sequential
   - `services/storage.ts` - MMKV storage (from Task 3)
 
   **Acceptance Criteria**:
+
   ```bash
   # Verify task file exists
   cat tasks/quota-refresh.ts | grep "defineTask"
   # Expected: TaskManager.defineTask call
-  
+
   # Verify registration
   cat tasks/quota-refresh.ts | grep "registerTaskAsync"
   # Expected: BackgroundTask.registerTaskAsync call
-  
+
   # Manual verification:
   # 1. Sign in to app
   # 2. Check console logs for task registration
@@ -944,15 +971,16 @@ Parallel Speedup: ~50% faster than sequential
   - Librarian research on widget data sharing patterns
 
   **Acceptance Criteria**:
+
   ```bash
   # Verify service exists
   cat services/widgets.ts | grep -E "syncWidgetData|clearWidgetData"
   # Expected: Both functions exported
-  
+
   # Verify integration
   cat stores/quota.ts | grep "syncWidgetData"
   # Expected: Called after successful fetch
-  
+
   # Manual verification:
   # 1. Sign in and load dashboard
   # 2. Check widget updates with current data
@@ -1006,6 +1034,7 @@ Parallel Speedup: ~50% faster than sequential
   - PRD Section 4.2 - Error states
 
   **Acceptance Criteria**:
+
   ```
   # Complete E2E flow verification:
   1. Fresh install test
@@ -1017,7 +1046,7 @@ Parallel Speedup: ~50% faster than sequential
   7. iOS widgets (3 sizes) display data
   8. Sign out clears widgets
   9. Background task registered (check logs)
-  
+
   # Screenshot evidence:
   - .sisyphus/evidence/task-15-e2e-login.png
   - .sisyphus/evidence/task-15-e2e-dashboard.png
@@ -1035,29 +1064,30 @@ Parallel Speedup: ~50% faster than sequential
 
 ## Commit Strategy
 
-| After Task | Message | Files | Verification |
-|------------|---------|-------|--------------|
-| 1 | `chore(setup): add dependencies and configure app.json` | package.json, app.json | npm install succeeds |
-| 2 | `feat(types): add quota types and API constants` | types/, constants/ | TypeScript compiles |
-| 3 | `feat(storage): add MMKV storage layer` | services/storage.ts | Import works |
-| 4 | `feat(auth): add GitHub OAuth service and auth store` | services/auth.ts, stores/auth.ts | TypeScript compiles |
-| 5 | `feat(api): add GitHub Copilot API client` | services/api.ts | curl test passes |
-| 6 | `feat(store): add quota store with MMKV persistence` | stores/quota.ts, hooks/useQuota.ts | Import works |
-| 7 | `feat(auth): add login screen with GitHub OAuth` | app/(auth)/*.tsx, components/auth/*.tsx | UI renders |
-| 8 | `feat(dashboard): add quota visualization components` | components/dashboard/*.tsx, app/(tabs)/index.tsx | UI renders |
-| 9 | `feat(settings): add settings screen with sign out` | app/(tabs)/settings.tsx, app/(tabs)/_layout.tsx | UI renders |
-| 10 | `feat(navigation): integrate auth flow with navigation` | app/_layout.tsx | Auth flow works |
-| 11 | `feat(widget): add Android home screen widget` | widgets/*.tsx, app.json | Widget shows |
-| 12 | `feat(widget): add iOS WidgetKit widgets` | targets/widget/*.swift, app.json | Widget shows |
-| 13 | `feat(background): add hourly quota refresh task` | tasks/quota-refresh.ts | Task registers |
-| 14 | `feat(widgets): add widget data sync service` | services/widgets.ts | Widgets update |
-| 15 | `chore(polish): final integration and cleanup` | Various | E2E works |
+| After Task | Message                                                 | Files                                             | Verification         |
+| ---------- | ------------------------------------------------------- | ------------------------------------------------- | -------------------- |
+| 1          | `chore(setup): add dependencies and configure app.json` | package.json, app.json                            | npm install succeeds |
+| 2          | `feat(types): add quota types and API constants`        | types/, constants/                                | TypeScript compiles  |
+| 3          | `feat(storage): add MMKV storage layer`                 | services/storage.ts                               | Import works         |
+| 4          | `feat(auth): add GitHub OAuth service and auth store`   | services/auth.ts, stores/auth.ts                  | TypeScript compiles  |
+| 5          | `feat(api): add GitHub Copilot API client`              | services/api.ts                                   | curl test passes     |
+| 6          | `feat(store): add quota store with MMKV persistence`    | stores/quota.ts, hooks/useQuota.ts                | Import works         |
+| 7          | `feat(auth): add login screen with GitHub OAuth`        | app/(auth)/_.tsx, components/auth/_.tsx           | UI renders           |
+| 8          | `feat(dashboard): add quota visualization components`   | components/dashboard/\*.tsx, app/(tabs)/index.tsx | UI renders           |
+| 9          | `feat(settings): add settings screen with sign out`     | app/(tabs)/settings.tsx, app/(tabs)/\_layout.tsx  | UI renders           |
+| 10         | `feat(navigation): integrate auth flow with navigation` | app/\_layout.tsx                                  | Auth flow works      |
+| 11         | `feat(widget): add Android home screen widget`          | widgets/\*.tsx, app.json                          | Widget shows         |
+| 12         | `feat(widget): add iOS WidgetKit widgets`               | targets/widget/\*.swift, app.json                 | Widget shows         |
+| 13         | `feat(background): add hourly quota refresh task`       | tasks/quota-refresh.ts                            | Task registers       |
+| 14         | `feat(widgets): add widget data sync service`           | services/widgets.ts                               | Widgets update       |
+| 15         | `chore(polish): final integration and cleanup`          | Various                                           | E2E works            |
 
 ---
 
 ## Success Criteria
 
 ### Verification Commands
+
 ```bash
 # Check all dependencies installed
 npm ls zustand react-native-mmkv expo-auth-session expo-secure-store
@@ -1075,6 +1105,7 @@ npx expo run:ios      # For iOS
 ```
 
 ### Final Checklist
+
 - [ ] All "Must Have" features present
 - [ ] All "Must NOT Have" items absent
 - [ ] OAuth flow works on both platforms

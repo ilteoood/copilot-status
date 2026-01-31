@@ -22,7 +22,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 2,
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
       staleTime: 5 * 60 * 1000,
       gcTime: 24 * 60 * 60 * 1000,
       refetchOnWindowFocus: false,
@@ -37,4 +37,4 @@ export const queryClient = new QueryClient({
   },
 });
 
-export const persistOptions = { persister: queryPersister }
+export const persistOptions = { persister: queryPersister };

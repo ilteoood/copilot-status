@@ -32,69 +32,49 @@ export function IOSCopilotWidget(data: WidgetData) {
   const remaining = data.totalQuota - data.usedQuota;
 
   const smallWidget = (
-    <Voltra.VStack
-      spacing={4}
-      alignment="center"
-      style={styles.smallContainer}
-    >
+    <Voltra.VStack spacing={4} alignment="center" style={styles.smallContainer}>
       <Voltra.HStack spacing={16} alignment="center">
         <Voltra.VStack spacing={2} alignment="center">
           <Voltra.Text style={{ ...styles.largeValue, color: statusColor }}>
             {Math.round(data.percentUsed)}%
           </Voltra.Text>
-          <Voltra.Text style={styles.label}>
-            {i18n.t('widget.usedLowercase')}
-          </Voltra.Text>
+          <Voltra.Text style={styles.label}>{i18n.t('widget.usedLowercase')}</Voltra.Text>
         </Voltra.VStack>
 
         <Voltra.VStack spacing={2} alignment="center">
           <Voltra.Text style={{ ...styles.mediumValue, color: theme.colors.good }}>
             {remaining.toLocaleString()}
           </Voltra.Text>
-          <Voltra.Text style={styles.label}>
-            {i18n.t('widget.requestsLeft')}
-          </Voltra.Text>
+          <Voltra.Text style={styles.label}>{i18n.t('widget.requestsLeft')}</Voltra.Text>
         </Voltra.VStack>
       </Voltra.HStack>
 
-      <Voltra.Text style={styles.smallFooter}>
-        {data.username}
-      </Voltra.Text>
+      <Voltra.Text style={styles.smallFooter}>{data.username}</Voltra.Text>
     </Voltra.VStack>
   );
 
   const mediumWidget = (
-    <Voltra.VStack
-      spacing={8}
-      alignment="center"
-      style={styles.container}
-    >
+    <Voltra.VStack spacing={8} alignment="center" style={styles.container}>
       <Voltra.HStack spacing={16} alignment="center">
         <Voltra.VStack spacing={2} alignment="center">
           <Voltra.Text style={{ ...styles.largeValue, color: statusColor }}>
             {Math.round(data.percentUsed)}%
           </Voltra.Text>
-          <Voltra.Text style={styles.label}>
-            {i18n.t('widget.usedLowercase')}
-          </Voltra.Text>
+          <Voltra.Text style={styles.label}>{i18n.t('widget.usedLowercase')}</Voltra.Text>
         </Voltra.VStack>
 
         <Voltra.VStack spacing={2} alignment="center">
           <Voltra.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
             {data.usedQuota.toLocaleString()}
           </Voltra.Text>
-          <Voltra.Text style={styles.label}>
-            {i18n.t('widget.requestsUsed')}
-          </Voltra.Text>
+          <Voltra.Text style={styles.label}>{i18n.t('widget.requestsUsed')}</Voltra.Text>
         </Voltra.VStack>
 
         <Voltra.VStack spacing={2} alignment="center">
           <Voltra.Text style={{ ...styles.mediumValue, color: theme.colors.good }}>
             {remaining.toLocaleString()}
           </Voltra.Text>
-          <Voltra.Text style={styles.label}>
-            {i18n.t('widget.requestsLeft')}
-          </Voltra.Text>
+          <Voltra.Text style={styles.label}>{i18n.t('widget.requestsLeft')}</Voltra.Text>
         </Voltra.VStack>
       </Voltra.HStack>
 
@@ -116,9 +96,7 @@ export function IOSCopilotWidgetLoading(isDarkMode: boolean) {
 
   const loadingWidget = (
     <Voltra.VStack alignment="center" style={styles.container}>
-      <Voltra.Text style={styles.loadingText}>
-        {i18n.t('widget.loading')}
-      </Voltra.Text>
+      <Voltra.Text style={styles.loadingText}>{i18n.t('widget.loading')}</Voltra.Text>
     </Voltra.VStack>
   );
 
@@ -134,9 +112,7 @@ export function IOSCopilotWidgetError(isDarkMode: boolean) {
 
   const errorWidget = (
     <Voltra.VStack alignment="center" style={styles.container}>
-      <Voltra.Text style={styles.errorText}>
-        {i18n.t('widget.signInToView')}
-      </Voltra.Text>
+      <Voltra.Text style={styles.errorText}>{i18n.t('widget.signInToView')}</Voltra.Text>
     </Voltra.VStack>
   );
 
@@ -167,10 +143,7 @@ export function AndroidCopilotWidget(data: WidgetData) {
         verticalAlignment="center-vertically"
         style={styles.row}
       >
-        <VoltraAndroid.Column
-          horizontalAlignment="center-horizontally"
-          style={styles.column}
-        >
+        <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
           <VoltraAndroid.Text style={{ ...styles.largeValue, color: statusColor }}>
             {Math.round(data.percentUsed)}%
           </VoltraAndroid.Text>
@@ -179,10 +152,7 @@ export function AndroidCopilotWidget(data: WidgetData) {
           </VoltraAndroid.Text>
         </VoltraAndroid.Column>
 
-        <VoltraAndroid.Column
-          horizontalAlignment="center-horizontally"
-          style={styles.column}
-        >
+        <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
           <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
             {data.usedQuota.toLocaleString()}
           </VoltraAndroid.Text>
@@ -191,10 +161,7 @@ export function AndroidCopilotWidget(data: WidgetData) {
           </VoltraAndroid.Text>
         </VoltraAndroid.Column>
 
-        <VoltraAndroid.Column
-          horizontalAlignment="center-horizontally"
-          style={styles.column}
-        >
+        <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
           <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.good }}>
             {remaining.toLocaleString()}
           </VoltraAndroid.Text>
@@ -221,9 +188,7 @@ export function AndroidCopilotWidgetLoading(isDarkMode: boolean) {
       verticalAlignment="center-vertically"
       style={styles.androidContainer}
     >
-      <VoltraAndroid.Text style={styles.loadingText}>
-        {i18n.t('widget.loading')}
-      </VoltraAndroid.Text>
+      <VoltraAndroid.Text style={styles.loadingText}>{i18n.t('widget.loading')}</VoltraAndroid.Text>
     </VoltraAndroid.Column>
   );
 }
@@ -250,9 +215,7 @@ export function prepareWidgetData(
   username: string,
   isDarkMode: boolean
 ): WidgetData {
-  const percentUsed = quota.totalQuota > 0
-    ? (quota.usedQuota / quota.totalQuota) * 100
-    : 0;
+  const percentUsed = quota.totalQuota > 0 ? (quota.usedQuota / quota.totalQuota) * 100 : 0;
   const lastUpdated = new Date().toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',

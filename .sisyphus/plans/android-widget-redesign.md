@@ -3,13 +3,14 @@
 ## TL;DR
 
 > **Quick Summary**: Redesign the Android home screen widget from a single-row horizontal layout to a 2-row vertical layout with 3 evenly-spaced stat columns and a username/timestamp footer.
-> 
+>
 > **Deliverables**:
+>
 > - Updated widget height configuration in `app.json`
 > - Redesigned `CopilotWidget` component with 2-row layout
 > - New i18n keys for "Requests used" / "Requests left"
 > - Username prop passed through widget data flow
-> 
+>
 > **Estimated Effort**: Short (2-3 hours)
 > **Parallel Execution**: YES - 2 waves
 > **Critical Path**: Task 1 (i18n) + Task 2 (config) → Task 3 (layout) → Task 4 (handler) → Task 5 (verify)
@@ -19,6 +20,7 @@
 ## Context
 
 ### Original Request
+
 Redesign the Android widget layout to match this specification:
 
 ```
@@ -28,11 +30,13 @@ ___________________________________________________________
 |      used       Requests used.    Requests left          |
 |                                                          |
 |  UserName - last update date                             |
-|__________________________________________________________| 
+|__________________________________________________________|
 ```
 
 ### Interview Summary
+
 **Key Discussions**:
+
 - **Layout Change**: From single-row horizontal (items left-compacted) to 2-row vertical
 - **Top Row**: 3 evenly-spaced stat columns using `justifyContent: 'space-between'`
 - **Bottom Row**: Username + timestamp in format "username - last update date"
@@ -41,6 +45,7 @@ ___________________________________________________________
 - **Loading/Error States**: Keep simple centered text (no structural changes)
 
 **Research Findings**:
+
 - `react-native-android-widget` FlexWidget fully supports required layout properties
 - ShopifyWidget example from library repo demonstrates similar multi-row metrics pattern
 - Username already exists in `QuotaInfo` type, just needs to be passed to widget
@@ -50,26 +55,31 @@ ___________________________________________________________
 ## Work Objectives
 
 ### Core Objective
+
 Transform the Android widget from a compact horizontal layout to a more readable 2-row vertical layout with username display.
 
 ### Concrete Deliverables
+
 - `app.json`: Widget `minHeight` changed from `40dp` to `70dp`
 - `locales/en.json`: New keys `widget.requestsUsed` and `widget.requestsLeft`
 - `widgets/CopilotWidget.tsx`: New 2-row layout with `username` prop
 - `widgets/widgetTaskHandler.tsx`: Pass `username` from `QuotaInfo` to widget
 
 ### Definition of Done
+
 - [ ] `npx tsc --noEmit` passes with no errors in modified files
 - [ ] Widget component renders with new 2-row structure
 - [ ] Username displays in bottom row
 
 ### Must Have
+
 - 3 stat columns evenly spaced across top row (percentage, used count, remaining)
 - Each stat column: value above, label below, center-aligned
 - Bottom row with username and timestamp
 - Existing color logic preserved (status color for percentage)
 
 ### Must NOT Have (Guardrails)
+
 - DO NOT modify iOS widget (`targets/widget/index.swift`)
 - DO NOT change MMKV storage structure or keys
 - DO NOT add new dependencies
@@ -82,6 +92,7 @@ Transform the Android widget from a compact horizontal layout to a more readable
 ## Verification Strategy (MANDATORY)
 
 ### Test Decision
+
 - **Infrastructure exists**: NO (widgets are not unit tested in this project)
 - **User wants tests**: Manual verification via LSP diagnostics
 - **Framework**: N/A
@@ -91,11 +102,13 @@ Transform the Android widget from a compact horizontal layout to a more readable
 Each task will be verified using LSP diagnostics to ensure type safety and no compilation errors.
 
 **Verification Command:**
+
 ```bash
 npx tsc --noEmit
 ```
 
 **Evidence Requirements:**
+
 - LSP diagnostics show no errors in modified files
 - TypeScript compilation succeeds
 
@@ -126,21 +139,21 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
 ### Dependency Matrix
 
 | Task | Depends On | Blocks | Can Parallelize With |
-|------|------------|--------|---------------------|
-| 1 | None | 3 | 2 |
-| 2 | None | 3 | 1 |
-| 3 | 1, 2 | 4 | None |
-| 4 | 3 | 5 | None |
-| 5 | 4 | None | None (final) |
+| ---- | ---------- | ------ | -------------------- |
+| 1    | None       | 3      | 2                    |
+| 2    | None       | 3      | 1                    |
+| 3    | 1, 2       | 4      | None                 |
+| 4    | 3          | 5      | None                 |
+| 5    | 4          | None   | None (final)         |
 
 ### Agent Dispatch Summary
 
-| Wave | Tasks | Recommended Agents |
-|------|-------|-------------------|
-| 1 | 1, 2 | `category='quick'` - Simple config edits |
-| 2 | 3 | `category='quick', load_skills=['frontend-ui-ux']` - Layout work |
-| 3 | 4 | `category='quick'` - Simple prop passing |
-| 4 | 5 | `category='quick'` - Verification |
+| Wave | Tasks | Recommended Agents                                               |
+| ---- | ----- | ---------------------------------------------------------------- |
+| 1    | 1, 2  | `category='quick'` - Simple config edits                         |
+| 2    | 3     | `category='quick', load_skills=['frontend-ui-ux']` - Layout work |
+| 3    | 4     | `category='quick'` - Simple prop passing                         |
+| 4    | 5     | `category='quick'` - Verification                                |
 
 ---
 
@@ -174,7 +187,7 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
   - `locales/en.json:54-61` - Existing widget i18n keys structure
 
   **Acceptance Criteria**:
-  
+
   ```bash
   # Verify keys exist in JSON
   bun -e "const en = require('./locales/en.json'); console.log(en.widget.requestsUsed, en.widget.requestsLeft)"
@@ -215,7 +228,7 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
   - `app.json:47-59` - Widget configuration block in expo plugins
 
   **Acceptance Criteria**:
-  
+
   ```bash
   # Verify minHeight is 70dp
   bun -e "const app = require('./app.json'); console.log(app.expo.plugins.find(p => Array.isArray(p) && p[0] === 'react-native-android-widget')[1].widgets[0].minHeight)"
@@ -231,15 +244,15 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
 - [ ] 3. Redesign CopilotWidget layout to 2-row structure
 
   **What to do**:
-  
   1. **Add `username` prop** to `CopilotWidgetProps` interface:
+
      ```typescript
      interface CopilotWidgetProps {
        usedQuota: number;
        totalQuota: number;
        percentUsed: number;
        lastUpdated: string;
-       username: string;  // ADD THIS
+       username: string; // ADD THIS
      }
      ```
 
@@ -255,24 +268,27 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
      - Contains 3 stat columns
 
   5. **Create 3 stat columns** (each is a vertical stack):
-     
+
      **Left column (percentage)**:
+
      ```tsx
      <FlexWidget style={{ alignItems: 'center' }}>
        <TextWidget text={`${Math.round(percentUsed)}%`} style={/* large, statusColor */} />
        <TextWidget text={i18n.t('widget.usedLowercase')} style={/* small, muted */} />
      </FlexWidget>
      ```
-     
+
      **Center column (used count)**:
+
      ```tsx
      <FlexWidget style={{ alignItems: 'center' }}>
        <TextWidget text={usedQuota.toLocaleString()} style={/* medium, text color */} />
        <TextWidget text={i18n.t('widget.requestsUsed')} style={/* small, muted */} />
      </FlexWidget>
      ```
-     
+
      **Right column (remaining count)**:
+
      ```tsx
      <FlexWidget style={{ alignItems: 'center' }}>
        <TextWidget text={remaining.toLocaleString()} style={/* medium, good color */} />
@@ -281,10 +297,11 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
      ```
 
   6. **Create bottom row** (username + timestamp):
+
      ```tsx
-     <TextWidget 
-       text={`${username} - ${lastUpdated}`} 
-       style={{ fontSize: xs, color: icon, alignSelf: 'flex-start' }} 
+     <TextWidget
+       text={`${username} - ${lastUpdated}`}
+       style={{ fontSize: xs, color: icon, alignSelf: 'flex-start' }}
      />
      ```
 
@@ -326,7 +343,7 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
   - FlexWidget docs: `justifyContent: 'space-between'` for even spacing
 
   **Acceptance Criteria**:
-  
+
   ```bash
   # Verify TypeScript compiles without errors
   npx tsc --noEmit 2>&1 | grep -E "CopilotWidget|error" || echo "No errors"
@@ -355,6 +372,7 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
   - In `buildWidget()` function, pass `username={quota.username}` to `<CopilotWidget />`
 
   **Current code** (line 41-48):
+
   ```tsx
   return (
     <CopilotWidget
@@ -367,6 +385,7 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
   ```
 
   **Updated code**:
+
   ```tsx
   return (
     <CopilotWidget
@@ -406,7 +425,7 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
   - `types/quota.ts:3-10` - QuotaInfo type showing username field exists
 
   **Acceptance Criteria**:
-  
+
   ```bash
   # Verify username prop is passed
   grep "username={quota.username}" widgets/widgetTaskHandler.tsx
@@ -458,7 +477,7 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
   - `widgets/widgetTaskHandler.tsx` - prop passing
 
   **Acceptance Criteria**:
-  
+
   ```bash
   # Full TypeScript verification
   npx tsc --noEmit
@@ -477,16 +496,17 @@ Parallel Speedup: ~20% faster (Wave 1 tasks parallel)
 
 ## Commit Strategy
 
-| After Task | Message | Files | Verification |
-|------------|---------|-------|--------------|
-| 1 + 2 | `feat(widget): add i18n keys for redesigned layout` | `locales/en.json`, `app.json` | JSON valid |
-| 3 + 4 | `feat(widget): redesign Android widget to 2-row layout with username` | `widgets/CopilotWidget.tsx`, `widgets/widgetTaskHandler.tsx` | `npx tsc --noEmit` |
+| After Task | Message                                                               | Files                                                        | Verification       |
+| ---------- | --------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------ |
+| 1 + 2      | `feat(widget): add i18n keys for redesigned layout`                   | `locales/en.json`, `app.json`                                | JSON valid         |
+| 3 + 4      | `feat(widget): redesign Android widget to 2-row layout with username` | `widgets/CopilotWidget.tsx`, `widgets/widgetTaskHandler.tsx` | `npx tsc --noEmit` |
 
 ---
 
 ## Success Criteria
 
 ### Verification Commands
+
 ```bash
 # TypeScript compilation
 npx tsc --noEmit  # Expected: exit 0, no output
@@ -502,6 +522,7 @@ bun -e "const app = require('./app.json'); const w = app.expo.plugins.find(p => 
 ```
 
 ### Final Checklist
+
 - [ ] All "Must Have" present:
   - [ ] 3 stat columns evenly spaced in top row
   - [ ] Each stat column has value above, label below, center-aligned

@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 /**
  * Legacy theme constants.
  * Theme colors are now managed by react-native-unistyles in /src/styles/unistyles.ts
- * 
+ *
  * Fonts are kept here for backward compatibility with explore.tsx
  */
 

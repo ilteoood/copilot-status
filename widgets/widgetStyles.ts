@@ -78,4 +78,3 @@ export const createWidgetStyles = (theme: Theme) => ({
 });
 
 export type WidgetStyles = ReturnType<typeof createWidgetStyles>;
-

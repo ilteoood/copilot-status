@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+.expo/
+.expo-shared/
+
+# Build outputs
+dist/
+build/
+android/build/
+ios/build/
+ios/Pods/
+
+# Generated files
+*.lock
+package-lock.json
+yarn.lock
+
+# Cache
+.cache/

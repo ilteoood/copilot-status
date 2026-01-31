@@ -4,7 +4,7 @@ import { updateCopilotWidgetWithData } from '@/widgets/voltraWidgetService';
 import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
 import { quotaStorage } from './storage';
 
-export type GitHubUser = RestEndpointMethodTypes["users"]["getAuthenticated"]["response"]["data"];
+export type GitHubUser = RestEndpointMethodTypes['users']['getAuthenticated']['response']['data'];
 
 export async function fetchGitHubUser(token: string): Promise<GitHubUser> {
   const octokit = new Octokit({
@@ -12,7 +12,7 @@ export async function fetchGitHubUser(token: string): Promise<GitHubUser> {
   });
 
   const { data } = await octokit.users.getAuthenticated();
-  return data
+  return data;
 }
 
 function parseQuotaResponse(response: GitHubCopilotResponse): QuotaInfo {
@@ -42,7 +42,7 @@ export async function fetchCopilotQuota(token: string): Promise<QuotaInfo> {
   quotaStorage.setQuotaData(JSON.stringify(quota));
   quotaStorage.setLastFetch(Date.now());
 
-  await updateCopilotWidgetWithData(quota).catch(() => { });
+  await updateCopilotWidgetWithData(quota).catch(() => {});
 
   return quota;
 }

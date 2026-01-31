@@ -9,6 +9,7 @@ User reported: "I selected the dark theme but the widget is still using the ligh
 **Module-level code execution timing issue:**
 
 ### Before (Broken):
+
 ```typescript
 // ❌ Executes ONCE when module loads (at app startup)
 const themeName = getWidgetTheme();
@@ -23,6 +24,7 @@ export function CopilotWidget({ ... }) {
 ```
 
 **Why it failed:**
+
 1. Theme was read **once** when the widget module first loaded
 2. Changing theme in Settings updated MMKV storage
 3. Widget refresh called `buildWidget()` → rendered `<CopilotWidget />`
@@ -34,11 +36,12 @@ export function CopilotWidget({ ... }) {
 **Read theme on every widget render:**
 
 ### After (Fixed):
+
 ```typescript
 // ✅ Function that reads fresh theme on every call
 function applyWidgetTheme() {
   const themePreference = storage.getString(StorageKeys.THEME_PREFERENCE);
-  
+
   let themeName: 'light' | 'dark';
   if (themePreference === 'system' || !themePreference) {
     const systemColorScheme = Appearance.getColorScheme();
@@ -46,7 +49,7 @@ function applyWidgetTheme() {
   } else {
     themeName = themePreference;
   }
-  
+
   UnistylesRuntime.setTheme(themeName);
   return UnistylesRuntime.getTheme();
 }
@@ -54,7 +57,7 @@ function applyWidgetTheme() {
 export function CopilotWidget({ ... }) {
   // ✅ Reads fresh theme on EVERY render
   const theme = applyWidgetTheme();
-  
+
   // ✅ Create styles dynamically with current theme
   const styles = StyleSheet.create({
     container: {
@@ -62,12 +65,13 @@ export function CopilotWidget({ ... }) {
       // ... uses fresh theme values
     },
   });
-  
+
   // ...
 }
 ```
 
 **Why it works:**
+
 1. User changes theme in Settings → Updates MMKV storage
 2. Widget refresh calls `buildWidget()` → renders `<CopilotWidget />`
 3. `CopilotWidget()` calls `applyWidgetTheme()` → **reads fresh value from MMKV**
@@ -80,6 +84,7 @@ export function CopilotWidget({ ... }) {
 **File:** `widgets/CopilotWidget.tsx`
 
 ### 1. Moved theme reading into function (line 18-32)
+
 ```typescript
 function applyWidgetTheme() {
   const themePreference = storage.getString(StorageKeys.THEME_PREFERENCE);
@@ -90,6 +95,7 @@ function applyWidgetTheme() {
 ```
 
 ### 2. Call in every widget component
+
 ```typescript
 export function CopilotWidget({ ... }) {
   const theme = applyWidgetTheme(); // ✅ Fresh theme on every render
@@ -111,10 +117,12 @@ export function CopilotWidgetError() {
 ```
 
 ### 3. Moved styles inside component functions
+
 - **Before:** Module-level `const styles = StyleSheet.create(...)` with stale theme
 - **After:** Component-level `const styles = StyleSheet.create(...)` with fresh theme
 
 ### 4. Added debug logging (temporary)
+
 ```typescript
 console.log('[Widget] Theme preference:', themePreference, '→ Applying:', themeName);
 ```
@@ -122,6 +130,7 @@ console.log('[Widget] Theme preference:', themePreference, '→ Applying:', them
 ## Testing Instructions
 
 ### 1. Rebuild the app
+
 ```bash
 npx expo run:android
 ```
@@ -129,6 +138,7 @@ npx expo run:android
 ### 2. Test theme switching
 
 **Step-by-step:**
+
 1. Open app → Settings
 2. Select "Dark" theme
 3. Go to Home screen
@@ -141,11 +151,13 @@ npx expo run:android
 ### 3. Check logs
 
 Open Android logcat to see debug output:
+
 ```bash
 adb logcat | grep "Widget"
 ```
 
 **Expected output:**
+
 ```
 [Widget] Theme preference: dark → Applying: dark
 ```
@@ -162,11 +174,12 @@ adb logcat | grep "Widget"
 ✅ Widget reads fresh theme preference from MMKV  
 ✅ Theme changes in Settings apply on next widget update  
 ✅ No app restart needed  
-✅ All three widget states (normal/loading/error) respect theme  
+✅ All three widget states (normal/loading/error) respect theme
 
 ## Why Widget Still Doesn't Update "Instantly"
 
 The widget updates when **Android triggers a widget refresh**, which happens:
+
 - When widget data updates (API call)
 - Every few seconds/minutes (Android's schedule)
 - On app restart
@@ -177,6 +190,7 @@ The widget updates when **Android triggers a widget refresh**, which happens:
 ## Performance Note
 
 Calling `applyWidgetTheme()` on every render is **acceptable** because:
+
 1. Widgets render infrequently (only on refresh cycles)
 2. MMKV reads are extremely fast (synchronous, < 1ms)
 3. `UnistylesRuntime.setTheme()` is lightweight
@@ -185,6 +199,7 @@ Calling `applyWidgetTheme()` on every render is **acceptable** because:
 ## Rollback Plan
 
 If this causes issues, revert to:
+
 ```bash
 git checkout HEAD~1 -- widgets/CopilotWidget.tsx
 ```

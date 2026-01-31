@@ -6,13 +6,13 @@ export {
   IOSCopilotWidgetError,
   IOSCopilotWidgetLoading,
   prepareWidgetData,
-  type WidgetData
+  type WidgetData,
 } from './VoltraCopilotWidget';
 
 export {
   clearCopilotWidget,
   updateCopilotWidget,
-  updateCopilotWidgetWithData
+  updateCopilotWidgetWithData,
 } from './voltraWidgetService';
 
 // Re-export background task utilities for widget data refresh
@@ -23,5 +23,5 @@ export {
   isBackgroundTaskAvailable,
   registerBackgroundTaskAsync,
   unregisterBackgroundTaskAsync,
-  updateBackgroundTaskInterval
+  updateBackgroundTaskInterval,
 } from '../services/backgroundTask';

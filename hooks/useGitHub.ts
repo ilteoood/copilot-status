@@ -20,7 +20,7 @@ export function useGitHubUser() {
       return user;
     },
     staleTime: 10 * 60 * 1000,
-    gcTime: 30 * 60 * 1000
+    gcTime: 30 * 60 * 1000,
   });
 }
 
@@ -36,7 +36,7 @@ export function useCopilotQuota() {
     staleTime: 2 * 60 * 1000,
     gcTime: 24 * 60 * 60 * 1000,
     refetchOnMount: true,
-    refetchOnReconnect: true
+    refetchOnReconnect: true,
   });
 
   return {

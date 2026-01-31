@@ -34,7 +34,7 @@ export const WidgetFontSizes = {
   base: 14,
   md: 16,
   lg: 18,
-  xl: 20
+  xl: 20,
 } as const;
 
 export const WidgetBorderRadius = {

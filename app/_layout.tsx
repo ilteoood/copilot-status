@@ -50,8 +50,8 @@ function useProtectedRoute() {
 const statusBarColor: Record<ThemePreference, 'light' | 'dark' | 'auto'> = {
   light: 'light',
   dark: 'dark',
-  system: 'auto'
-}
+  system: 'auto',
+};
 
 export default function RootLayout() {
   const { isLoading } = useProtectedRoute();
@@ -77,10 +77,7 @@ export default function RootLayout() {
   }
 
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={persistOptions}
-    >
+    <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
       <ThemeProvider value={navigationTheme}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(auth)" />

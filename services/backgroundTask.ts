@@ -37,7 +37,9 @@ TaskManager.defineTask(BACKGROUND_TASK_NAME, async () => {
   }
 });
 
-export async function registerBackgroundTaskAsync(interval?: BackgroundFetchInterval): Promise<void> {
+export async function registerBackgroundTaskAsync(
+  interval?: BackgroundFetchInterval
+): Promise<void> {
   const fetchInterval = interval ?? backgroundFetchStorage.getInterval();
 
   // If interval is 0 (never), unregister the task
@@ -69,7 +71,9 @@ export async function unregisterBackgroundTaskAsync(): Promise<void> {
   await BackgroundTask.unregisterTaskAsync(BACKGROUND_TASK_NAME);
 }
 
-export async function updateBackgroundTaskInterval(interval: BackgroundFetchInterval): Promise<void> {
+export async function updateBackgroundTaskInterval(
+  interval: BackgroundFetchInterval
+): Promise<void> {
   backgroundFetchStorage.setInterval(interval);
   await registerBackgroundTaskAsync(interval);
 }
@@ -84,6 +88,8 @@ export async function getBackgroundTaskStatusAsync(): Promise<{
   return { status, isRegistered };
 }
 
-export function isBackgroundTaskAvailable(status: BackgroundTask.BackgroundTaskStatus | null): boolean {
+export function isBackgroundTaskAvailable(
+  status: BackgroundTask.BackgroundTaskStatus | null
+): boolean {
   return status === BackgroundTask.BackgroundTaskStatus.Available;
 }

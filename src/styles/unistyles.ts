@@ -70,7 +70,7 @@ const commonTheme = {
       elevation: 5,
     },
   },
-}
+};
 
 // Light theme
 const lightTheme = {
@@ -88,7 +88,7 @@ const lightTheme = {
     card: '#F9FAFB',
     error: '#EF4444',
     success: '#22C55E',
-  }
+  },
 };
 
 // Dark theme
@@ -108,7 +108,7 @@ const darkTheme = {
     card: '#1F2937',
     error: '#EF4444',
     success: '#22C55E',
-  }
+  },
 };
 
 // Breakpoints for responsive design

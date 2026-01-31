@@ -10,7 +10,7 @@ interface CircularProgressProps {
   size?: number;
 }
 
-const PIE_CHART_COVER = { radius: 0.7, color: 'transparent' }
+const PIE_CHART_COVER = { radius: 0.7, color: 'transparent' };
 
 export function CircularProgress({ usedQuota, totalQuota, size = 360 }: CircularProgressProps) {
   const { theme } = useUnistyles();
@@ -33,11 +33,7 @@ export function CircularProgress({ usedQuota, totalQuota, size = 360 }: Circular
   return (
     <View style={[styles.container, { width: size, height: size }]}>
       <View style={styles.chartContainer}>
-        <PieChart
-          widthAndHeight={size}
-          series={series}
-          cover={PIE_CHART_COVER}
-        />
+        <PieChart widthAndHeight={size} series={series} cover={PIE_CHART_COVER} />
       </View>
 
       <View style={styles.centerContent}>

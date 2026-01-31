@@ -5,6 +5,7 @@
 The Android widget (`widgets/CopilotWidget.tsx`) now uses **unistyles directly** via `UnistylesRuntime.getTheme()` instead of auto-generated constants.
 
 ### Before (Auto-generated Constants)
+
 ```typescript
 import { WidgetColors, WidgetSpacing, WidgetFontSizes, WidgetBorderRadius } from '@/constants/widgetTheme';
 
@@ -15,6 +16,7 @@ style={{
 ```
 
 ### After (Direct Unistyles Runtime)
+
 ```typescript
 import { StyleSheet } from 'react-native';
 import { UnistylesRuntime } from 'react-native-unistyles';
@@ -35,11 +37,12 @@ const styles = StyleSheet.create({
 ✅ **No Build Script Needed**: `npm run generate-widget-theme` no longer required  
 ✅ **Real-time Theme Access**: Widget always uses current theme  
 ✅ **Less Maintenance**: One less file to maintain (`widgetTheme.ts`)  
-✅ **Type Safety**: Full TypeScript support from unistyles types  
+✅ **Type Safety**: Full TypeScript support from unistyles types
 
 ## Implementation Details
 
 ### Theme Access
+
 ```typescript
 // At module level (outside components)
 const theme = UnistylesRuntime.getTheme();
@@ -50,13 +53,15 @@ const theme = UnistylesRuntime.getTheme();
 - Theme values used in `StyleSheet.create()`
 
 ### Dynamic Status Colors
+
 ```typescript
 function getStatusColor(status: QuotaStatus): ColorProp {
-  return theme.colors[status] as ColorProp;  // 'good', 'warning', or 'critical'
+  return theme.colors[status] as ColorProp; // 'good', 'warning', or 'critical'
 }
 ```
 
 ### Type Assertions
+
 Due to differences between React Native's `StyleSheet` types and `react-native-android-widget`'s widget-specific types, `as any` assertions are used:
 
 ```typescript
@@ -64,6 +69,7 @@ Due to differences between React Native's `StyleSheet` types and `react-native-a
 ```
 
 This is **safe** because:
+
 - Widget library accepts React Native StyleSheet objects at runtime
 - Type mismatch is only due to TypeScript definitions being stricter
 - Values are validated by React Native StyleSheet
@@ -89,11 +95,13 @@ Since the widget no longer needs generated constants:
 ## Testing
 
 The widget should work exactly as before, but now:
+
 - Theme changes in `src/styles/unistyles.ts` automatically apply to widgets
 - No manual generation step needed
 - Widget respects the active theme (light/dark)
 
 ### Test Checklist
+
 - [ ] Add widget to home screen
 - [ ] Widget displays quota correctly
 - [ ] Widget colors match app theme
@@ -103,18 +111,22 @@ The widget should work exactly as before, but now:
 ## Known Limitations
 
 ### Theme Updates
+
 - Widgets read theme at **module load time**
 - If user changes theme in app, widget won't update until:
   - Widget data refreshes (quota update triggers re-render)
   - App restarts (widget module reloads)
-  
+
 This is acceptable because:
+
 - Widgets are typically dark-themed by design (Android convention)
 - Widget updates happen regularly (background fetch)
 - Widget is a "glanceable" view, not interactive
 
 ### iOS Widgets
+
 iOS widgets (`targets/widget/index.swift`) **cannot** use this approach:
+
 - Built with SwiftUI, not React Native
 - No access to JavaScript runtime or unistyles
 - Must use iOS native theme system
