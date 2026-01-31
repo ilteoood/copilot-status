@@ -4,6 +4,7 @@ const sharedColors = {
   good: '#22C55E',
   warning: '#F97316',
   critical: '#EF4444',
+  tint: '#0a7ea4',
 };
 
 const commonTheme = {
@@ -77,10 +78,8 @@ const lightTheme = {
   ...commonTheme,
   colors: {
     ...sharedColors,
-    // From Colors.light
     text: '#11181C',
     background: '#fff',
-    tint: '#0a7ea4',
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: '#0a7ea4',
@@ -96,14 +95,11 @@ const darkTheme = {
   ...commonTheme,
   colors: {
     ...sharedColors,
-    // From Colors.dark
     text: '#ECEDEE',
     background: '#151718',
-    tint: '#fff',
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: '#fff',
-    // Additional semantic colors
     border: '#2D3748',
     card: '#1F2937',
     error: '#EF4444',

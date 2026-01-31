@@ -14,7 +14,7 @@ export const formatTime = (t: TFunction, timestamp: number | null): string => {
   return new Date(timestamp).toLocaleDateString();
 };
 
-export const formatFullDate = (t: TFunction, timestamp: number | null): string => {
+export const formatFullDate = (t: TFunction, timestamp: Date | number | null): string => {
   if (!timestamp) return t('time.never');
   const date = new Date(timestamp);
   return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`;
