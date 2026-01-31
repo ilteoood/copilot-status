@@ -65,7 +65,6 @@ describe('CircularProgress', () => {
   it('renders correctly with initial state showing used quota', () => {
     render(<CircularProgress {...defaultProps} />);
 
-    // Should show 50% and "USED" label
     expect(screen.getByText('50%')).toBeTruthy();
     expect(screen.getByText('USED')).toBeTruthy();
   });
@@ -73,15 +72,12 @@ describe('CircularProgress', () => {
   it('toggles to show available quota when pressed', () => {
     render(<CircularProgress {...defaultProps} />);
 
-    // Initially shows used quota
     expect(screen.getByText('50%')).toBeTruthy();
     expect(screen.getByText('USED')).toBeTruthy();
 
-    // Press the chart to toggle
     const pressable = screen.getByRole('button');
     fireEvent.press(pressable);
 
-    // Now should show available quota (50% available)
     expect(screen.getByText('50%')).toBeTruthy();
     expect(screen.getByText('AVAILABLE')).toBeTruthy();
   });
@@ -91,11 +87,9 @@ describe('CircularProgress', () => {
 
     const pressable = screen.getByRole('button');
 
-    // Toggle to available
     fireEvent.press(pressable);
     expect(screen.getByText('AVAILABLE')).toBeTruthy();
 
-    // Toggle back to used
     fireEvent.press(pressable);
     expect(screen.getByText('USED')).toBeTruthy();
   });
@@ -103,26 +97,21 @@ describe('CircularProgress', () => {
   it('calculates percentages correctly for different quota values', () => {
     const { rerender } = render(<CircularProgress usedQuota={75} totalQuota={100} size={200} />);
 
-    // 75% used
     expect(screen.getByText('75%')).toBeTruthy();
 
     const pressable = screen.getByRole('button');
     fireEvent.press(pressable);
 
-    // 25% available
     expect(screen.getByText('25%')).toBeTruthy();
 
-    // Test with different values
     rerender(<CircularProgress usedQuota={90} totalQuota={100} size={200} />);
 
-    // Should update to 10% available (still in available mode)
     expect(screen.getByText('10%')).toBeTruthy();
   });
 
   it('handles edge case with 0 total quota', () => {
     render(<CircularProgress usedQuota={0} totalQuota={0} size={200} />);
 
-    // Should show 0%
     expect(screen.getByText('0%')).toBeTruthy();
     expect(screen.getByText('USED')).toBeTruthy();
   });
@@ -130,13 +119,11 @@ describe('CircularProgress', () => {
   it('handles edge case with full quota usage', () => {
     render(<CircularProgress usedQuota={100} totalQuota={100} size={200} />);
 
-    // Should show 100% used
     expect(screen.getByText('100%')).toBeTruthy();
 
     const pressable = screen.getByRole('button');
     fireEvent.press(pressable);
 
-    // Should show 0% available
     expect(screen.getByText('0%')).toBeTruthy();
     expect(screen.getByText('AVAILABLE')).toBeTruthy();
   });

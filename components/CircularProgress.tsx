@@ -27,11 +27,17 @@ export function CircularProgress({ usedQuota, totalQuota, size = 360 }: Circular
   };
   const color = getColor();
 
-  // Toggle between showing used (normal) and available (reverse) chart
+  const getAvailableColor = () => {
+    if (availablePercent < 10) return theme.colors.critical;
+    if (availablePercent < 25) return theme.colors.warning;
+    return theme.colors.good;
+  };
+  const availableColor = getAvailableColor();
+
   const displayPercent = showAvailable ? availablePercent : consumedPercent;
   const series = showAvailable
     ? [
-        { value: availablePercent, color: theme.colors.good },
+        { value: availablePercent, color: availableColor },
         { value: consumedPercent, color: theme.colors.border },
       ]
     : [
