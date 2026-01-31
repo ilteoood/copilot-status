@@ -53,7 +53,6 @@ describe('stores/quota', () => {
 
       const store = useQuotaStore.getState();
       
-      // Should not throw
       expect(() => store.clearQuota()).not.toThrow();
     });
   });

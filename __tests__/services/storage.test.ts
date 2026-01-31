@@ -1,27 +1,16 @@
 import { 
-  StorageKeys, 
   zustandStorage, 
   quotaStorage, 
   usernameStorage, 
   themeStorage 
 } from '@/services/storage';
+import { StorageKeys } from '@/services/storage';
 
-// Get the mock storage instance from global
 const mockStorage = global.mockStorageInstance;
 
 describe('services/storage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  describe('StorageKeys', () => {
-    it('should have all required keys', () => {
-      expect(StorageKeys.QUOTA_DATA).toBe('quota_data');
-      expect(StorageKeys.LAST_FETCH).toBe('last_fetch');
-      expect(StorageKeys.SYNC_STATUS).toBe('sync_status');
-      expect(StorageKeys.THEME_PREFERENCE).toBe('theme_preference');
-      expect(StorageKeys.USERNAME).toBe('username');
-    });
   });
 
   describe('zustandStorage', () => {

@@ -37,11 +37,10 @@ describe('services/queryClient', () => {
       expect(retryDelay).toBeDefined();
       expect(typeof retryDelay).toBe('function');
 
-      // Test retry delays
-      expect(retryDelay(0)).toBe(1000); // 1000 * 2^0 = 1000
-      expect(retryDelay(1)).toBe(2000); // 1000 * 2^1 = 2000
-      expect(retryDelay(2)).toBe(4000); // 1000 * 2^2 = 4000
-      expect(retryDelay(10)).toBe(30000); // Should be capped at 30000
+      expect(retryDelay(0)).toBe(1000);
+      expect(retryDelay(1)).toBe(2000);
+      expect(retryDelay(2)).toBe(4000);
+      expect(retryDelay(10)).toBe(30000);
     });
   });
 

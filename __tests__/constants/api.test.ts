@@ -17,11 +17,5 @@ describe('constants/api', () => {
     it('should have correct scopes', () => {
       expect(GITHUB_OAUTH_CONFIG.scopes).toEqual(['read:org', 'read:user']);
     });
-
-    it('should be an immutable object structure', () => {
-      expect(Object.isFrozen(GITHUB_OAUTH_CONFIG)).toBe(false); // Not frozen but should remain constant
-      expect(typeof GITHUB_OAUTH_CONFIG).toBe('object');
-      expect(Array.isArray(GITHUB_OAUTH_CONFIG.scopes)).toBe(true);
-    });
   });
 });

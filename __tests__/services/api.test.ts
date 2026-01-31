@@ -122,7 +122,6 @@ describe('services/api', () => {
 
       const result = await fetchCopilotQuota('test-token');
 
-      // 2000 * (1 - 25/100) = 2000 * 0.75 = 1500
       expect(result.usedQuota).toBe(1500);
       expect(result.totalQuota).toBe(2000);
     });
@@ -168,7 +167,6 @@ describe('services/api', () => {
         new Error('Widget error')
       );
 
-      // Should not throw even if widget update fails
       await expect(fetchCopilotQuota('test-token')).resolves.toBeDefined();
     });
 

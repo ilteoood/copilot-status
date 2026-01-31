@@ -8,7 +8,6 @@ jest.mock('@/stores/secureStorage');
 describe('stores/auth', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Reset the store state
     useAuthStore.setState({
       isAuthenticated: false,
       isLoading: false,
@@ -71,7 +70,6 @@ describe('stores/auth', () => {
       const store = useAuthStore.getState();
       const checkAuthPromise = store.checkAuth();
 
-      // Check loading state before promise resolves
       expect(useAuthStore.getState().isLoading).toBe(true);
 
       resolveFn!('token');
@@ -137,7 +135,6 @@ describe('stores/auth', () => {
     it('should sign out successfully', async () => {
       (clearAuthData as jest.Mock).mockResolvedValue(undefined);
 
-      // Set initial authenticated state
       useAuthStore.setState({ isAuthenticated: true });
 
       const store = useAuthStore.getState();

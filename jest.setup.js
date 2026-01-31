@@ -1,8 +1,6 @@
-// Add global stubs for expo
 global.__ExpoImportMetaRegistry = {};
 global.structuredClone = global.structuredClone || ((obj) => JSON.parse(JSON.stringify(obj)));
 
-// Create a mock storage instance that will be reused
 const mockStorageInstance = {
   getString: jest.fn(),
   getNumber: jest.fn(),
@@ -11,12 +9,10 @@ const mockStorageInstance = {
   clearAll: jest.fn(),
 };
 
-// Mock react-native-mmkv with the shared instance
 jest.mock('react-native-mmkv', () => ({
   createMMKV: jest.fn(() => mockStorageInstance),
 }));
 
-// Export the mock instance for tests to use
 global.mockStorageInstance = mockStorageInstance;
 
 jest.mock('expo-secure-store', () => ({

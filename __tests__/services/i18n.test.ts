@@ -7,7 +7,6 @@ describe('services/i18n', () => {
   });
 
   it('should translate keys correctly', () => {
-    // Test with a generic key that should exist or return itself
     const result = i18n.t('time.never', { defaultValue: 'Never' });
     expect(result).toBeDefined();
     expect(typeof result).toBe('string');

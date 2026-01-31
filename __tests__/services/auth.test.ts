@@ -4,7 +4,6 @@ import Constants from 'expo-constants';
 
 global.fetch = jest.fn();
 
-// We need to mock Constants properly
 jest.mock('expo-constants', () => ({
   __esModule: true,
   default: {
@@ -80,7 +79,6 @@ describe('services/auth', () => {
       const callArgs = (global.fetch as jest.Mock).mock.calls[0];
       const body = JSON.parse(callArgs[1].body);
 
-      // Verify that client_id is being set from Constants
       expect(body.client_id).toBeDefined();
       expect(body.client_secret).toBeDefined();
       expect(body.code).toBe('test-code');
