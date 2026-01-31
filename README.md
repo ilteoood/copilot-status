@@ -21,7 +21,7 @@ A mobile-only app to monitor your GitHub Copilot usage quota with native home sc
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 24+
 - Expo CLI (`npm install -g expo-cli`)
 - iOS: Xcode 15+ (for iOS development)
 - Android: Android Studio (for Android development)

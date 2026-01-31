@@ -38,8 +38,8 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "GITHUB_CLIENT_ID=${{ secrets.GITHUB_CLIENT_ID }}" > .env
-          echo "GITHUB_CLIENT_SECRET=${{ secrets.GITHUB_CLIENT_SECRET }}" >> .env
+          echo "GITHUB_CLIENT_ID=${{ secrets.CLIENT_ID }}" > .env
+          echo "GITHUB_CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
 
       - name: Generate native Android code
         run: npx expo prebuild --platform android --clean
