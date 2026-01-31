@@ -7,6 +7,9 @@ import type { GitHubCopilotResponse } from '@/types/api';
 jest.mock('@/services/storage');
 jest.mock('@/widgets/voltraWidgetService');
 
+const mockQuotaStorage = jest.mocked(quotaStorage);
+const mockUpdateCopilotWidgetWithData = jest.mocked(updateCopilotWidgetWithData);
+
 describe('services/api', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -21,13 +24,14 @@ describe('services/api', () => {
       };
 
       const mockGetAuthenticated = jest.fn().mockResolvedValue({ data: mockUserData });
-      (Octokit as jest.MockedClass<typeof Octokit>).mockImplementation(
+      const MockedOctokit = jest.mocked(Octokit);
+      MockedOctokit.mockImplementation(
         () =>
           ({
             users: {
               getAuthenticated: mockGetAuthenticated,
             },
-          }) as any
+          }) as unknown as InstanceType<typeof Octokit>
       );
 
       const result = await fetchGitHubUser('test-token');
@@ -41,13 +45,14 @@ describe('services/api', () => {
       const mockError = new Error('API Error');
       const mockGetAuthenticated = jest.fn().mockRejectedValue(mockError);
       
-      (Octokit as jest.MockedClass<typeof Octokit>).mockImplementation(
+      const MockedOctokit = jest.mocked(Octokit);
+      MockedOctokit.mockImplementation(
         () =>
           ({
             users: {
               getAuthenticated: mockGetAuthenticated,
             },
-          }) as any
+          }) as unknown as InstanceType<typeof Octokit>
       );
 
       await expect(fetchGitHubUser('test-token')).rejects.toThrow('API Error');
@@ -70,11 +75,12 @@ describe('services/api', () => {
     it('should fetch and parse copilot quota data', async () => {
       const mockRequest = jest.fn().mockResolvedValue({ data: mockCopilotResponse });
       
-      (Octokit as jest.MockedClass<typeof Octokit>).mockImplementation(
+      const MockedOctokit = jest.mocked(Octokit);
+      MockedOctokit.mockImplementation(
         () =>
           ({
             request: mockRequest,
-          }) as any
+          }) as unknown as InstanceType<typeof Octokit>
       );
 
       const mockNow = 1234567890000;
@@ -93,9 +99,9 @@ describe('services/api', () => {
         overageCount: 0,
       });
 
-      expect(quotaStorage.setQuotaData).toHaveBeenCalledWith(JSON.stringify(result));
-      expect(quotaStorage.setLastFetch).toHaveBeenCalledWith(mockNow);
-      expect(updateCopilotWidgetWithData).toHaveBeenCalledWith(result, mockNow);
+      expect(mockQuotaStorage.setQuotaData).toHaveBeenCalledWith(JSON.stringify(result));
+      expect(mockQuotaStorage.setLastFetch).toHaveBeenCalledWith(mockNow);
+      expect(mockUpdateCopilotWidgetWithData).toHaveBeenCalledWith(result, mockNow);
 
       jest.restoreAllMocks();
     });
@@ -115,11 +121,12 @@ describe('services/api', () => {
 
       const mockRequest = jest.fn().mockResolvedValue({ data: mockResponse });
       
-      (Octokit as jest.MockedClass<typeof Octokit>).mockImplementation(
+      const MockedOctokit = jest.mocked(Octokit);
+      MockedOctokit.mockImplementation(
         () =>
           ({
             request: mockRequest,
-          }) as any
+          }) as unknown as InstanceType<typeof Octokit>
       );
 
       const result = await fetchCopilotQuota('test-token');
@@ -143,11 +150,12 @@ describe('services/api', () => {
 
       const mockRequest = jest.fn().mockResolvedValue({ data: mockResponse });
       
-      (Octokit as jest.MockedClass<typeof Octokit>).mockImplementation(
+      const MockedOctokit = jest.mocked(Octokit);
+      MockedOctokit.mockImplementation(
         () =>
           ({
             request: mockRequest,
-          }) as any
+          }) as unknown as InstanceType<typeof Octokit>
       );
 
       const result = await fetchCopilotQuota('test-token');
@@ -159,14 +167,15 @@ describe('services/api', () => {
     it('should handle widget update failure gracefully', async () => {
       const mockRequest = jest.fn().mockResolvedValue({ data: mockCopilotResponse });
       
-      (Octokit as jest.MockedClass<typeof Octokit>).mockImplementation(
+      const MockedOctokit = jest.mocked(Octokit);
+      MockedOctokit.mockImplementation(
         () =>
           ({
             request: mockRequest,
-          }) as any
+          }) as unknown as InstanceType<typeof Octokit>
       );
 
-      (updateCopilotWidgetWithData as jest.Mock).mockRejectedValue(
+      mockUpdateCopilotWidgetWithData.mockRejectedValue(
         new Error('Widget error')
       );
 
@@ -177,11 +186,12 @@ describe('services/api', () => {
       const mockError = new Error('API Error');
       const mockRequest = jest.fn().mockRejectedValue(mockError);
       
-      (Octokit as jest.MockedClass<typeof Octokit>).mockImplementation(
+      const MockedOctokit = jest.mocked(Octokit);
+      MockedOctokit.mockImplementation(
         () =>
           ({
             request: mockRequest,
-          }) as any
+          }) as unknown as InstanceType<typeof Octokit>
       );
 
       await expect(fetchCopilotQuota('test-token')).rejects.toThrow('API Error');

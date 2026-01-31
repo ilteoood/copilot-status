@@ -6,7 +6,19 @@ import {
 } from '@/services/storage';
 import { StorageKeys } from '@/services/storage';
 
-const mockStorage = (global as any).mockStorageInstance;
+interface MockStorage {
+  getString: jest.Mock;
+  getNumber: jest.Mock;
+  set: jest.Mock;
+  remove: jest.Mock;
+  clearAll: jest.Mock;
+}
+
+declare global {
+  var mockStorageInstance: MockStorage;
+}
+
+const mockStorage = global.mockStorageInstance;
 
 describe('services/storage', () => {
   beforeEach(() => {
@@ -33,9 +45,9 @@ describe('services/storage', () => {
     });
 
     it('should set item with JSON stringification', () => {
-      const testData = { value: 'test' };
+      const testData = '{"value":"test"}';
       
-      zustandStorage.setItem('test-key', testData as any);
+      zustandStorage.setItem('test-key', testData);
       
       expect(mockStorage.set).toHaveBeenCalledWith('test-key', JSON.stringify(testData));
     });

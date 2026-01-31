@@ -1,30 +1,37 @@
 import { formatTime, formatFullDate } from '@/utils/dateTimeUtils';
+import type { TFunction } from 'i18next';
 
 describe('dateTimeUtils', () => {
   describe('formatTime', () => {
-    const mockT = jest.fn((key: string, options?: any) => {
-      const translations: Record<string, string> = {
-        'time.never': 'Never',
-        'time.justNow': 'Just now',
-      };
-      
-      if (key === 'time.minutesAgo') {
-        return `${options.count} minute${options.count > 1 ? 's' : ''} ago`;
-      }
-      
-      if (key === 'time.hoursAgo') {
-        return `${options.count} hour${options.count > 1 ? 's' : ''} ago`;
-      }
-      
-      return translations[key] || key;
-    });
+    const createMockT = (): TFunction => {
+      return jest.fn((key: string, options?: Record<string, unknown>) => {
+        const translations: Record<string, string> = {
+          'time.never': 'Never',
+          'time.justNow': 'Just now',
+        };
+        
+        if (key === 'time.minutesAgo' && options) {
+          const count = options.count as number;
+          return `${count} minute${count > 1 ? 's' : ''} ago`;
+        }
+        
+        if (key === 'time.hoursAgo' && options) {
+          const count = options.count as number;
+          return `${count} hour${count > 1 ? 's' : ''} ago`;
+        }
+        
+        return translations[key] || key;
+      }) as unknown as TFunction;
+    };
+
+    let mockT: TFunction;
 
     beforeEach(() => {
-      mockT.mockClear();
+      mockT = createMockT();
     });
 
     it('should return "Never" for null timestamp', () => {
-      const result = formatTime(mockT as any, null);
+      const result = formatTime(mockT, null);
       expect(result).toBe('Never');
       expect(mockT).toHaveBeenCalledWith('time.never');
     });
@@ -35,7 +42,7 @@ describe('dateTimeUtils', () => {
       
       jest.spyOn(Date, 'now').mockReturnValue(now);
       
-      const result = formatTime(mockT as any, timestamp);
+      const result = formatTime(mockT, timestamp);
       expect(result).toBe('Just now');
       expect(mockT).toHaveBeenCalledWith('time.justNow');
       
@@ -48,7 +55,7 @@ describe('dateTimeUtils', () => {
       
       jest.spyOn(Date, 'now').mockReturnValue(now);
       
-      const result = formatTime(mockT as any, timestamp);
+      const result = formatTime(mockT, timestamp);
       expect(result).toBe('5 minutes ago');
       expect(mockT).toHaveBeenCalledWith('time.minutesAgo', { count: 5 });
       
@@ -61,7 +68,7 @@ describe('dateTimeUtils', () => {
       
       jest.spyOn(Date, 'now').mockReturnValue(now);
       
-      const result = formatTime(mockT as any, timestamp);
+      const result = formatTime(mockT, timestamp);
       expect(result).toBe('1 minute ago');
       expect(mockT).toHaveBeenCalledWith('time.minutesAgo', { count: 1 });
       
@@ -74,7 +81,7 @@ describe('dateTimeUtils', () => {
       
       jest.spyOn(Date, 'now').mockReturnValue(now);
       
-      const result = formatTime(mockT as any, timestamp);
+      const result = formatTime(mockT, timestamp);
       expect(result).toBe('5 hours ago');
       expect(mockT).toHaveBeenCalledWith('time.hoursAgo', { count: 5 });
       
@@ -87,7 +94,7 @@ describe('dateTimeUtils', () => {
       
       jest.spyOn(Date, 'now').mockReturnValue(now);
       
-      const result = formatTime(mockT as any, timestamp);
+      const result = formatTime(mockT, timestamp);
       const expectedDate = new Date(timestamp).toLocaleDateString();
       expect(result).toBe(expectedDate);
       
@@ -96,26 +103,30 @@ describe('dateTimeUtils', () => {
   });
 
   describe('formatFullDate', () => {
-    const mockT = jest.fn((key: string) => {
-      const translations: Record<string, string> = {
-        'time.never': 'Never',
-      };
-      return translations[key] || key;
-    });
+    const createMockT = (): TFunction => {
+      return jest.fn((key: string) => {
+        const translations: Record<string, string> = {
+          'time.never': 'Never',
+        };
+        return translations[key] || key;
+      }) as unknown as TFunction;
+    };
+
+    let mockT: TFunction;
 
     beforeEach(() => {
-      mockT.mockClear();
+      mockT = createMockT();
     });
 
     it('should return "Never" for null timestamp', () => {
-      const result = formatFullDate(mockT as any, null);
+      const result = formatFullDate(mockT, null);
       expect(result).toBe('Never');
       expect(mockT).toHaveBeenCalledWith('time.never');
     });
 
     it('should format Date object correctly', () => {
       const date = new Date('2024-01-15T10:30:00');
-      const result = formatFullDate(mockT as any, date);
+      const result = formatFullDate(mockT, date);
       
       const expectedDate = date.toLocaleDateString();
       const expectedTime = date.toLocaleTimeString();
@@ -124,7 +135,7 @@ describe('dateTimeUtils', () => {
 
     it('should format timestamp number correctly', () => {
       const timestamp = new Date('2024-01-15T10:30:00').getTime();
-      const result = formatFullDate(mockT as any, timestamp);
+      const result = formatFullDate(mockT, timestamp);
       
       const date = new Date(timestamp);
       const expectedDate = date.toLocaleDateString();
