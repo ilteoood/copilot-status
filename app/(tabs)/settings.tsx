@@ -1,6 +1,8 @@
-import { SettingsVoice } from '@/app/(tabs)/components/SettingsVoice';
 import { RadioButton } from '@/components/RadioButton';
 import { Separator } from '@/components/Separator';
+import { SettingsCategory } from '@/components/settings/SettingsCategory';
+import { SettingsSection } from '@/components/settings/SettingsSection';
+import { SettingsVoice } from '@/components/settings/SettingsVoice';
 import { useGitHubUser } from '@/hooks/useGitHub';
 import {
   BACKGROUND_FETCH_INTERVALS,
@@ -22,8 +24,6 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { StyleSheet, UnistylesRuntime, useUnistyles } from 'react-native-unistyles';
-import { SettingsCategory } from './components/SettingsCategory';
-import { SettingsSection } from './components/SettingsSection';
 
 export default function SettingsScreen() {
   const { theme } = useUnistyles();
