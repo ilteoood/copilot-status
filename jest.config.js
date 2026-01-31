@@ -14,6 +14,7 @@ module.exports = {
     'stores/**/*.{ts,tsx}',
     'utils/**/*.{ts,tsx}',
     'constants/**/*.{ts,tsx}',
+    'types/**/*.{ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
   ],
