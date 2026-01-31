@@ -35,6 +35,8 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Create .env file
+        # Note: Placeholder credentials are used for build verification only.
+        # The built APK will be unsigned and requires proper credentials at runtime.
         run: |
           echo "GITHUB_CLIENT_ID=placeholder" > .env
           echo "GITHUB_CLIENT_SECRET=placeholder" >> .env
@@ -46,6 +48,8 @@ jobs:
         run: chmod +x android/gradlew
 
       - name: Build Release APK
+        # Note: This produces an unsigned APK suitable for artifact storage.
+        # For app distribution, add signing configuration with keystore credentials.
         run: |
           cd android
           ./gradlew assembleRelease --no-daemon
