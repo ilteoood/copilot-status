@@ -183,11 +183,7 @@ export async function updateCopilotWidget(): Promise<void> {
         deepLinkUrl: 'xyz.ilteoood.copilotstatus://',
       });
     }
-
-    console.log('[VoltraWidget] Widget updated successfully');
-  } catch (error) {
-    console.error('[VoltraWidget] Failed to update widget:', error);
-  }
+  } catch {}
 }
 
 /**
@@ -200,10 +196,7 @@ export async function clearCopilotWidget(): Promise<void> {
     } else if (Platform.OS === 'android') {
       await clearAndroidWidget(WIDGET_ID);
     }
-    console.log('[VoltraWidget] Widget cleared');
-  } catch (error) {
-    console.error('[VoltraWidget] Failed to clear widget:', error);
-  }
+  } catch {}
 }
 
 /**

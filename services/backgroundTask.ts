@@ -12,7 +12,6 @@ export const BACKGROUND_TASK_NAME = 'copilot-quota-background-task';
 export const BACKGROUND_FETCH_INTERVALS: BackgroundFetchInterval[] = [0, 15, 30, 60];
 
 TaskManager.defineTask(BACKGROUND_TASK_NAME, async () => {
-  console.log('Background task running: fetching Copilot quota');
   try {
     const token = await getStoredToken();
     if (!token) {

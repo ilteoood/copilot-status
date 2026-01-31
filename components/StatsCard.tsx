@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
+import * as BackgroundTask from 'expo-background-task';
 
 interface StatsCardProps {
   icon: keyof typeof Ionicons.glyphMap;
@@ -19,7 +20,12 @@ export function StatsCard({ icon, label, value, color }: StatsCardProps) {
         <Ionicons name={icon} size={24} color={iconColor} />
       </View>
       <View style={styles.content}>
-        <Text style={styles.label}>{label}</Text>
+        <Text
+          style={styles.label}
+          onPress={() => BackgroundTask.triggerTaskWorkerForTestingAsync()}
+        >
+          {label}
+        </Text>
         <Text style={styles.value}>{value.toLocaleString()}</Text>
       </View>
     </View>
