@@ -29,7 +29,12 @@ export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayPro
       }
     >
       <View style={styles.progressContainer}>
-        <CircularProgress usedQuota={quota.usedQuota} totalQuota={quota.totalQuota} size={200} />
+        <CircularProgress
+          usedQuota={quota.usedQuota}
+          totalQuota={quota.totalQuota}
+          resetDate={quota.resetDate}
+          size={200}
+        />
       </View>
 
       <View style={styles.statsContainer}>

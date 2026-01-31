@@ -1,3 +1,4 @@
+import { formatFullDate } from '@/utils/dateTimeUtils';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import PieChart from 'react-native-pie-chart';
@@ -6,12 +7,18 @@ import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 interface CircularProgressProps {
   usedQuota: number;
   totalQuota: number;
+  resetDate: Date;
   size?: number;
 }
 
 const PIE_CHART_COVER = { radius: 0.7, color: 'transparent' };
 
-export function CircularProgress({ usedQuota, totalQuota, size = 360 }: CircularProgressProps) {
+export function CircularProgress({
+  usedQuota,
+  totalQuota,
+  resetDate,
+  size = 360,
+}: CircularProgressProps) {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
 
@@ -40,6 +47,12 @@ export function CircularProgress({ usedQuota, totalQuota, size = 360 }: Circular
           {Math.round(consumedPercent)}%
         </Text>
         <Text style={[styles.labelText, { fontSize: size * 0.08 }]}>{t('quota.used')}</Text>
+        <Text style={[styles.resetText, { fontSize: size * 0.055, marginTop: size * 0.08 }]}>
+          {t('quota.resetsAt')}
+        </Text>
+        <Text style={[styles.resetDateText, { fontSize: size * 0.055 }]}>
+          {formatFullDate(t, resetDate.getTime())}
+        </Text>
       </View>
     </View>
   );
@@ -65,5 +78,15 @@ const styles = StyleSheet.create(theme => ({
     fontWeight: theme.typography.fontWeights.medium,
     marginTop: 4,
     opacity: 0.6,
+  },
+  resetText: {
+    color: theme.colors.icon,
+    fontWeight: theme.typography.fontWeights.medium,
+    opacity: 0.6,
+  },
+  resetDateText: {
+    color: theme.colors.text,
+    fontWeight: theme.typography.fontWeights.medium,
+    marginTop: 2,
   },
 }));
