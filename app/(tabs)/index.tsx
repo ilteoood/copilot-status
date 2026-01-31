@@ -8,9 +8,9 @@ import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 export default function DashboardScreen() {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
-  const { quota, lastFetch, isLoading, error, isCached, fetchQuota } = useQuota();
+  const { quota, lastFetch, isFetching, error, isCached, fetchQuota } = useQuota();
 
-  if (isLoading && !quota) {
+  if (isFetching && !quota) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={theme.colors.tint} />
@@ -42,7 +42,7 @@ export default function DashboardScreen() {
         <Text style={styles.headerTitle}>{t('dashboard.title')}</Text>
         <CachedBanner lastFetch={lastFetch} visible={isCached} />
       </View>
-      <QuotaDisplay quota={quota} onRefresh={fetchQuota} isRefreshing={isLoading} />
+      <QuotaDisplay quota={quota} onRefresh={fetchQuota} isRefreshing={isFetching} />
     </View>
   );
 }

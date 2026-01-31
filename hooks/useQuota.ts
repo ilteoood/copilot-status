@@ -2,7 +2,7 @@ import { useCopilotQuota } from '@/hooks/useGitHub';
 import { getPercentRemaining, getQuotaStatus, getRemainingQuota } from '@/types/quota';
 
 export function useQuota() {
-  const { data: quota, isLoading, error, isCached, dataUpdatedAt, refetch } = useCopilotQuota();
+  const { data: quota, isFetching, error, isCached, dataUpdatedAt, refetch } = useCopilotQuota();
 
   const remainingQuota = quota ? getRemainingQuota(quota) : null;
   const percentRemaining = quota ? getPercentRemaining(quota) : null;
@@ -14,7 +14,7 @@ export function useQuota() {
     percentRemaining,
     status,
     lastFetch: dataUpdatedAt,
-    isLoading,
+    isFetching,
     error: error?.message ?? null,
     isCached,
     fetchQuota: refetch,
