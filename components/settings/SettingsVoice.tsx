@@ -8,9 +8,10 @@ interface SettingsVoiceProps {
   icon: ComponentProps<typeof Ionicons>['name'];
   text: string;
   value: string;
+  onPress?: () => void;
 }
 
-export const SettingsVoice = ({ icon, text, value }: SettingsVoiceProps) => {
+export const SettingsVoice = ({ icon, text, value, onPress }: SettingsVoiceProps) => {
   const { t } = useTranslation();
   const { theme } = useUnistyles();
 
@@ -18,7 +19,9 @@ export const SettingsVoice = ({ icon, text, value }: SettingsVoiceProps) => {
     <View style={styles.row}>
       <Ionicons name={icon} size={22} color={theme.colors.text} />
       <Text style={styles.rowText}>{t(text)}</Text>
-      <Text style={styles.rowValue}>{t(value)}</Text>
+      <Text style={[styles.rowValue, onPress && styles.rowLink]} onPress={onPress}>
+        {t(value)}
+      </Text>
     </View>
   );
 };
@@ -39,5 +42,8 @@ const styles = StyleSheet.create(theme => ({
   rowValue: {
     fontSize: theme.typography.fontSizes.md,
     color: theme.colors.icon,
+  },
+  rowLink: {
+    color: theme.colors.tint,
   },
 }));

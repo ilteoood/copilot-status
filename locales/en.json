@@ -57,7 +57,14 @@
     "version": "Version",
     "signOutConfirmTitle": "Sign Out",
     "signOutConfirmMessage": "Are you sure you want to sign out?",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "sourceCode": "Source Code",
+    "github": "GitHub.com",
+    "repoLink": "https://github.com/ilteoood/copilot-status",
+    "author": "Author",
+    "authorName": "@ilteoood",
+    "authorProfile": "https://github.com/ilteoood",
+    "disclaimer": "This app is not affiliated with or endorsed by GitHub."
   },
   "widget": {
     "copilot": "Copilot",

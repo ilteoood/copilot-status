@@ -22,7 +22,7 @@ import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Linking, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { StyleSheet, UnistylesRuntime, useUnistyles } from 'react-native-unistyles';
 
 export default function SettingsScreen() {
@@ -163,7 +163,25 @@ export default function SettingsScreen() {
         />
         <Separator />
         <SettingsVoice icon="code-outline" text="settings.version" value={appVersion} />
+        <Separator />
+        <SettingsVoice
+          icon="code-download"
+          text="settings.sourceCode"
+          value="settings.github"
+          onPress={() => Linking.openURL(t('settings.repoLink'))}
+        />
+        <Separator />
+        <SettingsVoice
+          icon="man-outline"
+          text="settings.author"
+          value="settings.authorName"
+          onPress={() => Linking.openURL(t('settings.authorProfile'))}
+        />
       </SettingsCategory>
+
+      <SettingsSection>
+        <Text style={styles.rowText}>{t('settings.disclaimer')}</Text>
+      </SettingsSection>
     </ScrollView>
   );
 }
