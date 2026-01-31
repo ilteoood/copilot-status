@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import PieChart from 'react-native-pie-chart';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
@@ -14,8 +15,10 @@ const PIE_CHART_COVER = { radius: 0.7, color: 'transparent' };
 export function CircularProgress({ usedQuota, totalQuota, size = 360 }: CircularProgressProps) {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
+  const [showAvailable, setShowAvailable] = useState(false);
 
   const consumedPercent = totalQuota > 0 ? (usedQuota / totalQuota) * 100 : 0;
+  const availablePercent = 100 - consumedPercent;
 
   const getColor = () => {
     if (consumedPercent > 90) return theme.colors.critical;
@@ -24,24 +27,43 @@ export function CircularProgress({ usedQuota, totalQuota, size = 360 }: Circular
   };
   const color = getColor();
 
-  const series = [
-    { value: consumedPercent, color },
-    { value: 100 - consumedPercent, color: theme.colors.border },
-  ];
+  // Toggle between showing used (normal) and available (reverse) chart
+  const displayPercent = showAvailable ? availablePercent : consumedPercent;
+  const series = showAvailable
+    ? [
+        { value: availablePercent, color: theme.colors.good },
+        { value: consumedPercent, color: theme.colors.border },
+      ]
+    : [
+        { value: consumedPercent, color },
+        { value: availablePercent, color: theme.colors.border },
+      ];
+
+  const handlePress = () => {
+    setShowAvailable(prev => !prev);
+  };
 
   return (
-    <View style={[styles.container, { width: size, height: size }]}>
+    <Pressable
+      style={[styles.container, { width: size, height: size }]}
+      onPress={handlePress}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={t(showAvailable ? 'quota.toggleToUsed' : 'quota.toggleToAvailable')}
+    >
       <View style={styles.chartContainer}>
         <PieChart widthAndHeight={size} series={series} cover={PIE_CHART_COVER} />
       </View>
 
       <View style={styles.centerContent}>
         <Text style={[styles.percentText, { fontSize: size * 0.22 }]}>
-          {Math.round(consumedPercent)}%
+          {Math.round(displayPercent)}%
         </Text>
-        <Text style={[styles.labelText, { fontSize: size * 0.08 }]}>{t('quota.used')}</Text>
+        <Text style={[styles.labelText, { fontSize: size * 0.08 }]}>
+          {t(showAvailable ? 'quota.available' : 'quota.used')}
+        </Text>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
