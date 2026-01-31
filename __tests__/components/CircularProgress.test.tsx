@@ -8,8 +8,8 @@ jest.mock('react-i18next', () => ({
       const translations: Record<string, string> = {
         'quota.used': 'USED',
         'quota.available': 'AVAILABLE',
-        'quota.toggleToAvailable': 'Tap to show available quota',
-        'quota.toggleToUsed': 'Tap to show used quota',
+        'quota.toggleToAvailable': 'Show available quota',
+        'quota.toggleToUsed': 'Show used quota',
       };
       return translations[key] || key;
     },

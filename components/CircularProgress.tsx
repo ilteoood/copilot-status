@@ -39,14 +39,14 @@ export function CircularProgress({ usedQuota, totalQuota, size = 360 }: Circular
         { value: availablePercent, color: theme.colors.border },
       ];
 
-  const handlePress = () => {
+  const handleToggleView = () => {
     setShowAvailable(prev => !prev);
   };
 
   return (
     <Pressable
       style={[styles.container, { width: size, height: size }]}
-      onPress={handlePress}
+      onPress={handleToggleView}
       accessible={true}
       accessibilityRole="button"
       accessibilityLabel={t(showAvailable ? 'quota.toggleToUsed' : 'quota.toggleToAvailable')}
