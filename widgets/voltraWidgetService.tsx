@@ -115,48 +115,49 @@ function buildAndroidWidgetVariants(
     {
       size: { width: 250, height: 70 },
       content: (
-        <VoltraAndroid.Column
-          horizontalAlignment="center-horizontally"
-          verticalAlignment="center-vertically"
-          style={styles.androidContainer}
-        >
-          <VoltraAndroid.Row
+        <VoltraAndroid.Button enabled>
+          <VoltraAndroid.Column
             horizontalAlignment="center-horizontally"
             verticalAlignment="center-vertically"
-            style={styles.row}
+            style={styles.androidContainer}
           >
-            <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
-              <VoltraAndroid.Text style={{ ...styles.largeValue, color: statusColor }}>
-                {Math.round(widgetData.percentUsed)}%
-              </VoltraAndroid.Text>
-              <VoltraAndroid.Text style={styles.label}>
-                {i18n.t('widget.usedLowercase')}
-              </VoltraAndroid.Text>
-            </VoltraAndroid.Column>
+            <VoltraAndroid.Row
+              horizontalAlignment="center-horizontally"
+              verticalAlignment="center-vertically"
+              style={styles.row}
+            >
+              <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
+                <VoltraAndroid.Text style={{ ...styles.largeValue, color: statusColor }}>
+                  {Math.round(widgetData.percentUsed)}%
+                </VoltraAndroid.Text>
+                <VoltraAndroid.Text style={styles.label}>
+                  {i18n.t('widget.usedLowercase')}
+                </VoltraAndroid.Text>
+              </VoltraAndroid.Column>
+              <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
+                <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
+                  {widgetData.usedQuota.toLocaleString()}
+                </VoltraAndroid.Text>
+                <VoltraAndroid.Text style={styles.label}>
+                  {i18n.t('widget.requestsUsed')}
+                </VoltraAndroid.Text>
+              </VoltraAndroid.Column>
 
-            <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
-              <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
-                {widgetData.usedQuota.toLocaleString()}
-              </VoltraAndroid.Text>
-              <VoltraAndroid.Text style={styles.label}>
-                {i18n.t('widget.requestsUsed')}
-              </VoltraAndroid.Text>
-            </VoltraAndroid.Column>
+              <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
+                <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.good }}>
+                  {remaining.toLocaleString()}
+                </VoltraAndroid.Text>
+                <VoltraAndroid.Text style={styles.label}>
+                  {i18n.t('widget.requestsLeft')}
+                </VoltraAndroid.Text>
+              </VoltraAndroid.Column>
+            </VoltraAndroid.Row>
 
-            <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
-              <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.good }}>
-                {remaining.toLocaleString()}
-              </VoltraAndroid.Text>
-              <VoltraAndroid.Text style={styles.label}>
-                {i18n.t('widget.requestsLeft')}
-              </VoltraAndroid.Text>
-            </VoltraAndroid.Column>
-          </VoltraAndroid.Row>
-
-          <VoltraAndroid.Text style={styles.footerWithMargin}>
-            {widgetData.username} - {widgetData.lastUpdated}
-          </VoltraAndroid.Text>
-        </VoltraAndroid.Column>
+            <VoltraAndroid.Text style={styles.footerWithMargin}>
+              {widgetData.username} - {widgetData.lastUpdated}
+            </VoltraAndroid.Text>
+          </VoltraAndroid.Column>
+        </VoltraAndroid.Button>
       ),
     },
   ];
