@@ -6,7 +6,7 @@ import {
 } from '@/services/storage';
 import { StorageKeys } from '@/services/storage';
 
-const mockStorage = global.mockStorageInstance;
+const mockStorage = (global as any).mockStorageInstance;
 
 describe('services/storage', () => {
   beforeEach(() => {
@@ -35,7 +35,7 @@ describe('services/storage', () => {
     it('should set item with JSON stringification', () => {
       const testData = { value: 'test' };
       
-      zustandStorage.setItem('test-key', testData);
+      zustandStorage.setItem('test-key', testData as any);
       
       expect(mockStorage.set).toHaveBeenCalledWith('test-key', JSON.stringify(testData));
     });

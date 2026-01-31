@@ -56,6 +56,7 @@ describe('services/api', () => {
 
   describe('fetchCopilotQuota', () => {
     const mockCopilotResponse: GitHubCopilotResponse = {
+      username: 'testuser',
       quota_snapshots: {
         premium_interactions: {
           entitlement: 1000,
@@ -101,6 +102,7 @@ describe('services/api', () => {
 
     it('should calculate used quota correctly', async () => {
       const mockResponse: GitHubCopilotResponse = {
+        username: 'testuser',
         quota_snapshots: {
           premium_interactions: {
             entitlement: 2000,
@@ -128,6 +130,7 @@ describe('services/api', () => {
 
     it('should handle overage correctly', async () => {
       const mockResponse: GitHubCopilotResponse = {
+        username: 'testuser',
         quota_snapshots: {
           premium_interactions: {
             entitlement: 1000,
