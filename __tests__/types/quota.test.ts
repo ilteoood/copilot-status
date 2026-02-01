@@ -1,8 +1,8 @@
-import { 
-  getQuotaStatus, 
-  getRemainingQuota, 
+import {
   getPercentRemaining,
-  type QuotaInfo 
+  getQuotaStatus,
+  getRemainingQuota,
+  type QuotaInfo,
 } from '@/types/quota';
 
 describe('types/quota', () => {

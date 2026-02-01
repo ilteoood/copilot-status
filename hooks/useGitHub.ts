@@ -1,5 +1,4 @@
 import { fetchCopilotQuota, fetchGitHubUser, type GitHubUser } from '@/services/api';
-import { usernameStorage } from '@/services/storage';
 import { getStoredToken } from '@/stores/secureStorage';
 import type { QuotaInfo } from '@/types/quota';
 import { useQuery } from '@tanstack/react-query';
@@ -15,12 +14,9 @@ export function useGitHubUser() {
     queryFn: async () => {
       const token = await getStoredToken();
       if (!token) throw new Error('Not authenticated');
-      const user = await fetchGitHubUser(token);
-      usernameStorage.setUsername(user.login);
-      return user;
+      return fetchGitHubUser(token);
     },
     staleTime: 10 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
   });
 }
 
@@ -34,7 +30,6 @@ export function useCopilotQuota() {
       return fetchCopilotQuota(token);
     },
     staleTime: 2 * 60 * 1000,
-    gcTime: 24 * 60 * 60 * 1000,
     refetchOnMount: 'always',
     refetchOnReconnect: true,
   });

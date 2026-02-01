@@ -1,9 +1,4 @@
-import {
-  quotaStorage,
-  StorageKeys,
-  themeStorage,
-  usernameStorage
-} from '@/services/storage';
+import { StorageKeys, themeStorage } from '@/services/storage';
 
 interface MockStorage {
   getString: jest.Mock;
@@ -22,106 +17,6 @@ const mockStorage = global.mockStorageInstance;
 describe('services/storage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  describe('quotaStorage', () => {
-    it('should get quota data', () => {
-      const testData = '{"test": "data"}';
-      mockStorage.getString.mockReturnValue(testData);
-
-      const result = quotaStorage.getQuotaData();
-
-      expect(mockStorage.getString).toHaveBeenCalledWith(StorageKeys.QUOTA_DATA);
-      expect(result).toBe(testData);
-    });
-
-    it('should return null if quota data does not exist', () => {
-      mockStorage.getString.mockReturnValue(undefined);
-
-      const result = quotaStorage.getQuotaData();
-
-      expect(result).toBeNull();
-    });
-
-    it('should set quota data', () => {
-      const testData = '{"test": "data"}';
-
-      quotaStorage.setQuotaData(testData);
-
-      expect(mockStorage.set).toHaveBeenCalledWith(StorageKeys.QUOTA_DATA, testData);
-    });
-
-    it('should clear quota data', () => {
-      quotaStorage.clearQuotaData();
-
-      expect(mockStorage.remove).toHaveBeenCalledWith(StorageKeys.QUOTA_DATA);
-    });
-
-    it('should get last fetch timestamp', () => {
-      const timestamp = 1234567890;
-      mockStorage.getNumber.mockReturnValue(timestamp);
-
-      const result = quotaStorage.getLastFetch();
-
-      expect(mockStorage.getNumber).toHaveBeenCalledWith(StorageKeys.LAST_FETCH);
-      expect(result).toBe(timestamp);
-    });
-
-    it('should return null if last fetch does not exist', () => {
-      mockStorage.getNumber.mockReturnValue(undefined);
-
-      const result = quotaStorage.getLastFetch();
-
-      expect(result).toBeNull();
-    });
-
-    it('should set last fetch timestamp', () => {
-      const timestamp = 1234567890;
-
-      quotaStorage.setLastFetch(timestamp);
-
-      expect(mockStorage.set).toHaveBeenCalledWith(StorageKeys.LAST_FETCH, timestamp);
-    });
-
-    it('should clear all data', () => {
-      quotaStorage.clearAll();
-
-      expect(mockStorage.clearAll).toHaveBeenCalled();
-    });
-  });
-
-  describe('usernameStorage', () => {
-    it('should get username', () => {
-      const username = 'testuser';
-      mockStorage.getString.mockReturnValue(username);
-
-      const result = usernameStorage.getUsername();
-
-      expect(mockStorage.getString).toHaveBeenCalledWith(StorageKeys.USERNAME);
-      expect(result).toBe(username);
-    });
-
-    it('should return null if username does not exist', () => {
-      mockStorage.getString.mockReturnValue(undefined);
-
-      const result = usernameStorage.getUsername();
-
-      expect(result).toBeNull();
-    });
-
-    it('should set username', () => {
-      const username = 'testuser';
-
-      usernameStorage.setUsername(username);
-
-      expect(mockStorage.set).toHaveBeenCalledWith(StorageKeys.USERNAME, username);
-    });
-
-    it('should clear username', () => {
-      usernameStorage.clearUsername();
-
-      expect(mockStorage.remove).toHaveBeenCalledWith(StorageKeys.USERNAME);
-    });
   });
 
   describe('themeStorage', () => {

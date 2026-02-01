@@ -1,6 +1,8 @@
 import { TFunction } from 'i18next';
 
-export const formatTime = (t: TFunction, timestamp: number | null): string => {
+type Nullable<T> = T | null | undefined;
+
+export const formatTime = (t: TFunction, timestamp: Nullable<number>): string => {
   if (!timestamp) return t('time.never');
 
   const now = Date.now();
@@ -14,7 +16,7 @@ export const formatTime = (t: TFunction, timestamp: number | null): string => {
   return new Date(timestamp).toLocaleDateString();
 };
 
-export const formatFullDate = (t: TFunction, timestamp: Date | number | null): string => {
+export const formatFullDate = (t: TFunction, timestamp: Nullable<Date | number>): string => {
   if (!timestamp) return t('time.never');
   const date = new Date(timestamp);
   return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`;

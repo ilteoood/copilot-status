@@ -1,7 +1,10 @@
+import { QUERY_KEYS } from '@/hooks/useGitHub';
+import { GitHubUser } from '@/services/api';
 import i18n from '@/services/i18n';
-import { quotaStorage, storage, StorageKeys, usernameStorage } from '@/services/storage';
+import { queryClient } from '@/services/queryClient';
+import { storage, StorageKeys } from '@/services/storage';
 import type { QuotaInfo } from '@/types/quota';
-import { formatFullDate, formatTime } from '@/utils/dateTimeUtils';
+import { formatFullDate } from '@/utils/dateTimeUtils';
 import { Platform } from 'react-native';
 import { VoltraAndroid } from 'voltra/android';
 import {
@@ -30,24 +33,19 @@ function getIsDarkMode(): boolean {
     | 'system'
     | undefined;
 
-  // For widgets, default to dark if system or undefined
-  if (themePreference === 'light') {
-    return false;
-  }
-  return true;
+  return themePreference !== 'light';
 }
 
 function getWidgetData(): { quota: QuotaInfo | null; username: string; lastFetch: number | null } {
-  const quotaDataStr = quotaStorage.getQuotaData();
-  const lastFetch = quotaStorage.getLastFetch();
-  const username = usernameStorage.getUsername() ?? '';
+  const queryState = queryClient.getQueryState<QuotaInfo>(QUERY_KEYS.COPILOT_QUOTA);
+  const githubUser = queryClient.getQueryData<GitHubUser>(QUERY_KEYS.GITHUB_USER);
+  const username = githubUser?.login ?? '';
 
-  try {
-    const quota = quotaDataStr ? (JSON.parse(quotaDataStr) as QuotaInfo) : null;
-    return { quota, username, lastFetch };
-  } catch {
-    return { quota: null, username, lastFetch: null };
-  }
+  return {
+    quota: queryState?.data ?? null,
+    username,
+    lastFetch: queryState?.dataUpdatedAt ?? null,
+  };
 }
 
 /**
@@ -171,7 +169,7 @@ function buildAndroidWidgetVariants(
 export async function updateCopilotWidget(): Promise<void> {
   try {
     const { quota, username, lastFetch } = getWidgetData();
-    const lastUpdated = formatTime(i18n.t, lastFetch);
+    const lastUpdated = formatFullDate(i18n.t, lastFetch);
     const isDarkMode = getIsDarkMode();
 
     if (Platform.OS === 'ios') {
@@ -199,33 +197,4 @@ export async function clearCopilotWidget(): Promise<void> {
       await clearAndroidWidget(WIDGET_ID);
     }
   } catch {}
-}
-
-/**
- * Updates widget with new quota data directly
- * Used when quota data is already available (e.g., after API fetch)
- */
-export async function updateCopilotWidgetWithData(
-  quota: QuotaInfo,
-  lastFetch: number
-): Promise<void> {
-  try {
-    const lastUpdated = formatFullDate(i18n.t, lastFetch);
-    const isDarkMode = getIsDarkMode();
-    const username = usernameStorage.getUsername() ?? '';
-
-    if (Platform.OS === 'ios') {
-      const variants = buildIOSWidgetVariants(quota, username, lastUpdated, isDarkMode);
-      await updateWidget(WIDGET_ID, variants, {
-        deepLinkUrl: DEEP_LINK_URL,
-      });
-    } else if (Platform.OS === 'android') {
-      const variants = buildAndroidWidgetVariants(quota, username, lastUpdated, isDarkMode);
-      await updateAndroidWidget(WIDGET_ID, variants, {
-        deepLinkUrl: DEEP_LINK_URL,
-      });
-    }
-  } catch (error) {
-    console.error('[VoltraWidget] Failed to update widget with data:', error);
-  }
 }

@@ -9,9 +9,4 @@ export {
   type WidgetData
 } from './VoltraCopilotWidget';
 
-export {
-  clearCopilotWidget,
-  updateCopilotWidget,
-  updateCopilotWidgetWithData
-} from './voltraWidgetService';
-
+export { clearCopilotWidget, updateCopilotWidget } from './voltraWidgetService';

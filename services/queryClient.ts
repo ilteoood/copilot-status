@@ -1,5 +1,6 @@
-import { QueryClient } from '@tanstack/react-query';
+import { updateCopilotWidget } from '@/widgets/voltraWidgetService';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import { QueryCache, QueryClient } from '@tanstack/react-query';
 import { storage } from './storage';
 
 // Create MMKV-based persister for React Query
@@ -23,8 +24,7 @@ export const queryClient = new QueryClient({
     queries: {
       retry: 2,
       retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-      staleTime: 5 * 60 * 1000,
-      gcTime: 24 * 60 * 60 * 1000,
+      gcTime: Infinity,
       refetchOnWindowFocus: false,
       refetchOnReconnect: true,
       refetchOnMount: true,
@@ -35,6 +35,9 @@ export const queryClient = new QueryClient({
       networkMode: 'offlineFirst',
     },
   },
+  queryCache: new QueryCache({
+    onSuccess: updateCopilotWidget,
+  }),
 });
 
 export const persistOptions = { persister: queryPersister };

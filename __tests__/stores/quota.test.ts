@@ -1,18 +1,11 @@
-import { quotaStorage, usernameStorage } from '@/services/storage';
+import { queryClient } from '@/services/queryClient';
 import { useQuotaStore } from '@/stores/quota';
 import { clearCopilotWidget } from '@/widgets/voltraWidgetService';
 
-jest.mock('@/services/storage', () => ({
-  quotaStorage: {
-    clearQuotaData: jest.fn(),
+jest.mock('@/services/queryClient', () => ({
+  queryClient: {
+    clear: jest.fn(),
   },
-  usernameStorage: {
-    clearUsername: jest.fn(),
-  },
-}));
-
-jest.mock('@/widgets/voltraWidgetService', () => ({
-  clearCopilotWidget: jest.fn(() => Promise.resolve()),
 }));
 
 describe('stores/quota', () => {
@@ -21,24 +14,11 @@ describe('stores/quota', () => {
   });
 
   describe('useQuotaStore', () => {
-    it('should have clearQuota method', () => {
-      const store = useQuotaStore();
-      expect(store.clearQuota).toBeDefined();
-      expect(typeof store.clearQuota).toBe('function');
-    });
-
-    it('should clear quota data when clearQuota is called', () => {
+    it('should clear queryClient when clearQuota is called', () => {
       const store = useQuotaStore();
       store.clearQuota();
 
-      expect(quotaStorage.clearQuotaData).toHaveBeenCalled();
-    });
-
-    it('should clear username when clearQuota is called', () => {
-      const store = useQuotaStore();
-      store.clearQuota();
-
-      expect(usernameStorage.clearUsername).toHaveBeenCalled();
+      expect(queryClient.clear).toHaveBeenCalled();
     });
 
     it('should clear copilot widget when clearQuota is called', () => {

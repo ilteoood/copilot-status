@@ -1,7 +1,7 @@
-import * as AuthSession from 'expo-auth-session';
-import * as WebBrowser from 'expo-web-browser';
-import Constants from 'expo-constants';
 import { GITHUB_OAUTH_CONFIG } from '@/constants/api';
+import * as AuthSession from 'expo-auth-session';
+import Constants from 'expo-constants';
+import * as WebBrowser from 'expo-web-browser';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -14,9 +14,6 @@ const getCredentials = () => {
   };
 };
 
-// Create redirect URI
-const getRedirectUri = () => AuthSession.makeRedirectUri();
-
 // Discovery document for GitHub OAuth
 const discovery: AuthSession.DiscoveryDocument = {
   authorizationEndpoint: GITHUB_OAUTH_CONFIG.authorizationEndpoint,
@@ -26,13 +23,12 @@ const discovery: AuthSession.DiscoveryDocument = {
 // Sign in with GitHub - returns auth request for use with promptAsync
 export function useGitHubAuthRequest() {
   const { clientId } = getCredentials();
-  const redirectUri = getRedirectUri();
 
   return AuthSession.useAuthRequest(
     {
       clientId,
       scopes: GITHUB_OAUTH_CONFIG.scopes,
-      redirectUri,
+      redirectUri: AuthSession.makeRedirectUri(),
     },
     discovery
   );
@@ -41,13 +37,12 @@ export function useGitHubAuthRequest() {
 // Exchange authorization code for access token
 export async function exchangeCodeForToken(code: string, codeVerifier?: string): Promise<string> {
   const { clientId, clientSecret } = getCredentials();
-  const redirectUri = getRedirectUri();
 
   const body: Record<string, string> = {
     client_id: clientId,
     client_secret: clientSecret,
     code,
-    redirect_uri: redirectUri,
+    redirect_uri: AuthSession.makeRedirectUri(),
   };
 
   if (codeVerifier) {
