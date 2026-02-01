@@ -17,7 +17,7 @@ function parseQuotaResponse(response: GitHubCopilotResponse): QuotaInfo {
   const { premium_interactions } = response.quota_snapshots;
   const totalQuota = premium_interactions.entitlement;
   const percentRemaining = premium_interactions.percent_remaining;
-  const usedQuota = Math.round(totalQuota * (1 - percentRemaining / 100));
+  const usedQuota = totalQuota * (1 - percentRemaining / 100);
 
   return {
     totalQuota,

@@ -39,11 +39,10 @@ function getIsDarkMode(): boolean {
 function getWidgetData(): { quota: QuotaInfo | null; username: string; lastFetch: number | null } {
   const queryState = queryClient.getQueryState<QuotaInfo>(QUERY_KEYS.COPILOT_QUOTA);
   const githubUser = queryClient.getQueryData<GitHubUser>(QUERY_KEYS.GITHUB_USER);
-  const username = githubUser?.login ?? '';
 
   return {
     quota: queryState?.data ?? null,
-    username,
+    username: githubUser?.login ?? '',
     lastFetch: queryState?.dataUpdatedAt ?? null,
   };
 }
@@ -128,7 +127,7 @@ function buildAndroidWidgetVariants(
           >
             <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
               <VoltraAndroid.Text style={{ ...styles.largeValue, color: statusColor }}>
-                {Math.round(widgetData.percentUsed)}%
+                {widgetData.percentUsed}%
               </VoltraAndroid.Text>
               <VoltraAndroid.Text style={styles.label}>
                 {i18n.t('widget.usedLowercase')}
@@ -174,14 +173,10 @@ export async function updateCopilotWidget(): Promise<void> {
 
     if (Platform.OS === 'ios') {
       const variants = buildIOSWidgetVariants(quota, username, lastUpdated, isDarkMode);
-      await updateWidget(WIDGET_ID, variants, {
-        deepLinkUrl: DEEP_LINK_URL,
-      });
+      await updateWidget(WIDGET_ID, variants, { deepLinkUrl: DEEP_LINK_URL });
     } else if (Platform.OS === 'android') {
       const variants = buildAndroidWidgetVariants(quota, username, lastUpdated, isDarkMode);
-      await updateAndroidWidget(WIDGET_ID, variants, {
-        deepLinkUrl: DEEP_LINK_URL,
-      });
+      await updateAndroidWidget(WIDGET_ID, variants, { deepLinkUrl: DEEP_LINK_URL });
     }
   } catch {}
 }

@@ -69,9 +69,7 @@ export function CircularProgress({ usedQuota, totalQuota, size = 360 }: Circular
       </View>
 
       <View style={styles.centerContent}>
-        <Text style={[styles.percentText, { fontSize: size * 0.22 }]}>
-          {Math.round(displayPercent)}%
-        </Text>
+        <Text style={[styles.percentText, { fontSize: size * 0.22 }]}>{displayPercent}%</Text>
         <Text style={[styles.labelText, { fontSize: size * 0.08 }]}>
           {t(showAvailable ? 'quota.available' : 'quota.used')}
         </Text>

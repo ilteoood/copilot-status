@@ -37,7 +37,7 @@ export function IOSCopilotWidget(data: WidgetData, deepLinkUrl: string) {
         <Voltra.HStack spacing={16} alignment="center">
           <Voltra.VStack spacing={2} alignment="center">
             <Voltra.Text style={{ ...styles.largeValue, color: statusColor }}>
-              {Math.round(data.percentUsed)}%
+              {data.percentUsed}%
             </Voltra.Text>
             <Voltra.Text style={styles.label}>{i18n.t('widget.usedLowercase')}</Voltra.Text>
           </Voltra.VStack>
@@ -61,7 +61,7 @@ export function IOSCopilotWidget(data: WidgetData, deepLinkUrl: string) {
         <Voltra.HStack spacing={16} alignment="center">
           <Voltra.VStack spacing={2} alignment="center">
             <Voltra.Text style={{ ...styles.largeValue, color: statusColor }}>
-              {Math.round(data.percentUsed)}%
+              {data.percentUsed}%
             </Voltra.Text>
             <Voltra.Text style={styles.label}>{i18n.t('widget.usedLowercase')}</Voltra.Text>
           </Voltra.VStack>
@@ -149,7 +149,7 @@ export function AndroidCopilotWidget(data: WidgetData) {
       >
         <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
           <VoltraAndroid.Text style={{ ...styles.largeValue, color: statusColor }}>
-            {Math.round(data.percentUsed)}%
+            {data.percentUsed}%
           </VoltraAndroid.Text>
           <VoltraAndroid.Text style={styles.label}>
             {i18n.t('widget.usedLowercase')}
