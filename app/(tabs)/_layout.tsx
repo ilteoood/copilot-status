@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
+import { useUnistyles } from 'react-native-unistyles';
 
 export default function TabLayout() {
   const { theme } = useUnistyles();
@@ -13,7 +13,10 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: theme.colors.tint,
         headerShown: false,
-        tabBarStyle: styles.tabBar,
+        tabBarStyle: {
+          backgroundColor: theme.colors.background,
+          borderTopColor: theme.colors.border,
+        },
       }}
     >
       <Tabs.Screen
@@ -33,10 +36,3 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create(theme => ({
-  tabBar: {
-    backgroundColor: theme.colors.background,
-    borderTopColor: theme.colors.border,
-  },
-}));
