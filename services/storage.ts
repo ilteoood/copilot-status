@@ -1,5 +1,4 @@
 import { createMMKV, type MMKV } from 'react-native-mmkv';
-import { StateStorage } from 'zustand/middleware';
 
 export const StorageKeys = {
   QUOTA_DATA: 'quota_data',

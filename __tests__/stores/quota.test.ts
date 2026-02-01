@@ -1,5 +1,5 @@
-import { useQuotaStore } from '@/stores/quota';
 import { quotaStorage, usernameStorage } from '@/services/storage';
+import { useQuotaStore } from '@/stores/quota';
 import { clearCopilotWidget } from '@/widgets/voltraWidgetService';
 
 jest.mock('@/services/storage', () => ({
@@ -22,27 +22,27 @@ describe('stores/quota', () => {
 
   describe('useQuotaStore', () => {
     it('should have clearQuota method', () => {
-      const store = useQuotaStore.getState();
+      const store = useQuotaStore();
       expect(store.clearQuota).toBeDefined();
       expect(typeof store.clearQuota).toBe('function');
     });
 
     it('should clear quota data when clearQuota is called', () => {
-      const store = useQuotaStore.getState();
+      const store = useQuotaStore();
       store.clearQuota();
 
       expect(quotaStorage.clearQuotaData).toHaveBeenCalled();
     });
 
     it('should clear username when clearQuota is called', () => {
-      const store = useQuotaStore.getState();
+      const store = useQuotaStore();
       store.clearQuota();
 
       expect(usernameStorage.clearUsername).toHaveBeenCalled();
     });
 
     it('should clear copilot widget when clearQuota is called', () => {
-      const store = useQuotaStore.getState();
+      const store = useQuotaStore();
       store.clearQuota();
 
       expect(clearCopilotWidget).toHaveBeenCalled();
@@ -51,8 +51,8 @@ describe('stores/quota', () => {
     it('should handle widget clear failure gracefully', () => {
       (clearCopilotWidget as jest.Mock).mockRejectedValue(new Error('Widget error'));
 
-      const store = useQuotaStore.getState();
-      
+      const store = useQuotaStore();
+
       expect(() => store.clearQuota()).not.toThrow();
     });
   });
