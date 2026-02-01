@@ -13,19 +13,6 @@ export const storage: MMKV = createMMKV({
   id: 'copilot-status-storage',
 });
 
-export const zustandStorage: StateStorage = {
-  getItem: (name: string): string | null => {
-    const value = storage.getString(name);
-    return value ? JSON.parse(value) : null;
-  },
-  setItem: (name: string, value: unknown): void => {
-    storage.set(name, JSON.stringify(value));
-  },
-  removeItem: (name: string): void => {
-    storage.remove(name);
-  },
-};
-
 export const quotaStorage = {
   getQuotaData: (): string | null => {
     const value = storage.getString(StorageKeys.QUOTA_DATA);
@@ -72,5 +59,3 @@ export const themeStorage = {
 };
 
 export type ThemePreference = 'light' | 'dark' | 'system';
-
-export const platformStorage: StateStorage = zustandStorage;
