@@ -12,6 +12,18 @@ interface CircularProgressProps {
 
 const PIE_CHART_COVER = { radius: 0.7, color: 'transparent' };
 
+const getColorByPercent = (percent: number, colors: any) => {
+  if (percent > 90) return colors.critical;
+  if (percent >= 75) return colors.warning;
+  return colors.good;
+};
+
+const getAvailableColorByPercent = (percent: number, colors: any) => {
+  if (percent < 10) return colors.critical;
+  if (percent < 25) return colors.warning;
+  return colors.good;
+};
+
 export function CircularProgress({ usedQuota, totalQuota, size = 360 }: CircularProgressProps) {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
@@ -20,19 +32,8 @@ export function CircularProgress({ usedQuota, totalQuota, size = 360 }: Circular
   const consumedPercent = totalQuota > 0 ? (usedQuota / totalQuota) * 100 : 0;
   const availablePercent = 100 - consumedPercent;
 
-  const getColor = () => {
-    if (consumedPercent > 90) return theme.colors.critical;
-    if (consumedPercent >= 75) return theme.colors.warning;
-    return theme.colors.good;
-  };
-  const color = getColor();
-
-  const getAvailableColor = () => {
-    if (availablePercent < 10) return theme.colors.critical;
-    if (availablePercent < 25) return theme.colors.warning;
-    return theme.colors.good;
-  };
-  const availableColor = getAvailableColor();
+  const color = getColorByPercent(consumedPercent, theme.colors);
+  const availableColor = getAvailableColorByPercent(availablePercent, theme.colors);
 
   const displayPercent = showAvailable ? availablePercent : consumedPercent;
   const series = showAvailable
