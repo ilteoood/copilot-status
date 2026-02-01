@@ -225,8 +225,6 @@ export async function updateCopilotWidgetWithData(
         deepLinkUrl: DEEP_LINK_URL,
       });
     }
-
-    console.log('[VoltraWidget] Widget updated with data');
   } catch (error) {
     console.error('[VoltraWidget] Failed to update widget with data:', error);
   }

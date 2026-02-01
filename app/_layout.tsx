@@ -1,14 +1,13 @@
 import '@/services/i18n';
 import { persistOptions, queryClient } from '@/services/queryClient';
 import { ThemePreference, themeStorage } from '@/services/storage';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { Stack, router, useRootNavigationState, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import 'react-native-reanimated';
-import { StyleSheet, UnistylesRuntime } from 'react-native-unistyles';
+import { StyleSheet, UnistylesRuntime, useUnistyles } from 'react-native-unistyles';
 
 import { useAuthStore } from '@/stores/auth';
 
@@ -41,13 +40,14 @@ function useProtectedRoute() {
 }
 
 const statusBarColor: Record<ThemePreference, 'light' | 'dark' | 'auto'> = {
-  light: 'light',
-  dark: 'dark',
+  light: 'dark',
+  dark: 'light',
   system: 'auto',
 };
 
 export default function RootLayout() {
   const { isLoading } = useProtectedRoute();
+  const { rt } = useUnistyles();
 
   useEffect(() => {
     const storedTheme = themeStorage.getThemePreference();
@@ -59,8 +59,6 @@ export default function RootLayout() {
     }
   }, []);
 
-  const navigationTheme = UnistylesRuntime.themeName === 'dark' ? DarkTheme : DefaultTheme;
-
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -69,15 +67,15 @@ export default function RootLayout() {
     );
   }
 
+  const statusBarStyle = statusBarColor[rt.themeName ?? 'system'];
+
   return (
     <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
-      <ThemeProvider value={navigationTheme}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(auth)" />
-          <Stack.Screen name="(tabs)" />
-        </Stack>
-        <StatusBar style={statusBarColor[UnistylesRuntime.themeName ?? 'system']} />
-      </ThemeProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(tabs)" />
+      </Stack>
+      <StatusBar style={statusBarStyle} />
     </PersistQueryClientProvider>
   );
 }
