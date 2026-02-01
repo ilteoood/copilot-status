@@ -17,10 +17,13 @@
   },
   "quota": {
     "used": "USED",
+    "available": "AVAILABLE",
     "completionsUsed": "Completions Used",
     "remaining": "Remaining",
     "totalLimit": "Total Limit",
-    "resetsAt": "Resets at"
+    "resetsAt": "Resets at",
+    "toggleToAvailable": "Show available quota",
+    "toggleToUsed": "Show used quota"
   },
   "cached": {
     "usingCachedData": "Using cached data",
