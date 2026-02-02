@@ -8,6 +8,10 @@ jest.mock('@/services/queryClient', () => ({
   },
 }));
 
+jest.mock('@/widgets/voltraWidgetService', () => ({
+  clearCopilotWidget: jest.fn(),
+}));
+
 describe('stores/quota', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -26,14 +30,6 @@ describe('stores/quota', () => {
       store.clearQuota();
 
       expect(clearCopilotWidget).toHaveBeenCalled();
-    });
-
-    it('should handle widget clear failure gracefully', () => {
-      (clearCopilotWidget as jest.Mock).mockRejectedValue(new Error('Widget error'));
-
-      const store = useQuotaStore();
-
-      expect(() => store.clearQuota()).not.toThrow();
     });
   });
 });

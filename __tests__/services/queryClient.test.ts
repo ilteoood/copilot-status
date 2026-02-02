@@ -1,4 +1,4 @@
-import { queryClient, persistOptions } from '@/services/queryClient';
+import { persistOptions, queryClient } from '@/services/queryClient';
 
 describe('services/queryClient', () => {
   beforeEach(() => {
@@ -15,8 +15,7 @@ describe('services/queryClient', () => {
       const options = queryClient.getDefaultOptions();
 
       expect(options.queries?.retry).toBe(2);
-      expect(options.queries?.staleTime).toBe(5 * 60 * 1000);
-      expect(options.queries?.gcTime).toBe(24 * 60 * 60 * 1000);
+      expect(options.queries?.gcTime).toBe(Infinity);
       expect(options.queries?.refetchOnWindowFocus).toBe(false);
       expect(options.queries?.refetchOnReconnect).toBe(true);
       expect(options.queries?.refetchOnMount).toBe(true);

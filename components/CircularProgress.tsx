@@ -1,3 +1,4 @@
+import { formatPercent } from '@/utils/numberUtils';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
@@ -69,7 +70,9 @@ export function CircularProgress({ usedQuota, totalQuota, size = 360 }: Circular
       </View>
 
       <View style={styles.centerContent}>
-        <Text style={[styles.percentText, { fontSize: size * 0.22 }]}>{displayPercent}%</Text>
+        <Text style={[styles.percentText, { fontSize: size * 0.22 }]}>
+          {formatPercent(displayPercent)}
+        </Text>
         <Text style={[styles.labelText, { fontSize: size * 0.08 }]}>
           {t(showAvailable ? 'quota.available' : 'quota.used')}
         </Text>

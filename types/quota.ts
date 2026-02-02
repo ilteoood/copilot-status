@@ -2,10 +2,10 @@ export type QuotaStatus = 'good' | 'warning' | 'critical';
 
 export interface QuotaInfo {
   totalQuota: number;
+  remainingQuota: number;
   usedQuota: number;
+  remainingPercent: number;
   resetDate: Date;
-  hasOverage: boolean;
-  overageCount: number;
 }
 
 // Computed properties helper

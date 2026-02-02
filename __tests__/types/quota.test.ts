@@ -30,10 +30,10 @@ describe('types/quota', () => {
     it('should calculate remaining quota correctly', () => {
       const quota: QuotaInfo = {
         totalQuota: 1000,
+        remainingQuota: 700,
         usedQuota: 300,
+        remainingPercent: 70,
         resetDate: new Date(),
-        hasOverage: false,
-        overageCount: 0,
       };
 
       expect(getRemainingQuota(quota)).toBe(700);
@@ -42,10 +42,10 @@ describe('types/quota', () => {
     it('should return 0 when all quota is used', () => {
       const quota: QuotaInfo = {
         totalQuota: 1000,
+        remainingQuota: 0,
         usedQuota: 1000,
+        remainingPercent: 0,
         resetDate: new Date(),
-        hasOverage: false,
-        overageCount: 0,
       };
 
       expect(getRemainingQuota(quota)).toBe(0);
@@ -54,10 +54,10 @@ describe('types/quota', () => {
     it('should handle negative remaining when overage exists', () => {
       const quota: QuotaInfo = {
         totalQuota: 1000,
+        remainingQuota: -100,
         usedQuota: 1100,
+        remainingPercent: -10,
         resetDate: new Date(),
-        hasOverage: true,
-        overageCount: 100,
       };
 
       expect(getRemainingQuota(quota)).toBe(-100);
@@ -68,10 +68,10 @@ describe('types/quota', () => {
     it('should calculate percent remaining correctly', () => {
       const quota: QuotaInfo = {
         totalQuota: 1000,
+        remainingQuota: 700,
         usedQuota: 300,
+        remainingPercent: 70,
         resetDate: new Date(),
-        hasOverage: false,
-        overageCount: 0,
       };
 
       expect(getPercentRemaining(quota)).toBe(70);
@@ -80,10 +80,10 @@ describe('types/quota', () => {
     it('should return 0 when all quota is used', () => {
       const quota: QuotaInfo = {
         totalQuota: 1000,
+        remainingQuota: 0,
         usedQuota: 1000,
+        remainingPercent: 0,
         resetDate: new Date(),
-        hasOverage: false,
-        overageCount: 0,
       };
 
       expect(getPercentRemaining(quota)).toBe(0);
@@ -92,10 +92,10 @@ describe('types/quota', () => {
     it('should return 100 when no quota is used', () => {
       const quota: QuotaInfo = {
         totalQuota: 1000,
+        remainingQuota: 1000,
         usedQuota: 0,
+        remainingPercent: 100,
         resetDate: new Date(),
-        hasOverage: false,
-        overageCount: 0,
       };
 
       expect(getPercentRemaining(quota)).toBe(100);
@@ -104,10 +104,10 @@ describe('types/quota', () => {
     it('should return 0 when total quota is 0', () => {
       const quota: QuotaInfo = {
         totalQuota: 0,
+        remainingQuota: 0,
         usedQuota: 0,
+        remainingPercent: 0,
         resetDate: new Date(),
-        hasOverage: false,
-        overageCount: 0,
       };
 
       expect(getPercentRemaining(quota)).toBe(0);
@@ -116,10 +116,10 @@ describe('types/quota', () => {
     it('should handle decimal percentages correctly', () => {
       const quota: QuotaInfo = {
         totalQuota: 1000,
+        remainingQuota: 667,
         usedQuota: 333,
+        remainingPercent: 66.7,
         resetDate: new Date(),
-        hasOverage: false,
-        overageCount: 0,
       };
 
       expect(getPercentRemaining(quota)).toBe(66.7);
@@ -128,10 +128,10 @@ describe('types/quota', () => {
     it('should handle negative percent when overage exists', () => {
       const quota: QuotaInfo = {
         totalQuota: 1000,
+        remainingQuota: -100,
         usedQuota: 1100,
+        remainingPercent: -10,
         resetDate: new Date(),
-        hasOverage: true,
-        overageCount: 100,
       };
 
       expect(getPercentRemaining(quota)).toBe(-10);

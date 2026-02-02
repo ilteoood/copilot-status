@@ -15,16 +15,13 @@ export async function fetchGitHubUser(token: string): Promise<GitHubUser> {
 
 function parseQuotaResponse(response: GitHubCopilotResponse): QuotaInfo {
   const { premium_interactions } = response.quota_snapshots;
-  const totalQuota = premium_interactions.entitlement;
-  const percentRemaining = premium_interactions.percent_remaining;
-  const usedQuota = totalQuota * (1 - percentRemaining / 100);
 
   return {
-    totalQuota,
-    usedQuota,
+    totalQuota: premium_interactions.entitlement,
+    remainingQuota: premium_interactions.remaining,
+    usedQuota: premium_interactions.entitlement - premium_interactions.remaining,
+    remainingPercent: premium_interactions.percent_remaining,
     resetDate: new Date(response.quota_reset_date_utc),
-    hasOverage: premium_interactions.overage_count > 0,
-    overageCount: premium_interactions.overage_count,
   };
 }
 

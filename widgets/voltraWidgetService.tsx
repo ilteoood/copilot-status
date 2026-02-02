@@ -22,6 +22,7 @@ import {
   type WidgetData,
 } from './VoltraCopilotWidget';
 import { createWidgetStyles } from './widgetStyles';
+import { formatPercent } from '@/utils/numberUtils';
 
 const WIDGET_ID = 'copilot_status';
 const DEEP_LINK_URL = 'xyz.ilteoood.copilotstatus://';
@@ -127,7 +128,7 @@ function buildAndroidWidgetVariants(
           >
             <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
               <VoltraAndroid.Text style={{ ...styles.largeValue, color: statusColor }}>
-                {widgetData.percentUsed}%
+                {formatPercent(widgetData.percentUsed)}
               </VoltraAndroid.Text>
               <VoltraAndroid.Text style={styles.label}>
                 {i18n.t('widget.usedLowercase')}
