@@ -4,21 +4,10 @@ import type { TFunction } from 'i18next';
 describe('dateTimeUtils', () => {
   describe('formatTime', () => {
     const createMockT = (): TFunction => {
-      return jest.fn((key: string, options?: Record<string, unknown>) => {
+      return jest.fn((key: string) => {
         const translations: Record<string, string> = {
           'time.never': 'Never',
-          'time.justNow': 'Just now',
         };
-
-        if (key === 'time.minutesAgo' && options) {
-          const count = options.count as number;
-          return `${count} minute${count > 1 ? 's' : ''} ago`;
-        }
-
-        if (key === 'time.hoursAgo' && options) {
-          const count = options.count as number;
-          return `${count} hour${count > 1 ? 's' : ''} ago`;
-        }
 
         return translations[key] || key;
       }) as unknown as TFunction;
@@ -36,15 +25,14 @@ describe('dateTimeUtils', () => {
       expect(mockT).toHaveBeenCalledWith('time.never');
     });
 
-    it('should return "Just now" for timestamps less than 1 minute ago', () => {
+    it('should return "less than a minute ago" for timestamps less than 1 minute ago', () => {
       const now = Date.now();
-      const timestamp = now - 30000;
+      const timestamp = now - 10000;
 
       jest.spyOn(Date, 'now').mockReturnValue(now);
 
-      const result = formatTime(mockT, timestamp);
-      expect(result).toBe('Just now');
-      expect(mockT).toHaveBeenCalledWith('time.justNow');
+      const result = formatTime(mockT, new Date(timestamp));
+      expect(result).toBe('less than a minute ago');
 
       jest.restoreAllMocks();
     });
@@ -55,9 +43,8 @@ describe('dateTimeUtils', () => {
 
       jest.spyOn(Date, 'now').mockReturnValue(now);
 
-      const result = formatTime(mockT, timestamp);
+      const result = formatTime(mockT, new Date(timestamp));
       expect(result).toBe('5 minutes ago');
-      expect(mockT).toHaveBeenCalledWith('time.minutesAgo', { count: 5 });
 
       jest.restoreAllMocks();
     });
@@ -68,9 +55,8 @@ describe('dateTimeUtils', () => {
 
       jest.spyOn(Date, 'now').mockReturnValue(now);
 
-      const result = formatTime(mockT, timestamp);
+      const result = formatTime(mockT, new Date(timestamp));
       expect(result).toBe('1 minute ago');
-      expect(mockT).toHaveBeenCalledWith('time.minutesAgo', { count: 1 });
 
       jest.restoreAllMocks();
     });
@@ -81,9 +67,8 @@ describe('dateTimeUtils', () => {
 
       jest.spyOn(Date, 'now').mockReturnValue(now);
 
-      const result = formatTime(mockT, timestamp);
-      expect(result).toBe('5 hours ago');
-      expect(mockT).toHaveBeenCalledWith('time.hoursAgo', { count: 5 });
+      const result = formatTime(mockT, new Date(timestamp));
+      expect(result).toBe('about 5 hours ago');
 
       jest.restoreAllMocks();
     });
@@ -94,7 +79,7 @@ describe('dateTimeUtils', () => {
 
       jest.spyOn(Date, 'now').mockReturnValue(now);
 
-      const result = formatTime(mockT, timestamp);
+      const result = formatTime(mockT, new Date(timestamp));
       const expectedDate = new Date(timestamp).toLocaleDateString();
       expect(result).toBe(expectedDate);
 

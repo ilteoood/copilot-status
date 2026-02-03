@@ -36,10 +36,7 @@
   },
   "cached": {
     "usingCachedData": "Using cached data",
-    "updated": "Updated",
-    "justNow": "Just now",
-    "minutesAgo": "{{count}}m ago",
-    "hoursAgo": "{{count}}h ago"
+    "updated": "Updated"
   },
   "login": {
     "title": "Copilot Status",
@@ -82,9 +79,6 @@
     "signInToView": "Sign in to view"
   },
   "time": {
-    "never": "Never",
-    "justNow": "Just now",
-    "minutesAgo": "{{count}}m ago",
-    "hoursAgo": "{{count}}h ago"
+    "never": "Never"
   }
 }
