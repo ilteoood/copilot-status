@@ -24,7 +24,7 @@ export function IOSCopilotWidget(data: WidgetData) {
   const statusColor = getColorByPercent(data.quota.remainingPercent, theme.colors);
 
   const smallWidget = (
-    <Voltra.VStack spacing={4} alignment="center" style={styles.smallContainer}>
+    <Voltra.VStack spacing={4} alignment="center" style={styles.container}>
       <Voltra.HStack spacing={16} alignment="center">
         <Voltra.VStack spacing={2} alignment="center">
           <Voltra.Text style={{ ...styles.mediumValue, color: statusColor }}>
