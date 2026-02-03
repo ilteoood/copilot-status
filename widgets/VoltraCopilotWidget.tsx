@@ -2,12 +2,12 @@ import i18n from '@/services/i18n';
 import { themes, type Theme } from '@/src/styles/unistyles';
 import { useThemeStore } from '@/stores/theme';
 import { QuotaInfo } from '@/types/quota';
+import { getColorByPercent } from '@/utils/colorUtils';
 import { formatFullDate } from '@/utils/dateTimeUtils';
 import { formatPercent } from '@/utils/numberUtils';
 import { Voltra } from 'voltra';
 import { VoltraAndroid } from 'voltra/android';
 import { createWidgetStyles } from './widgetStyles';
-import { getColorByPercent } from '@/utils/colorUtils';
 
 export interface WidgetData {
   username: string;
@@ -18,50 +18,74 @@ export function getTheme(): Theme {
   return useThemeStore.getState().isDarkMode() ? themes.dark : themes.light;
 }
 
-export function IOSCopilotWidget(data: WidgetData, deepLinkUrl: string) {
+export function IOSCopilotWidget(data: WidgetData) {
   const theme = getTheme();
   const styles = createWidgetStyles(theme);
   const statusColor = getColorByPercent(data.quota.remainingPercent, theme.colors);
 
   const smallWidget = (
-    <Voltra.Link destination={deepLinkUrl}>
-      <Voltra.VStack spacing={4} alignment="center" style={styles.smallContainer}>
-        <Voltra.HStack spacing={16} alignment="center">
-          <Voltra.VStack spacing={2} alignment="center">
-            <Voltra.Text style={{ ...styles.largeValue, color: statusColor }}>
-              {formatPercent(data.quota.consumedPercent)}
-            </Voltra.Text>
-            <Voltra.Text style={styles.label}>{i18n.t('widget.usedLowercase')}</Voltra.Text>
-          </Voltra.VStack>
+    <Voltra.VStack spacing={4} alignment="center" style={styles.smallContainer}>
+      <Voltra.HStack spacing={16} alignment="center">
+        <Voltra.VStack spacing={2} alignment="center">
+          <Voltra.Text style={{ ...styles.mediumValue, color: statusColor }}>
+            {formatPercent(data.quota.consumedPercent)}
+          </Voltra.Text>
+          <Voltra.Text style={styles.label}>{i18n.t('widget.usedLowercase')}</Voltra.Text>
+        </Voltra.VStack>
+      </Voltra.HStack>
+      <Voltra.HStack spacing={16} alignment="center">
+        <Voltra.VStack spacing={2} alignment="center">
+          <Voltra.Text style={{ ...styles.mediumValue, color: theme.colors.text }}>
+            {data.quota.usedQuota}
+          </Voltra.Text>
+          <Voltra.Text style={styles.label}>{i18n.t('widget.requestsUsed')}</Voltra.Text>
+        </Voltra.VStack>
+      </Voltra.HStack>
+      <Voltra.HStack spacing={16} alignment="center">
+        <Voltra.VStack spacing={2} alignment="center">
+          <Voltra.Text style={{ ...styles.mediumValue, color: theme.colors.good }}>
+            {data.quota.remainingQuota}
+          </Voltra.Text>
+          <Voltra.Text style={styles.label}>{i18n.t('widget.requestsLeft')}</Voltra.Text>
+        </Voltra.VStack>
+      </Voltra.HStack>
+      <Voltra.Text style={styles.smallFooter}>
+        {data.username} - {formatFullDate(i18n.t, data.quota.lastUpdated)}
+      </Voltra.Text>
+    </Voltra.VStack>
+  );
 
-          <Voltra.VStack spacing={2} alignment="center">
-            <Voltra.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
-              {data.quota.usedQuota}
-            </Voltra.Text>
-            <Voltra.Text style={styles.label}>{i18n.t('widget.requestsUsed')}</Voltra.Text>
-          </Voltra.VStack>
-        </Voltra.HStack>
-
-        <Voltra.HStack spacing={16} alignment="center">
-          <Voltra.VStack spacing={2} alignment="center">
-            <Voltra.Text style={{ ...styles.mediumValue, color: theme.colors.good }}>
-              {data.quota.remainingQuota}
-            </Voltra.Text>
-            <Voltra.Text style={styles.label}>{i18n.t('widget.requestsLeft')}</Voltra.Text>
-          </Voltra.VStack>
-          <Voltra.VStack spacing={2} alignment="center">
-            <Voltra.Text style={styles.smallFooter}>{data.username}</Voltra.Text>
-            <Voltra.Text style={styles.smallFooter}>
-              {formatFullDate(i18n.t, data.quota.lastUpdated)}
-            </Voltra.Text>
-          </Voltra.VStack>
-        </Voltra.HStack>
-      </Voltra.VStack>
-    </Voltra.Link>
+  const mediumWidget = (
+    <Voltra.VStack spacing={4} alignment="center" style={styles.container}>
+      <Voltra.HStack spacing={16} alignment="center">
+        <Voltra.VStack spacing={2} alignment="center">
+          <Voltra.Text style={{ ...styles.largeValue, color: statusColor }}>
+            {formatPercent(data.quota.consumedPercent)}
+          </Voltra.Text>
+          <Voltra.Text style={styles.label}>{i18n.t('widget.usedLowercase')}</Voltra.Text>
+        </Voltra.VStack>
+        <Voltra.VStack spacing={2} alignment="center">
+          <Voltra.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
+            {data.quota.usedQuota}
+          </Voltra.Text>
+          <Voltra.Text style={styles.label}>{i18n.t('widget.requestsUsed')}</Voltra.Text>
+        </Voltra.VStack>
+        <Voltra.VStack spacing={2} alignment="center">
+          <Voltra.Text style={{ ...styles.largeValue, color: theme.colors.good }}>
+            {data.quota.remainingQuota}
+          </Voltra.Text>
+          <Voltra.Text style={styles.label}>{i18n.t('widget.requestsLeft')}</Voltra.Text>
+        </Voltra.VStack>
+      </Voltra.HStack>
+      <Voltra.Text style={styles.footer}>
+        {data.username} - {formatFullDate(i18n.t, data.quota.lastUpdated)}
+      </Voltra.Text>
+    </Voltra.VStack>
   );
 
   return {
     systemSmall: smallWidget,
+    systemMedium: mediumWidget,
   };
 }
 
@@ -77,6 +101,7 @@ export function IOSCopilotWidgetLoading() {
 
   return {
     systemSmall: loadingWidget,
+    systemMedium: loadingWidget,
   };
 }
 
