@@ -59,10 +59,20 @@ export default function SettingsScreen() {
 
   const avatarUrl = user?.login ? `https://github.com/${user.login}.png` : null;
 
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t('settings.title')}</Text>
+        <View style={styles.headerRow}>
+          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+            <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>{t('settings.title')}</Text>
+          <View style={styles.headerSpacer} />
+        </View>
       </View>
 
       <SettingsSection>
@@ -162,6 +172,16 @@ const styles = StyleSheet.create(theme => ({
     fontSize: theme.typography.fontSizes['5xl'],
     fontWeight: theme.typography.fontWeights.bold,
     color: theme.colors.text,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backButton: {
+    padding: theme.spacing.sm,
+  },
+  headerSpacer: {
+    width: 40,
   },
   userCard: {
     flexDirection: 'row',
