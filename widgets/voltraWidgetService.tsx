@@ -49,7 +49,7 @@ function buildIOSWidgetVariants(quota: QuotaInfo | null, username: string) {
     quota,
   };
 
-  return IOSCopilotWidget(widgetData, DEEP_LINK_URL);
+  return IOSCopilotWidget(widgetData);
 }
 
 /**
