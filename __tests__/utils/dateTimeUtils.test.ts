@@ -205,7 +205,7 @@ describe('dateTimeUtils', () => {
       expect(result.dailyAverage).toBe(60);
     });
 
-    it('should calculate fractional days correctly', () => {
+    it('should round partial days to whole days correctly', () => {
       jest.setSystemTime(new Date('2024-01-15T23:00:00'));
 
       const resetDate = new Date('2024-01-16T06:00:00');
