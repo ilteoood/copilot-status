@@ -4,7 +4,7 @@ import { useCopilotQuota } from '@/hooks/useGitHub';
 import type { QuotaType } from '@/types/quota';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
@@ -58,17 +58,22 @@ export default function DashboardScreen() {
 
       <View style={styles.tabsContainer}>
         {QUOTA_TYPES.map((type, index) => (
-          <View key={type} style={[styles.tab, currentPage === index && styles.activeTab]}>
+          <Pressable
+            key={type}
+            style={[styles.tab, currentPage === index && styles.activeTab]}
+            onPress={() => setCurrentPage(index)}
+          >
             <Text style={[styles.tabText, currentPage === index && styles.activeTabText]}>
               {t(`quota.types.${type}`)}
             </Text>
-          </View>
+          </Pressable>
         ))}
       </View>
 
       <PagerView
         style={styles.pagerView}
-        initialPage={0}
+        key={currentPage}
+        initialPage={currentPage}
         onPageSelected={e => setCurrentPage(e.nativeEvent.position)}
       >
         {QUOTA_TYPES.map(type => (

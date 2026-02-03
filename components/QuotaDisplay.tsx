@@ -38,7 +38,7 @@ export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayPro
             icon="infinite-outline"
             label={t('quota.unlimited')}
             value={'∞'}
-            color={theme.colors.tint}
+            color={theme.colors.good}
           />
         ) : (
           <>
