@@ -4,43 +4,25 @@ import { SettingsCategory } from '@/components/settings/SettingsCategory';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsVoice } from '@/components/settings/SettingsVoice';
 import { useGitHubUser } from '@/hooks/useGitHub';
-import { themeStorage, type ThemePreference } from '@/services/storage';
 import { useAuthStore } from '@/stores/auth';
 import { useQuotaStore } from '@/stores/quota';
-import { updateCopilotWidget } from '@/widgets/voltraWidgetService';
+import { useThemeStore } from '@/stores/theme';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Image, Linking, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { StyleSheet, UnistylesRuntime, useUnistyles } from 'react-native-unistyles';
+import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 export default function SettingsScreen() {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
   const { signOut } = useAuthStore();
   const { clearQuota } = useQuotaStore();
+  const { themePreference, setThemePreference } = useThemeStore();
   const { data: user } = useGitHubUser();
   const appVersion = Constants.expoConfig?.version ?? '1.0.0';
-
-  const [themePreference, setThemePreference] = useState<ThemePreference>(() =>
-    themeStorage.getThemePreference()
-  );
-
-  const handleThemeChange = async (newTheme: ThemePreference) => {
-    setThemePreference(newTheme);
-    themeStorage.setThemePreference(newTheme);
-
-    if (newTheme === 'system') {
-      UnistylesRuntime.setAdaptiveThemes(true);
-    } else {
-      UnistylesRuntime.setAdaptiveThemes(false);
-      UnistylesRuntime.setTheme(newTheme);
-    }
-
-    updateCopilotWidget();
-  };
 
   const handleSignOut = () => {
     Alert.alert(t('settings.signOutConfirmTitle'), t('settings.signOutConfirmMessage'), [
@@ -62,7 +44,13 @@ export default function SettingsScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t('settings.title')}</Text>
+        <View style={styles.headerRow}>
+          <TouchableOpacity style={styles.backButton} onPress={router.back}>
+            <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>{t('settings.title')}</Text>
+          <View style={styles.headerSpacer} />
+        </View>
       </View>
 
       <SettingsSection>
@@ -88,7 +76,7 @@ export default function SettingsScreen() {
           value="light"
           i18nPrefix="settings"
           selected={themePreference === 'light'}
-          onSelect={handleThemeChange}
+          onSelect={setThemePreference}
           icon="sunny-outline"
         />
         <Separator />
@@ -96,7 +84,7 @@ export default function SettingsScreen() {
           value="dark"
           i18nPrefix="settings"
           selected={themePreference === 'dark'}
-          onSelect={handleThemeChange}
+          onSelect={setThemePreference}
           icon="moon-outline"
         />
         <Separator />
@@ -104,7 +92,7 @@ export default function SettingsScreen() {
           value="system"
           i18nPrefix="settings"
           selected={themePreference === 'system'}
-          onSelect={handleThemeChange}
+          onSelect={setThemePreference}
           icon="phone-portrait-outline"
         />
       </SettingsCategory>
@@ -162,6 +150,16 @@ const styles = StyleSheet.create(theme => ({
     fontSize: theme.typography.fontSizes['5xl'],
     fontWeight: theme.typography.fontWeights.bold,
     color: theme.colors.text,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backButton: {
+    padding: theme.spacing.sm,
+  },
+  headerSpacer: {
+    width: 40,
   },
   userCard: {
     flexDirection: 'row',

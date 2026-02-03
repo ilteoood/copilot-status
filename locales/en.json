@@ -29,7 +29,7 @@
     "daysRemaining": "Days Left",
     "perDay": "{{count}}/day",
     "types": {
-      "premium_interactions": "Premium",
+      "premium_interactions": "Premium requests",
       "chat": "Chat",
       "completions": "Completions"
     }

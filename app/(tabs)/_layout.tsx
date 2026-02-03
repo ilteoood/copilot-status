@@ -22,15 +22,22 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: t('navigation.dashboard'),
-          tabBarIcon: ({ color }) => <Ionicons size={24} name="stats-chart-sharp" color={color} />,
+          title: t('quota.types.premium_interactions'),
+          tabBarIcon: ({ color }) => <Ionicons size={24} name="sparkles" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="chat"
         options={{
-          title: t('navigation.settings'),
-          tabBarIcon: ({ color }) => <Ionicons size={24} name="settings-outline" color={color} />,
+          title: t('quota.types.chat'),
+          tabBarIcon: ({ color }) => <Ionicons size={24} name="chatbubbles" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="completions"
+        options={{
+          title: t('quota.types.completions'),
+          tabBarIcon: ({ color }) => <Ionicons size={24} name="code-slash" color={color} />,
         }}
       />
     </Tabs>
