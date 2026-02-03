@@ -39,38 +39,54 @@ export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayPro
       <View style={styles.statsContainer}>
         {dailyQuota ? (
           <>
-            <StatsCard
-              icon="code-slash"
-              label={t('quota.completionsUsed')}
-              value={quota.usedQuota}
-              color={theme.colors.good}
-            />
-            <StatsCard
-              icon="code-working-outline"
-              label={t('quota.remaining')}
-              value={quota.remainingQuota}
-              color={theme.colors.warning}
-            />
-            <StatsCard
-              icon="stop-circle"
-              label={t('quota.totalLimit')}
-              value={quota.totalQuota}
-              color={theme.colors.critical}
-            />
-            <StatsCard
-              icon="trending-down-outline"
-              label={t('quota.dailyAverage')}
-              value={t('quota.perDay', {
-                count: dailyQuota.dailyAverage,
-              })}
-              color={theme.colors.tint}
-            />
-            <StatsCard
-              icon="time-outline"
-              label={t('quota.daysRemaining')}
-              value={dailyQuota.daysRemaining}
-              color={theme.colors.tint}
-            />
+            <View style={styles.row}>
+              <View style={styles.halfWidth}>
+                <StatsCard
+                  icon="code-slash"
+                  label={t('quota.completionsUsed')}
+                  value={quota.usedQuota}
+                  color={theme.colors.good}
+                />
+              </View>
+              <View style={styles.halfWidth}>
+                <StatsCard
+                  icon="trending-down-outline"
+                  label={t('quota.dailyAverage')}
+                  value={t('quota.perDay', {
+                    count: dailyQuota.dailyAverage,
+                  })}
+                  color={theme.colors.tint}
+                />
+              </View>
+            </View>
+            <View style={styles.row}>
+              <View style={styles.halfWidth}>
+                <StatsCard
+                  icon="stop-circle"
+                  label={t('quota.totalLimit')}
+                  value={quota.totalQuota}
+                  color={theme.colors.critical}
+                />
+              </View>
+              <View style={styles.halfWidth}>
+                <StatsCard
+                  icon="code-working-outline"
+                  label={t('quota.remaining')}
+                  value={quota.remainingQuota}
+                  color={theme.colors.warning}
+                />
+              </View>
+            </View>
+            <View style={styles.row}>
+              <View style={styles.halfWidth}>
+                <StatsCard
+                  icon="time-outline"
+                  label={t('quota.daysRemaining')}
+                  value={dailyQuota.daysRemaining}
+                  color={theme.colors.tint}
+                />
+              </View>
+            </View>
           </>
         ) : (
           <StatsCard
@@ -106,6 +122,14 @@ const styles = StyleSheet.create(theme => ({
   },
   statsContainer: {
     gap: theme.spacing.sm,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: theme.spacing.sm,
+  },
+  halfWidth: {
+    flex: 1,
+    minWidth: 0,
   },
   unlimitedContainer: {
     alignItems: 'center',
