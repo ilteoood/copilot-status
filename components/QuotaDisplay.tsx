@@ -1,150 +1,124 @@
-import type { QuotaInfo } from '@/types/quota';
-import { formatFullDate, getDailyQuotaInsight } from '@/utils/dateTimeUtils';
-import { useTranslation } from 'react-i18next';
-import { RefreshControl, ScrollView, View } from 'react-native';
-import { StyleSheet, useUnistyles } from 'react-native-unistyles';
-import { CircularProgress } from './CircularProgress';
-import { StatsCard } from './StatsCard';
+'use client';
 
-interface QuotaDisplayProps {
-  quota: QuotaInfo;
-  onRefresh: () => void;
-  isRefreshing: boolean;
+import { CachedBanner } from '@/components/CachedBanner';
+import { QuotaValues } from '@/components/QuotaValues';
+import { useCopilotQuota } from '@/hooks/useGitHub';
+import type { QuotaType } from '@/types/quota';
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, useUnistyles } from 'react-native-unistyles';
+
+interface QuotaScreenProps {
+  quotaType: QuotaType;
 }
 
-export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayProps) {
+export function QuotaDisplay({ quotaType }: QuotaScreenProps) {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
+  const {
+    data: quotas,
+    dataUpdatedAt: lastFetch,
+    isFetching,
+    error,
+    isCached,
+    refetch,
+  } = useCopilotQuota();
 
-  const dailyQuota = quota.unlimited
-    ? null
-    : getDailyQuotaInsight(quota.remainingQuota, quota.resetDate);
+  if (isFetching && !quotas) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={theme.colors.tint} />
+        <Text style={styles.loadingText}>{t('dashboard.loadingQuota')}</Text>
+      </View>
+    );
+  }
+
+  if (error?.message && !quotas) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.errorTitle}>{t('dashboard.unableToLoad')}</Text>
+        <Text style={styles.errorText}>{error.message}</Text>
+      </View>
+    );
+  }
+
+  if (!quotas) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.errorText}>{t('dashboard.noDataAvailable')}</Text>
+      </View>
+    );
+  }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      refreshControl={
-        <RefreshControl
-          refreshing={isRefreshing}
-          onRefresh={onRefresh}
-          tintColor={theme.colors.text}
-        />
-      }
-    >
-      <View style={styles.progressContainer}>
-        <CircularProgress usedQuota={quota.usedQuota} totalQuota={quota.totalQuota} size={200} />
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <View style={styles.headerRow}>
+          <Text style={styles.headerTitle}>{t('dashboard.title')}</Text>
+          <TouchableOpacity style={styles.settingsButton} onPress={() => router.push('/settings')}>
+            <Ionicons name="settings-outline" size={24} color={theme.colors.text} />
+          </TouchableOpacity>
+        </View>
+        <CachedBanner lastFetch={lastFetch} visible={isCached} />
       </View>
 
-      <View style={styles.statsContainer}>
-        {dailyQuota ? (
-          <>
-            <View style={styles.row}>
-              <View style={styles.halfWidth}>
-                <StatsCard
-                  icon="code-slash"
-                  label={t('quota.completionsUsed')}
-                  value={quota.usedQuota}
-                  color={theme.colors.good}
-                />
-              </View>
-              <View style={styles.halfWidth}>
-                <StatsCard
-                  icon="trending-down-outline"
-                  label={t('quota.dailyAverage')}
-                  value={t('quota.perDay', {
-                    count: dailyQuota.dailyAverage,
-                  })}
-                  color={theme.colors.tint}
-                />
-              </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.halfWidth}>
-                <StatsCard
-                  icon="stop-circle"
-                  label={t('quota.totalLimit')}
-                  value={quota.totalQuota}
-                  color={theme.colors.critical}
-                />
-              </View>
-              <View style={styles.halfWidth}>
-                <StatsCard
-                  icon="code-working-outline"
-                  label={t('quota.remaining')}
-                  value={quota.remainingQuota}
-                  color={theme.colors.warning}
-                />
-              </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.halfWidth}>
-                <StatsCard
-                  icon="time-outline"
-                  label={t('quota.daysRemaining')}
-                  value={dailyQuota.daysRemaining}
-                  color={theme.colors.tint}
-                />
-              </View>
-            </View>
-          </>
-        ) : (
-          <StatsCard
-            icon="infinite-outline"
-            label={t('quota.unlimited')}
-            value={'∞'}
-            color={theme.colors.good}
-          />
-        )}
-
-        <StatsCard
-          icon="calendar-outline"
-          label={t('quota.resetsAt')}
-          value={formatFullDate(t, quota.resetDate)}
-          color={theme.colors.tint}
-        />
+      <View style={styles.content}>
+        <QuotaValues quota={quotas[quotaType]} onRefresh={refetch} isRefreshing={isFetching} />
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create(theme => ({
   container: {
     flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+  header: {
+    paddingTop: 60,
+    paddingHorizontal: theme.spacing.lg,
+    paddingBottom: theme.spacing.xs,
+    gap: theme.spacing.sm,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: theme.typography.fontSizes['5xl'],
+    fontWeight: theme.typography.fontWeights.bold,
+    color: theme.colors.text,
+  },
+  settingsButton: {
+    padding: theme.spacing.sm,
   },
   content: {
-    padding: theme.spacing.lg,
-    gap: theme.spacing.lg,
-  },
-  progressContainer: {
-    alignItems: 'center',
-    paddingVertical: theme.spacing.lg,
-  },
-  statsContainer: {
-    gap: theme.spacing.sm,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: theme.spacing.sm,
-  },
-  halfWidth: {
     flex: 1,
-    minWidth: 0,
   },
-  unlimitedContainer: {
-    alignItems: 'center',
+  centered: {
+    flex: 1,
     justifyContent: 'center',
-    paddingVertical: theme.spacing.xl * 2,
+    alignItems: 'center',
+    backgroundColor: theme.colors.background,
+    padding: theme.spacing.lg,
   },
-  unlimitedIcon: {
-    fontSize: 120,
-    color: theme.colors.tint,
-    fontWeight: theme.typography.fontWeights.normal,
-  },
-  unlimitedText: {
-    fontSize: theme.typography.fontSizes['2xl'],
-    color: theme.colors.text,
-    fontWeight: theme.typography.fontWeights.semibold,
+  loadingText: {
     marginTop: theme.spacing.md,
+    fontSize: theme.typography.fontSizes.md,
+    color: theme.colors.icon,
+  },
+  errorTitle: {
+    fontSize: theme.typography.fontSizes.xl,
+    fontWeight: theme.typography.fontWeights.semibold,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.xs,
+  },
+  errorText: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.icon,
+    textAlign: 'center',
   },
 }));

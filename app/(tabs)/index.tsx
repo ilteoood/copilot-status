@@ -1,5 +1,5 @@
-import { QuotaScreen } from './QuotaScreen';
+import { QuotaDisplay } from '../../components/QuotaDisplay';
 
 export default function PremiumTab() {
-  return <QuotaScreen quotaType="premium_interactions" />;
+  return <QuotaDisplay quotaType="premium_interactions" />;
 }

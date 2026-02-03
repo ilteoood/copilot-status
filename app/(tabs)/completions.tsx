@@ -1,5 +1,5 @@
-import { QuotaScreen } from './QuotaScreen';
+import { QuotaDisplay } from '../../components/QuotaDisplay';
 
 export default function CompletionsTab() {
-  return <QuotaScreen quotaType="completions" />;
+  return <QuotaDisplay quotaType="completions" />;
 }
