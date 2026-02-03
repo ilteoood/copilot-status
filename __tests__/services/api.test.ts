@@ -54,17 +54,47 @@ describe('services/api', () => {
   });
 
   describe('fetchCopilotQuota', () => {
+    const createMockQuotaSnapshot = <T extends string>(
+      quotaId: T,
+      entitlement: number,
+      remaining: number,
+      percentRemaining: number,
+      unlimited: boolean = false
+    ) => ({
+      entitlement,
+      remaining,
+      percent_remaining: percentRemaining,
+      overage_count: 0,
+      overage_permitted: false,
+      quota_id: quotaId,
+      quota_remaining: remaining,
+      timestamp_utc: '2024-02-01T00:00:00Z',
+      unlimited,
+    });
+
     const mockCopilotResponse: GitHubCopilotResponse = {
-      username: 'testuser',
-      quota_snapshots: {
-        premium_interactions: {
-          entitlement: 1000,
-          remaining: 500,
-          percent_remaining: 50,
-          overage_count: 0,
-        },
+      access_type_sku: 'plus_yearly_subscriber_quota',
+      analytics_tracking_id: 'test-tracking-id',
+      assigned_date: '2024-01-01T00:00:00Z',
+      can_signup_for_limited: false,
+      chat_enabled: true,
+      codex_agent_enabled: true,
+      copilot_plan: 'individual_pro',
+      endpoints: {
+        api: 'https://api.individual.githubcopilot.com',
+        'origin-tracker': 'https://origin-tracker.individual.githubcopilot.com',
+        proxy: 'https://proxy.individual.githubcopilot.com',
+        telemetry: 'https://telemetry.individual.githubcopilot.com',
       },
+      organization_list: [],
+      organization_login_list: [],
+      quota_reset_date: '2024-02-01',
       quota_reset_date_utc: '2024-02-01T00:00:00Z',
+      quota_snapshots: {
+        premium_interactions: createMockQuotaSnapshot('premium_interactions', 1000, 500, 50),
+        chat: createMockQuotaSnapshot('chat', 0, 0, 100, true),
+        completions: createMockQuotaSnapshot('completions', 0, 0, 100, true),
+      },
     };
 
     it('should fetch and parse copilot quota data', async () => {
@@ -83,27 +113,45 @@ describe('services/api', () => {
       expect(Octokit).toHaveBeenCalledWith({ auth: 'test-token' });
       expect(mockRequest).toHaveBeenCalledWith('GET /copilot_internal/user');
 
-      expect(result).toEqual({
+      expect(result.premium_interactions).toEqual({
+        type: 'premium_interactions',
         totalQuota: 1000,
         remainingQuota: 500,
         usedQuota: 500,
         remainingPercent: 50,
         resetDate: new Date('2024-02-01T00:00:00Z'),
+        unlimited: false,
+      });
+
+      expect(result.chat).toEqual({
+        type: 'chat',
+        totalQuota: 0,
+        remainingQuota: 0,
+        usedQuota: 0,
+        remainingPercent: 100,
+        resetDate: new Date('2024-02-01T00:00:00Z'),
+        unlimited: true,
+      });
+
+      expect(result.completions).toEqual({
+        type: 'completions',
+        totalQuota: 0,
+        remainingQuota: 0,
+        usedQuota: 0,
+        remainingPercent: 100,
+        resetDate: new Date('2024-02-01T00:00:00Z'),
+        unlimited: true,
       });
     });
 
     it('should calculate used quota correctly', async () => {
       const mockResponse: GitHubCopilotResponse = {
-        username: 'testuser',
+        ...mockCopilotResponse,
         quota_snapshots: {
-          premium_interactions: {
-            entitlement: 2000,
-            remaining: 500,
-            percent_remaining: 25,
-            overage_count: 0,
-          },
+          premium_interactions: createMockQuotaSnapshot('premium_interactions', 2000, 500, 25),
+          chat: createMockQuotaSnapshot('chat', 0, 0, 100, true),
+          completions: createMockQuotaSnapshot('completions', 0, 0, 100, true),
         },
-        quota_reset_date_utc: '2024-02-01T00:00:00Z',
       };
 
       const mockRequest = jest.fn().mockResolvedValue({ data: mockResponse });
@@ -118,10 +166,10 @@ describe('services/api', () => {
 
       const result = await fetchCopilotQuota('test-token');
 
-      expect(result.usedQuota).toBe(1500);
-      expect(result.totalQuota).toBe(2000);
-      expect(result.remainingQuota).toBe(500);
-      expect(result.remainingPercent).toBe(25);
+      expect(result.premium_interactions.usedQuota).toBe(1500);
+      expect(result.premium_interactions.totalQuota).toBe(2000);
+      expect(result.premium_interactions.remainingQuota).toBe(500);
+      expect(result.premium_interactions.remainingPercent).toBe(25);
     });
 
     it('should throw error if API call fails', async () => {

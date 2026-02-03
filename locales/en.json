@@ -23,7 +23,13 @@
     "totalLimit": "Total Limit",
     "resetsAt": "Resets at",
     "toggleToAvailable": "Show available quota",
-    "toggleToUsed": "Show used quota"
+    "toggleToUsed": "Show used quota",
+    "unlimited": "Unlimited",
+    "types": {
+      "premium_interactions": "Premium",
+      "chat": "Chat",
+      "completions": "Completions"
+    }
   },
   "cached": {
     "usingCachedData": "Using cached data",

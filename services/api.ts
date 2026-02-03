@@ -1,5 +1,5 @@
 import type { GitHubCopilotResponse } from '@/types/api';
-import type { QuotaInfo } from '@/types/quota';
+import type { AllQuotas, QuotaInfo, QuotaType } from '@/types/quota';
 import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
 
 export type GitHubUser = RestEndpointMethodTypes['users']['getAuthenticated']['response']['data'];
@@ -13,19 +13,37 @@ export async function fetchGitHubUser(token: string): Promise<GitHubUser> {
   return data;
 }
 
-function parseQuotaResponse(response: GitHubCopilotResponse): QuotaInfo {
-  const { premium_interactions } = response.quota_snapshots;
-
+function parseQuotaSnapshot(
+  quotaType: QuotaType,
+  snapshot: GitHubCopilotResponse['quota_snapshots'][QuotaType],
+  resetDate: Date
+): QuotaInfo {
   return {
-    totalQuota: premium_interactions.entitlement,
-    remainingQuota: premium_interactions.remaining,
-    usedQuota: premium_interactions.entitlement - premium_interactions.remaining,
-    remainingPercent: premium_interactions.percent_remaining,
-    resetDate: new Date(response.quota_reset_date_utc),
+    type: quotaType,
+    totalQuota: snapshot.entitlement,
+    remainingQuota: snapshot.remaining,
+    usedQuota: snapshot.entitlement - snapshot.remaining,
+    remainingPercent: snapshot.percent_remaining,
+    resetDate,
+    unlimited: snapshot.unlimited,
   };
 }
 
-export async function fetchCopilotQuota(token: string): Promise<QuotaInfo> {
+function parseQuotaResponse(response: GitHubCopilotResponse): AllQuotas {
+  const resetDate = new Date(response.quota_reset_date_utc);
+
+  return {
+    premium_interactions: parseQuotaSnapshot(
+      'premium_interactions',
+      response.quota_snapshots.premium_interactions,
+      resetDate
+    ),
+    chat: parseQuotaSnapshot('chat', response.quota_snapshots.chat, resetDate),
+    completions: parseQuotaSnapshot('completions', response.quota_snapshots.completions, resetDate),
+  };
+}
+
+export async function fetchCopilotQuota(token: string): Promise<AllQuotas> {
   const octokit = new Octokit({
     auth: token,
   });
