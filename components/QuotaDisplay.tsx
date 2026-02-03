@@ -15,7 +15,6 @@ interface QuotaDisplayProps {
 export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayProps) {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
-  const remaining = quota.totalQuota - quota.usedQuota;
 
   return (
     <ScrollView
@@ -34,24 +33,36 @@ export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayPro
       </View>
 
       <View style={styles.statsContainer}>
-        <StatsCard
-          icon="code-slash"
-          label={t('quota.completionsUsed')}
-          value={quota.usedQuota}
-          color={theme.colors.good}
-        />
-        <StatsCard
-          icon="code-working-outline"
-          label={t('quota.remaining')}
-          value={remaining}
-          color={theme.colors.warning}
-        />
-        <StatsCard
-          icon="stop-circle"
-          label={t('quota.totalLimit')}
-          value={quota.totalQuota}
-          color={theme.colors.critical}
-        />
+        {quota.unlimited ? (
+          <StatsCard
+            icon="infinite-outline"
+            label={t('quota.unlimited')}
+            value={'∞'}
+            color={theme.colors.tint}
+          />
+        ) : (
+          <>
+            <StatsCard
+              icon="code-slash"
+              label={t('quota.completionsUsed')}
+              value={quota.usedQuota}
+              color={theme.colors.good}
+            />
+            <StatsCard
+              icon="code-working-outline"
+              label={t('quota.remaining')}
+              value={quota.remainingQuota}
+              color={theme.colors.warning}
+            />
+            <StatsCard
+              icon="stop-circle"
+              label={t('quota.totalLimit')}
+              value={quota.totalQuota}
+              color={theme.colors.critical}
+            />
+          </>
+        )}
+
         <StatsCard
           icon="calendar-outline"
           label={t('quota.resetsAt')}
@@ -77,5 +88,21 @@ const styles = StyleSheet.create(theme => ({
   },
   statsContainer: {
     gap: theme.spacing.sm,
+  },
+  unlimitedContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: theme.spacing.xl * 2,
+  },
+  unlimitedIcon: {
+    fontSize: 120,
+    color: theme.colors.tint,
+    fontWeight: theme.typography.fontWeights.normal,
+  },
+  unlimitedText: {
+    fontSize: theme.typography.fontSizes['2xl'],
+    color: theme.colors.text,
+    fontWeight: theme.typography.fontWeights.semibold,
+    marginTop: theme.spacing.md,
   },
 }));

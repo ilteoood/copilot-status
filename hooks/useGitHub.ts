@@ -1,6 +1,6 @@
 import { fetchCopilotQuota, fetchGitHubUser, type GitHubUser } from '@/services/api';
 import { getStoredToken } from '@/stores/secureStorage';
-import type { QuotaInfo } from '@/types/quota';
+import type { AllQuotas } from '@/types/quota';
 import { useQuery } from '@tanstack/react-query';
 
 export const QUERY_KEYS = {
@@ -21,7 +21,7 @@ export function useGitHubUser() {
 }
 
 export function useCopilotQuota() {
-  const query = useQuery<QuotaInfo>({
+  const query = useQuery<AllQuotas>({
     queryKey: QUERY_KEYS.COPILOT_QUOTA,
     queryFn: async () => {
       const token = await getStoredToken();
