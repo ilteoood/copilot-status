@@ -17,14 +17,7 @@ interface QuotaScreenProps {
 export function QuotaDisplay({ quotaType }: QuotaScreenProps) {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
-  const {
-    data: quotas,
-    dataUpdatedAt: lastFetch,
-    isFetching,
-    error,
-    isCached,
-    refetch,
-  } = useCopilotQuota();
+  const { data: quotas, isFetching, error, isCached, refetch } = useCopilotQuota();
 
   if (isFetching && !quotas) {
     return (
@@ -52,6 +45,8 @@ export function QuotaDisplay({ quotaType }: QuotaScreenProps) {
     );
   }
 
+  const quota = quotas[quotaType];
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -61,11 +56,11 @@ export function QuotaDisplay({ quotaType }: QuotaScreenProps) {
             <Ionicons name="settings-outline" size={24} color={theme.colors.text} />
           </TouchableOpacity>
         </View>
-        <CachedBanner lastFetch={lastFetch} visible={isCached} />
+        <CachedBanner lastFetch={quota.lastUpdated} visible={isCached} />
       </View>
 
       <View style={styles.content}>
-        <QuotaValues quota={quotas[quotaType]} onRefresh={refetch} isRefreshing={isFetching} />
+        <QuotaValues quota={quota} onRefresh={refetch} isRefreshing={isFetching} />
       </View>
     </View>
   );

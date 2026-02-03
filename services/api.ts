@@ -24,8 +24,10 @@ function parseQuotaSnapshot(
     remainingQuota: snapshot.remaining,
     usedQuota: snapshot.entitlement - snapshot.remaining,
     remainingPercent: snapshot.percent_remaining,
+    consumedPercent: 100 - snapshot.percent_remaining,
     resetDate,
     unlimited: snapshot.unlimited,
+    lastUpdated: new Date(),
   };
 }
 

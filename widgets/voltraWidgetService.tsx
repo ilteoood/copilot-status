@@ -94,11 +94,11 @@ function buildAndroidWidgetVariants(
   }
 
   const widgetData: WidgetData = {
-    ...prepareWidgetData(quota, username, isDarkMode),
+    ...prepareWidgetData(quota, username),
     lastUpdated,
   };
 
-  const statusColor = getStatusColor(widgetData.percentUsed, isDarkMode);
+  const statusColor = getStatusColor(widgetData.percentUsed);
   const remaining = widgetData.totalQuota - widgetData.usedQuota;
 
   return [

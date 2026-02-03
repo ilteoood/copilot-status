@@ -22,17 +22,14 @@ export function getDailyQuotaInsight(remainingQuota: number, resetDate: Date): D
   };
 }
 
-export const formatTime = (t: TFunction, timestamp: Nullable<number>): string => {
+export const formatTime = (t: TFunction, timestamp: Nullable<Date>): string => {
   if (!timestamp) return t('time.never');
 
-  const now = Date.now();
-  const diff = now - timestamp;
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
+  const { minute, hour } = DateTime.now().minus(DateTime.fromJSDate(timestamp));
 
-  if (minutes < 1) return t('time.justNow');
-  if (minutes < 60) return t('time.minutesAgo', { count: minutes });
-  if (hours < 24) return t('time.hoursAgo', { count: hours });
+  if (minute < 1) return t('time.justNow');
+  if (minute < 60) return t('time.minutesAgo', { count: minute });
+  if (hour < 24) return t('time.hoursAgo', { count: hour });
   return new Date(timestamp).toLocaleDateString();
 };
 

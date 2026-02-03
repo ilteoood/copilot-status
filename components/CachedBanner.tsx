@@ -6,7 +6,7 @@ import { Text, View } from 'react-native';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 interface CachedBannerProps {
-  lastFetch: number | null;
+  lastFetch: Date;
   visible: boolean;
 }
 

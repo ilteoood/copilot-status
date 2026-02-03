@@ -1,3 +1,4 @@
+import { getAvailableColorByPercent, getColorByPercent } from '@/utils/colorUtils';
 import { formatPercent } from '@/utils/numberUtils';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,24 +13,6 @@ interface CircularProgressProps {
 }
 
 const PIE_CHART_COVER = { radius: 0.7, color: 'transparent' };
-
-interface ThemeColors {
-  critical: string;
-  warning: string;
-  good: string;
-}
-
-const getColorByPercent = (percent: number, colors: ThemeColors) => {
-  if (percent > 90) return colors.critical;
-  if (percent >= 75) return colors.warning;
-  return colors.good;
-};
-
-const getAvailableColorByPercent = (percent: number, colors: ThemeColors) => {
-  if (percent < 10) return colors.critical;
-  if (percent < 25) return colors.warning;
-  return colors.good;
-};
 
 export function CircularProgress({ usedQuota, totalQuota, size = 360 }: CircularProgressProps) {
   const { theme } = useUnistyles();
