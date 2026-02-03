@@ -2,8 +2,8 @@ import { QUERY_KEYS } from '@/hooks/useGitHub';
 import { GitHubUser } from '@/services/api';
 import i18n from '@/services/i18n';
 import { queryClient } from '@/services/queryClient';
-import { useThemeStore } from '@/stores/theme';
 import type { AllQuotas, QuotaInfo } from '@/types/quota';
+import { getColorByPercent } from '@/utils/colorUtils';
 import { formatFullDate } from '@/utils/dateTimeUtils';
 import { formatPercent } from '@/utils/numberUtils';
 import { Platform } from 'react-native';
@@ -15,11 +15,9 @@ import {
 } from 'voltra/android/client';
 import { clearWidget, updateWidget } from 'voltra/client';
 import {
-  getStatusColor,
   getTheme,
   IOSCopilotWidget,
   IOSCopilotWidgetError,
-  prepareWidgetData,
   type WidgetData,
 } from './VoltraCopilotWidget';
 import { createWidgetStyles } from './widgetStyles';
@@ -41,22 +39,17 @@ function getWidgetData(): { quota: QuotaInfo | null; username: string; lastFetch
 /**
  * Builds iOS widget variants for systemSmall and systemMedium
  */
-function buildIOSWidgetVariants(
-  quota: QuotaInfo | null,
-  username: string,
-  lastUpdated: string,
-  isDarkMode: boolean
-) {
+function buildIOSWidgetVariants(quota: QuotaInfo | null, username: string) {
   if (!quota) {
-    return IOSCopilotWidgetError(isDarkMode);
+    return IOSCopilotWidgetError();
   }
 
-  const widgetData = {
-    ...prepareWidgetData(quota, username, isDarkMode),
-    lastUpdated,
+  const widgetData: WidgetData = {
+    username,
+    quota,
   };
 
-  return IOSCopilotWidget(widgetData, DEEP_LINK_URL);
+  return IOSCopilotWidget(widgetData);
 }
 
 /**
@@ -65,11 +58,9 @@ function buildIOSWidgetVariants(
  */
 function buildAndroidWidgetVariants(
   quota: QuotaInfo | null,
-  username: string,
-  lastUpdated: string,
-  isDarkMode: boolean
+  username: string
 ): AndroidWidgetVariants {
-  const theme = getTheme(isDarkMode);
+  const theme = getTheme();
   const styles = createWidgetStyles(theme);
 
   if (!quota) {
@@ -93,13 +84,7 @@ function buildAndroidWidgetVariants(
     ];
   }
 
-  const widgetData: WidgetData = {
-    ...prepareWidgetData(quota, username, isDarkMode),
-    lastUpdated,
-  };
-
-  const statusColor = getStatusColor(widgetData.percentUsed, isDarkMode);
-  const remaining = widgetData.totalQuota - widgetData.usedQuota;
+  const statusColor = getColorByPercent(quota.remainingPercent, theme.colors);
 
   return [
     {
@@ -118,7 +103,7 @@ function buildAndroidWidgetVariants(
           >
             <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
               <VoltraAndroid.Text style={{ ...styles.largeValue, color: statusColor }}>
-                {formatPercent(widgetData.percentUsed)}
+                {formatPercent(quota.consumedPercent)}
               </VoltraAndroid.Text>
               <VoltraAndroid.Text style={styles.label}>
                 {i18n.t('widget.usedLowercase')}
@@ -126,7 +111,7 @@ function buildAndroidWidgetVariants(
             </VoltraAndroid.Column>
             <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
               <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.text }}>
-                {widgetData.usedQuota.toLocaleString()}
+                {quota.usedQuota}
               </VoltraAndroid.Text>
               <VoltraAndroid.Text style={styles.label}>
                 {i18n.t('widget.requestsUsed')}
@@ -135,7 +120,7 @@ function buildAndroidWidgetVariants(
 
             <VoltraAndroid.Column horizontalAlignment="center-horizontally" style={styles.column}>
               <VoltraAndroid.Text style={{ ...styles.largeValue, color: theme.colors.good }}>
-                {remaining.toLocaleString()}
+                {quota.remainingQuota}
               </VoltraAndroid.Text>
               <VoltraAndroid.Text style={styles.label}>
                 {i18n.t('widget.requestsLeft')}
@@ -144,7 +129,7 @@ function buildAndroidWidgetVariants(
           </VoltraAndroid.Row>
 
           <VoltraAndroid.Text style={styles.footerWithMargin}>
-            {widgetData.username} - {widgetData.lastUpdated}
+            {username} - {formatFullDate(i18n.t, quota.lastUpdated)}
           </VoltraAndroid.Text>
         </VoltraAndroid.Column>
       ),
@@ -158,15 +143,13 @@ function buildAndroidWidgetVariants(
  */
 export async function updateCopilotWidget(): Promise<void> {
   try {
-    const { quota, username, lastFetch } = getWidgetData();
-    const lastUpdated = formatFullDate(i18n.t, lastFetch);
-    const isDarkMode = useThemeStore.getState().isDarkMode();
+    const { quota, username } = getWidgetData();
 
     if (Platform.OS === 'ios') {
-      const variants = buildIOSWidgetVariants(quota, username, lastUpdated, isDarkMode);
+      const variants = buildIOSWidgetVariants(quota, username);
       await updateWidget(WIDGET_ID, variants, { deepLinkUrl: DEEP_LINK_URL });
     } else if (Platform.OS === 'android') {
-      const variants = buildAndroidWidgetVariants(quota, username, lastUpdated, isDarkMode);
+      const variants = buildAndroidWidgetVariants(quota, username);
       await updateAndroidWidget(WIDGET_ID, variants, { deepLinkUrl: DEEP_LINK_URL });
     }
   } catch {}

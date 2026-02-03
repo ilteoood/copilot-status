@@ -1,5 +1,5 @@
 import { TFunction } from 'i18next';
-import { DateTime } from 'luxon';
+import { differenceInDays, formatDistanceToNow } from 'date-fns';
 
 type Nullable<T> = T | null | undefined;
 
@@ -9,11 +9,11 @@ export interface DailyQuotaInsight {
 }
 
 export function getDailyQuotaInsight(remainingQuota: number, resetDate: Date): DailyQuotaInsight {
-  const now = DateTime.now();
-  const endOfMonth = DateTime.fromJSDate(new Date(resetDate));
+  const now = new Date();
 
-  const diffTime = endOfMonth.diff(now, 'days').days;
-  const daysRemaining = Math.max(1, Math.round(diffTime));
+  const diffDays = differenceInDays(resetDate, now);
+
+  const daysRemaining = Math.max(1, Math.round(diffDays));
   const dailyAverage = Math.max(0, Math.floor(remainingQuota / daysRemaining));
 
   return {
@@ -22,18 +22,12 @@ export function getDailyQuotaInsight(remainingQuota: number, resetDate: Date): D
   };
 }
 
-export const formatTime = (t: TFunction, timestamp: Nullable<number>): string => {
+export const formatTime = (t: TFunction, timestamp: Nullable<Date>): string => {
   if (!timestamp) return t('time.never');
 
-  const now = Date.now();
-  const diff = now - timestamp;
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
+  const dateTimestamp = new Date(timestamp);
 
-  if (minutes < 1) return t('time.justNow');
-  if (minutes < 60) return t('time.minutesAgo', { count: minutes });
-  if (hours < 24) return t('time.hoursAgo', { count: hours });
-  return new Date(timestamp).toLocaleDateString();
+  return formatDistanceToNow(dateTimestamp, { addSuffix: true });
 };
 
 export const formatFullDate = (t: TFunction, timestamp: Nullable<Date | number>): string => {

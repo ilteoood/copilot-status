@@ -98,6 +98,8 @@ describe('services/api', () => {
     };
 
     it('should fetch and parse copilot quota data', async () => {
+      const lastUpdated = new Date('2024-01-15T12:00:00');
+      jest.useFakeTimers().setSystemTime(lastUpdated);
       const mockRequest = jest.fn().mockResolvedValue({ data: mockCopilotResponse });
 
       const MockedOctokit = jest.mocked(Octokit);
@@ -110,6 +112,8 @@ describe('services/api', () => {
 
       const result = await fetchCopilotQuota('test-token');
 
+      jest.useRealTimers();
+
       expect(Octokit).toHaveBeenCalledWith({ auth: 'test-token' });
       expect(mockRequest).toHaveBeenCalledWith('GET /copilot_internal/user');
 
@@ -117,9 +121,11 @@ describe('services/api', () => {
         type: 'premium_interactions',
         totalQuota: 1000,
         remainingQuota: 500,
+        consumedPercent: 50,
         usedQuota: 500,
         remainingPercent: 50,
         resetDate: new Date('2024-02-01T00:00:00Z'),
+        lastUpdated,
         unlimited: false,
       });
 
@@ -129,6 +135,8 @@ describe('services/api', () => {
         remainingQuota: 0,
         usedQuota: 0,
         remainingPercent: 100,
+        consumedPercent: 0,
+        lastUpdated,
         resetDate: new Date('2024-02-01T00:00:00Z'),
         unlimited: true,
       });
@@ -138,8 +146,10 @@ describe('services/api', () => {
         totalQuota: 0,
         remainingQuota: 0,
         usedQuota: 0,
+        consumedPercent: 0,
         remainingPercent: 100,
         resetDate: new Date('2024-02-01T00:00:00Z'),
+        lastUpdated,
         unlimited: true,
       });
     });
