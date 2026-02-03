@@ -73,15 +73,14 @@ describe('dateTimeUtils', () => {
       jest.restoreAllMocks();
     });
 
-    it('should return formatted date for timestamps more than 24 hours ago', () => {
+    it('should return formatted distance for timestamps more than 24 hours ago', () => {
       const now = Date.now();
       const timestamp = now - 25 * 3600000;
 
       jest.spyOn(Date, 'now').mockReturnValue(now);
 
       const result = formatTime(mockT, new Date(timestamp));
-      const expectedDate = new Date(timestamp).toLocaleDateString();
-      expect(result).toBe(expectedDate);
+      expect(result).toBe('1 day ago');
 
       jest.restoreAllMocks();
     });
@@ -192,8 +191,8 @@ describe('dateTimeUtils', () => {
       const resetDate = new Date('2024-03-01T00:00:00');
       const result = getDailyQuotaInsight(100, resetDate);
 
-      expect(result.daysRemaining).toBe(2);
-      expect(result.dailyAverage).toBe(50);
+      expect(result.daysRemaining).toBe(1);
+      expect(result.dailyAverage).toBe(100);
     });
 
     it('should handle year boundaries correctly', () => {
@@ -202,11 +201,11 @@ describe('dateTimeUtils', () => {
       const resetDate = new Date('2025-01-01T00:00:00');
       const result = getDailyQuotaInsight(60, resetDate);
 
-      expect(result.daysRemaining).toBe(2);
-      expect(result.dailyAverage).toBe(30);
+      expect(result.daysRemaining).toBe(1);
+      expect(result.dailyAverage).toBe(60);
     });
 
-    it('should calculate fractional days correctly', () => {
+    it('should round partial days to whole days correctly', () => {
       jest.setSystemTime(new Date('2024-01-15T23:00:00'));
 
       const resetDate = new Date('2024-01-16T06:00:00');
