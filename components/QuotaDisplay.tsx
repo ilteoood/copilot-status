@@ -1,5 +1,5 @@
 import type { QuotaInfo } from '@/types/quota';
-import { formatFullDate } from '@/utils/dateTimeUtils';
+import { formatFullDate, getDailyQuotaInsight } from '@/utils/dateTimeUtils';
 import { useTranslation } from 'react-i18next';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
@@ -15,6 +15,10 @@ interface QuotaDisplayProps {
 export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayProps) {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
+
+  const dailyQuota = quota.unlimited
+    ? null
+    : getDailyQuotaInsight(quota.remainingQuota, quota.resetDate);
 
   return (
     <ScrollView
@@ -33,14 +37,7 @@ export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayPro
       </View>
 
       <View style={styles.statsContainer}>
-        {quota.unlimited ? (
-          <StatsCard
-            icon="infinite-outline"
-            label={t('quota.unlimited')}
-            value={'∞'}
-            color={theme.colors.good}
-          />
-        ) : (
+        {dailyQuota ? (
           <>
             <StatsCard
               icon="code-slash"
@@ -60,7 +57,28 @@ export function QuotaDisplay({ quota, onRefresh, isRefreshing }: QuotaDisplayPro
               value={quota.totalQuota}
               color={theme.colors.critical}
             />
+            <StatsCard
+              icon="trending-down-outline"
+              label={t('quota.dailyAverage')}
+              value={t('quota.perDay', {
+                count: dailyQuota.dailyAverage,
+              })}
+              color={theme.colors.tint}
+            />
+            <StatsCard
+              icon="time-outline"
+              label={t('quota.daysRemaining')}
+              value={dailyQuota.daysRemaining}
+              color={theme.colors.tint}
+            />
           </>
+        ) : (
+          <StatsCard
+            icon="infinite-outline"
+            label={t('quota.unlimited')}
+            value={'∞'}
+            color={theme.colors.good}
+          />
         )}
 
         <StatsCard
