@@ -1,6 +1,26 @@
 import { TFunction } from 'i18next';
+import { DateTime } from 'luxon';
 
 type Nullable<T> = T | null | undefined;
+
+export interface DailyQuotaInsight {
+  daysRemaining: number;
+  dailyAverage: number;
+}
+
+export function getDailyQuotaInsight(remainingQuota: number, resetDate: Date): DailyQuotaInsight {
+  const now = DateTime.now();
+  const endOfMonth = DateTime.fromJSDate(new Date(resetDate));
+
+  const diffTime = endOfMonth.diff(now, 'days').days;
+  const daysRemaining = Math.max(1, Math.round(diffTime));
+  const dailyAverage = Math.max(0, Math.floor(remainingQuota / daysRemaining));
+
+  return {
+    daysRemaining,
+    dailyAverage,
+  };
+}
 
 export const formatTime = (t: TFunction, timestamp: Nullable<number>): string => {
   if (!timestamp) return t('time.never');

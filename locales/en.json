@@ -25,6 +25,9 @@
     "toggleToAvailable": "Show available quota",
     "toggleToUsed": "Show used quota",
     "unlimited": "Unlimited",
+    "dailyAverage": "Daily Budget",
+    "daysRemaining": "Days Left",
+    "perDay": "{{count}}/day",
     "types": {
       "premium_interactions": "Premium",
       "chat": "Chat",
