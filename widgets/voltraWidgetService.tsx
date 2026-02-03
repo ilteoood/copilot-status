@@ -2,9 +2,10 @@ import { QUERY_KEYS } from '@/hooks/useGitHub';
 import { GitHubUser } from '@/services/api';
 import i18n from '@/services/i18n';
 import { queryClient } from '@/services/queryClient';
-import { storage, StorageKeys } from '@/services/storage';
+import { useThemeStore } from '@/stores/theme';
 import type { AllQuotas, QuotaInfo } from '@/types/quota';
 import { formatFullDate } from '@/utils/dateTimeUtils';
+import { formatPercent } from '@/utils/numberUtils';
 import { Platform } from 'react-native';
 import { VoltraAndroid } from 'voltra/android';
 import {
@@ -22,20 +23,9 @@ import {
   type WidgetData,
 } from './VoltraCopilotWidget';
 import { createWidgetStyles } from './widgetStyles';
-import { formatPercent } from '@/utils/numberUtils';
 
 const WIDGET_ID = 'copilot_status';
 const DEEP_LINK_URL = 'xyz.ilteoood.copilotstatus://';
-
-function getIsDarkMode(): boolean {
-  const themePreference = storage.getString(StorageKeys.THEME_PREFERENCE) as
-    | 'light'
-    | 'dark'
-    | 'system'
-    | undefined;
-
-  return themePreference !== 'light';
-}
 
 function getWidgetData(): { quota: QuotaInfo | null; username: string; lastFetch: number | null } {
   const queryState = queryClient.getQueryState<AllQuotas>(QUERY_KEYS.COPILOT_QUOTA);
@@ -170,7 +160,7 @@ export async function updateCopilotWidget(): Promise<void> {
   try {
     const { quota, username, lastFetch } = getWidgetData();
     const lastUpdated = formatFullDate(i18n.t, lastFetch);
-    const isDarkMode = getIsDarkMode();
+    const isDarkMode = useThemeStore.getState().isDarkMode();
 
     if (Platform.OS === 'ios') {
       const variants = buildIOSWidgetVariants(quota, username, lastUpdated, isDarkMode);

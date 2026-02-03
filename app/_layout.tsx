@@ -1,13 +1,13 @@
 import '@/services/i18n';
 import { persistOptions, queryClient } from '@/services/queryClient';
-import { ThemePreference, themeStorage } from '@/services/storage';
+import { ThemePreference } from '@/services/storage';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { Stack, router, useRootNavigationState, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import 'react-native-reanimated';
-import { StyleSheet, UnistylesRuntime, useUnistyles } from 'react-native-unistyles';
+import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 import { useAuthStore } from '@/stores/auth';
 
@@ -48,16 +48,6 @@ const statusBarColor: Record<ThemePreference, 'light' | 'dark' | 'auto'> = {
 export default function RootLayout() {
   const { isLoading } = useProtectedRoute();
   const { rt } = useUnistyles();
-
-  useEffect(() => {
-    const storedTheme = themeStorage.getThemePreference();
-    if (storedTheme === 'system') {
-      UnistylesRuntime.setAdaptiveThemes(true);
-    } else {
-      UnistylesRuntime.setAdaptiveThemes(false);
-      UnistylesRuntime.setTheme(storedTheme);
-    }
-  }, []);
 
   if (isLoading) {
     return (
