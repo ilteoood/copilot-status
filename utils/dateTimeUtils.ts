@@ -1,5 +1,5 @@
 import { TFunction } from 'i18next';
-import { differenceInHours, formatDistanceToNow } from 'date-fns';
+import { differenceInDays, formatDistanceToNow } from 'date-fns';
 
 type Nullable<T> = T | null | undefined;
 
@@ -11,9 +11,7 @@ export interface DailyQuotaInsight {
 export function getDailyQuotaInsight(remainingQuota: number, resetDate: Date): DailyQuotaInsight {
   const now = new Date();
 
-  // Calculate difference in hours to get fractional days behavior similar to Luxon
-  const diffHours = differenceInHours(resetDate, now);
-  const diffDays = diffHours / 24;
+  const diffDays = differenceInDays(resetDate, now);
 
   const daysRemaining = Math.max(1, Math.round(diffDays));
   const dailyAverage = Math.max(0, Math.floor(remainingQuota / daysRemaining));
@@ -27,14 +25,7 @@ export function getDailyQuotaInsight(remainingQuota: number, resetDate: Date): D
 export const formatTime = (t: TFunction, timestamp: Nullable<Date>): string => {
   if (!timestamp) return t('time.never');
 
-  const now = new Date();
   const dateTimestamp = new Date(timestamp);
-
-  const hours = differenceInHours(now, dateTimestamp);
-
-  if (hours >= 24) {
-    return dateTimestamp.toLocaleDateString();
-  }
 
   return formatDistanceToNow(dateTimestamp, { addSuffix: true });
 };
