@@ -43,7 +43,7 @@ export function QuotaValues({ quota, onRefresh, isRefreshing }: QuotaValuesProps
               <View style={styles.halfWidth}>
                 <StatsCard
                   icon="code-slash"
-                  label={t('quota.completionsUsed')}
+                  label={t('quota.used')}
                   value={quota.usedQuota}
                   color={theme.colors.good}
                 />

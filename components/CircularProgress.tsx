@@ -53,7 +53,7 @@ export function CircularProgress({ usedQuota, totalQuota, size = 360 }: Circular
       </View>
 
       <View style={styles.centerContent}>
-        <Text style={[styles.percentText, { fontSize: size * 0.22 }]}>
+        <Text style={[styles.percentText, { fontSize: size * 0.18 }]}>
           {formatPercent(displayPercent)}
         </Text>
         <Text style={[styles.labelText, { fontSize: size * 0.08 }]}>
@@ -81,6 +81,7 @@ const styles = StyleSheet.create(theme => ({
   },
   labelText: {
     color: theme.colors.icon,
+    textTransform: 'uppercase',
     fontWeight: theme.typography.fontWeights.medium,
     marginTop: 4,
     opacity: 0.6,

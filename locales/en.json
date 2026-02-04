@@ -16,9 +16,8 @@
     "noDataAvailable": "No quota data available"
   },
   "quota": {
-    "used": "USED",
-    "available": "AVAILABLE",
-    "completionsUsed": "Completions Used",
+    "used": "Used",
+    "available": "available",
     "remaining": "Remaining",
     "totalLimit": "Total Limit",
     "resetsAt": "Resets at",
