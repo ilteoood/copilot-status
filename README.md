@@ -116,3 +116,7 @@ copilot-status/
 ## License
 
 MIT
+
+## Acknowledgements
+
+This project is kindly sponsored by [Nearform](https://nearform.com/).
