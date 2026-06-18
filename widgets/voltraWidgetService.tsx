@@ -1,4 +1,4 @@
-import { QUERY_KEYS } from '@/hooks/useGitHub';
+import { QUERY_KEYS } from '@/hooks/useUserData';
 import { GitHubUser } from '@/services/api';
 import i18n from '@/services/i18n';
 import { queryClient } from '@/services/queryClient';
@@ -27,8 +27,8 @@ const WIDGET_ID = 'copilot_status';
 const DEEP_LINK_URL = 'com.nearform.copilotstatus://';
 
 function getWidgetData(): { quota: QuotaInfo | null; username: string; lastFetch: number | null } {
-  const queryState = queryClient.getQueryState<AllQuotas>(QUERY_KEYS.COPILOT_QUOTA);
-  const githubUser = queryClient.getQueryData<GitHubUser>(QUERY_KEYS.GITHUB_USER);
+  const queryState = queryClient.getQueryState<AllQuotas>(QUERY_KEYS.QUOTA);
+  const githubUser = queryClient.getQueryData<GitHubUser>(QUERY_KEYS.USER);
 
   const data = queryState?.data;
   const quota = hasPremiumQuota(data) ? data.premium_interactions : data?.hasSubscription ? data.chat : null;

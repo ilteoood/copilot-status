@@ -2,7 +2,7 @@
 
 import { CachedBanner } from '@/components/CachedBanner';
 import { QuotaValues } from '@/components/QuotaValues';
-import { useCopilotQuota } from '@/hooks/useGitHub';
+import { useQuota } from '@/hooks/useUserData';
 import type { QuotaInfo, QuotaType } from '@/types/quota';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Text, View } from 'react-native';
@@ -15,7 +15,7 @@ interface QuotaScreenProps {
 export function QuotaDisplay({ quotaType }: QuotaScreenProps) {
   const { theme } = useUnistyles();
   const { t } = useTranslation();
-  const { data: quotas, isFetching, error, refetch } = useCopilotQuota();
+  const { data: quotas, isFetching, error, refetch } = useQuota();
 
   if (isFetching) {
     return (

@@ -3,7 +3,7 @@ import { Separator } from '@/components/Separator';
 import { SettingsCategory } from '@/components/settings/SettingsCategory';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsVoice } from '@/components/settings/SettingsVoice';
-import { useGitHubUser } from '@/hooks/useGitHub';
+import { useUser } from '@/hooks/useUserData';
 import { useAuthStore } from '@/stores/auth';
 import { useQuotaStore } from '@/stores/quota';
 import { useThemeStore } from '@/stores/theme';
@@ -21,7 +21,7 @@ export default function SettingsScreen() {
   const { signOut } = useAuthStore();
   const { clearQuota } = useQuotaStore();
   const { themePreference, setThemePreference } = useThemeStore();
-  const { data: user } = useGitHubUser();
+  const { data: user } = useUser();
   const appVersion = Constants.expoConfig?.version ?? '1.0.0';
 
   const handleSignOut = () => {
