@@ -1,5 +1,5 @@
+import { useQuota, useUser } from '@/hooks/useUserData';
 import { useQuery } from '@tanstack/react-query';
-import { useGitHubUser, useCopilotQuota } from '@/hooks/useGitHub';
 
 jest.mock('@tanstack/react-query', () => ({
   useQuery: jest.fn(() => ({
@@ -20,7 +20,7 @@ jest.mock('@/services/api', () => ({
 
 const mockedUseQuery = useQuery as jest.Mock;
 
-describe('hooks/useGitHub', () => {
+describe('hooks/useUserData', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockedUseQuery.mockReturnValue({
@@ -30,21 +30,21 @@ describe('hooks/useGitHub', () => {
     });
   });
 
-  describe('useGitHubUser', () => {
+  describe('useUser', () => {
     it('should have correct query key', () => {
-      useGitHubUser();
+      useUser();
 
       const options = mockedUseQuery.mock.calls[0][0];
-      expect(options.queryKey).toEqual(['github', 'user']);
+      expect(options.queryKey).toEqual(['user']);
     });
   });
 
-  describe('useCopilotQuota', () => {
+  describe('useQuota', () => {
     it('should have correct query key', () => {
-      useCopilotQuota();
+      useQuota();
 
       const options = mockedUseQuery.mock.calls[0][0];
-      expect(options.queryKey).toEqual(['github', 'copilot', 'quota']);
+      expect(options.queryKey).toEqual(['quota']);
     });
   });
 });

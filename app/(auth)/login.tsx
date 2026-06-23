@@ -1,11 +1,14 @@
+import { DEMO_TOKEN } from '@/constants/demo';
 import { useGitHubAuthRequest } from '@/services/auth';
 import { useAuthStore } from '@/stores/auth';
+import { storeToken } from '@/stores/secureStorage';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Animated, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Animated, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
+
+const DEMO_TAP_THRESHOLD = 5;
 
 export default function LoginScreen() {
   const { theme } = useUnistyles();
@@ -13,6 +16,7 @@ export default function LoginScreen() {
   const [request, response, promptAsync] = useGitHubAuthRequest();
   const { signIn, isLoading, error, clearError } = useAuthStore();
   const [localLoading, setLocalLoading] = useState(false);
+  const tapCount = useRef(0);
 
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const slideAnim = React.useRef(new Animated.Value(30)).current;
@@ -43,7 +47,6 @@ export default function LoginScreen() {
   const handleSignIn = async (code: string) => {
     try {
       await signIn(code, request?.codeVerifier);
-      router.replace('/(tabs)');
     } catch {
       setLocalLoading(false);
     }
@@ -53,6 +56,16 @@ export default function LoginScreen() {
     clearError();
     setLocalLoading(true);
     await promptAsync();
+  };
+
+  const handleDemoLoginTrigger = () => {
+    tapCount.current += 1;
+    if (tapCount.current >= DEMO_TAP_THRESHOLD) {
+      tapCount.current = 0;
+      storeToken(DEMO_TOKEN).then(() => {
+        useAuthStore.setState({ isAuthenticated: true });
+      });
+    }
   };
 
   const showLoading = isLoading || localLoading;
@@ -103,7 +116,9 @@ export default function LoginScreen() {
           )}
         </TouchableOpacity>
 
-        <Text style={styles.footer}>{t('login.footer')}</Text>
+        <Pressable onPress={handleDemoLoginTrigger}>
+          <Text style={styles.footer}>{t('login.footer')}</Text>
+        </Pressable>
       </Animated.View>
     </View>
   );
